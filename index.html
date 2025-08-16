@@ -8,261 +8,63 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" />
 <style>
-  :root {
-    --main-bg: #262e46;
-    --primary: #3b8bee;
-    --accent: #ffe05b;
-    --danger: #e94f37;
-    --radius: 16px;
-  }
-  html, body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Montserrat', Arial, sans-serif;
-    background: var(--main-bg);
-    color: #fff;
-    overflow-x: hidden;
-  }
-  h1, h2, h3 {
-    font-weight: 700;
-    margin-bottom: 12px;
-  }
-  .page {
-    display: none;
-    height: calc(100vh - 80px);
-    max-height: 100%;
-    padding: 20px 30px;
-    animation: fadein 0.3s;
-    box-sizing: border-box;
-    position: relative;
-    overflow-y: auto;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  .show {
-    display: flex;
-  }
-  @keyframes fadein {
-    from {opacity: 0;}
-    to {opacity:1;}
-  }
-  input[type=text] {
-    font-size: 1.3em;
-    padding: 12px 18px;
-    border-radius: var(--radius);
-    border: none;
-    margin: 8px 0 18px 0;
-    min-width: 240px;
-    box-sizing: border-box;
-    text-align: center;
-    background: #344365;
-    color: #fff;
-  }
-  input[type=text]::placeholder {
-    color: #a3a9d4;
-  }
-  button {
-    font-size: 1.35em;
-    border: none;
-    border-radius: 48px;
-    padding: 20px 56px;
-    cursor: pointer;
-    margin: 18px 14px;
-    font-family: Montserrat;
-    background: var(--primary);
-    color: #fff;
-    font-weight: 700;
-    transition: background 0.18s;
-    box-shadow: 0 6px 12px #2554a1a1;
-    user-select: none;
-    min-width: 280px;
-  }
-  button:hover:not(:disabled) {
-    background: var(--accent);
-    color: #232323;
-  }
-  button:disabled {
-    background: #ddd;
-    color: #999;
-    box-shadow: none;
-    cursor: not-allowed;
-  }
-  label {
-    color: #acbede;
-    font-size: 1.05em;
-    margin-bottom: 6px;
-    user-select: none;
-  }
-  .buzzer-btn {
-    background: var(--accent);
-    color: #141c34;
-    font-size: 5em;
-    padding: 96px 180px;
-    border-radius: 200px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    margin: 60px 0 36px 0;
-    transition: background 0.15s;
-    border: 10px solid #fff;
-    box-shadow: 0 14px 52px #ffea6fcc;
-    user-select: none;
-  }
-  .buzzer-btn:disabled {
-    background: #eee;
-    color: #999;
-    border-color: #ccc;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
-  .scoreboard {
-    box-shadow: 0 2px 16px #0006;
-    background: #222947;
-    border-radius: var(--radius);
-    margin: 28px auto 12px auto;
-    padding: 18px 22px;
-    min-width: 320px;
-    width: 100%;
-    max-width: 460px;
-    user-select: none;
-  }
-  .score-row {
-    display: flex;
-    align-items: center;
-    border-radius: 10px;
-    margin-bottom: 12px;
-    background: #fff2;
-    padding: 12px 16px;
-  }
-  .rank {
-    background: var(--primary);
-    color: #fff;
-    font-weight: 700;
-    width: 36px;
-    height: 36px;
-    text-align: center;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 14px;
-    font-size: 1.1em;
-    user-select: none;
-  }
-  .pname {
-    flex: 1;
-    font-weight: 600;
-    font-size: 1.1em;
-  }
-  .pscore {
-    color: var(--accent);
-    font-size: 1.35em;
-    font-weight: 700;
-    margin-right: 24px;
-    user-select: none;
-  }
-  .buzzed-tag {
-    background: var(--accent);
-    color: #232323;
-    border-radius: 10px;
-    padding: 5px 12px;
-    font-size: 1em;
-    margin-left: 9px;
-    user-select: none;
-  }
-  .admin-controls button {
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    font-size: 1.3em;
-    margin-left: 6px;
-    border-radius: 12px;
-    padding: 8px 12px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .admin-controls button:hover {
-    background: #19b866;
-  }
-  .admin-controls button.delete:hover {
-    background: var(--danger);
-  }
-  #buzz-lock-msg {
-    font-size: 1.3em;
-    color: var(--accent);
-    margin-top: 18px;
-    font-weight: 700;
-  }
-  #footer {
-    text-align: center;
-    color: #b4bfe6;
-    margin: 48px auto 12px;
-    font-size: 1.05em;
-  }
-  #buzzed-who {
-    font-size: 1.5em;
-    color: var(--accent);
-    margin-top: 20px;
-    font-weight: 700;
-  }
-  .rround {
-    font-size: 1.15em;
-    color: #febf42;
-    margin-top: 4px;
-    margin-bottom: 0;
-  }
-  .backbtn {
-    position: fixed;
-    bottom: 18px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.2em;
-    padding: 10px 28px;
-    border-radius: 60px;
-    background: #364063;
-    border: none;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 4px 10px #0008;
-    user-select: none;
-    z-index: 999;
-    transition: background 0.2s;
-  }
-  .backbtn:hover {
-    background: #fdb70f;
-    color: #232323;
-  }
-  @media (max-width: 640px) {
-    .buzzer-btn {
-      padding: 48px 120px;
-      font-size: 3.8em;
-      border-width: 6px;
-    }
-    button {
-      padding: 18px 38px;
-      font-size: 1.1em;
-      min-width: 220px;
-      margin: 14px 10px;
-    }
-    input[type=text] {
-      min-width: 220px;
-      font-size: 1.2em;
-    }
-  }
+  :root { --main-bg: #262e46; --primary: #3b8bee; --accent: #ffe05b; --danger: #e94f37; --radius: 16px; }
+  html, body { height: 100%; margin: 0; font-family: 'Montserrat', Arial, sans-serif; background: var(--main-bg); color: #fff; overflow-x: hidden;}
+  h1,h2,h3 { font-weight: 700; margin-bottom: 12px;}
+  .page { display: none; min-height: calc(100vh - 120px); padding: 28px 30px; animation: fadein 0.32s; box-sizing: border-box; flex-direction: column; align-items: center; }
+  .show { display: flex;}
+  @keyframes fadein {from {opacity: 0;} to {opacity:1;}}
+  input[type=text], input[type=password] { font-size: 1.2em; padding: 12px 18px; border-radius: var(--radius); border: none; min-width: 240px; margin: 8px 0 18px 0; text-align: center; background: #344365; color: #fff; }
+  input[type=text]::placeholder, input[type=password]::placeholder { color: #a3a9d4;}
+  button { font-size: 1.35em; border-radius: 48px; padding: 20px 56px; cursor:pointer; margin: 18px 14px; font-family: Montserrat; background: var(--primary); color: #fff; font-weight: 700; border:none; transition: background 0.18s; min-width: 200px;}
+  button:hover:not(:disabled) { background: var(--accent); color:#232323;}
+  button:disabled { background: #ddd; color: #999;}
+  label { color: #acbede; font-size: 1.05em; margin-bottom:6px;}
+  .buzzer-btn { background: var(--accent); color: #141c34; font-size: 4em; padding: 64px 110px; border-radius: 200px; font-weight: 800; letter-spacing: 0.10em; margin: 40px 0 16px 0; border:8px solid #fff;}
+  .buzzer-btn:disabled { background: #eee; color: #999; border-color: #ccc; cursor: not-allowed;}
+  .scoreboard { box-shadow: 0 2px 16px #0006; background: #222947; border-radius: var(--radius); margin: 16px auto 12px auto; padding: 18px 22px; min-width: 240px; max-width: 370px;}
+  .score-row { display: flex; align-items: center; border-radius: 10px; margin-bottom: 12px; background: #fff2; padding: 12px 12px;}
+  .rank { background: var(--primary); color:#fff; font-weight:700; width:30px; height:30px; text-align:center; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-right:10px;}
+  .pname { flex:1; font-size:1.1em;}
+  .pscore { color: var(--accent); font-size:1.1em; font-weight:700; margin-right:18px;}
+  .buzzed-tag { background: var(--accent); color: #232323; border-radius: 10px; padding: 4px 8px; font-size: 1em; margin-left: 7px;}
+  .admin-controls button { background: var(--primary); color: #fff; font-size:1em; margin-left: 4px; border-radius:8px;padding:6px 10px;}
+  .admin-controls button:hover { background: #19b866;}
+  .admin-controls button.delete:hover { background: var(--danger);}
+  #buzz-lock-msg { color: var(--accent); margin: 17px 0 3px 0; font-weight: 700;}
+  #question-holder { background:#272e4e; border-radius:18px; box-shadow:0 4px 16px #233d; margin:20px 0 12px 0; padding:8px 18px; display:flex; flex-direction:column; align-items:center;}
+  #image-display {max-width:220px; max-height:180px; margin:8px 0 9px 0; border-radius:10px;}
+  #footer { text-align:center; color: #ffcf45; margin: 20px auto 16px; font-size:1.13em; font-weight: bold; letter-spacing:0.12em;}
+  .backbtn {position:fixed; bottom:15px; left:50%; transform:translateX(-50%);font-size:1.18em; padding:7px 24px; border-radius:40px; background:#364063; color:white; border:none; box-shadow:0 4px 10px #0008;z-index:110;}
+  .backbtn:hover {background:var(--accent); color:#232323;}
+  #modal {display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:#111A; z-index:9999; align-items:center; justify-content:center;}
+  #modal.active {display:flex;}
+  #modal .inner {background:#fff; color:#232323; padding:20px 30px; border-radius:16px;min-width:220px; font-weight:600; font-size:1.16em; box-shadow:0 12px 22px #0005;}
 </style>
 </head>
 <body>
 
-<div id="modal" class=""></div>
+<div id="modal"><div class="inner" id="modal-msg"></div></div>
 <button class="backbtn" id="backbtn" style="display:none" onclick="goHome()">← Back</button>
 
-<div id="page-home" class="page show">
-  <h1>Quiz Buzzer</h1>
-  <button onclick="hostPage()">Host Game</button>
-  <button onclick="joinPage()">Join Game</button>
-  <div id="footer">Developed by Amutan Group</div>
+<!-- Login/Register Page -->
+<div id="page-login" class="page show">
+  <h1>Login/Register</h1>
+  <input type="text" id="login-username" placeholder="Username" maxlength="24" autocomplete="off">
+  <input type="password" id="login-password" placeholder="Password" maxlength="24">
+  <button onclick="loginUser()">Login</button>
+  <button onclick="registerUser()">Register</button>
 </div>
 
+<!-- Home -->
+<div id="page-home" class="page">
+  <h2>Welcome, <span id="welcome-user"></span>!</h2>
+  <button onclick="hostPage()">Host Game</button>
+  <button onclick="joinPage()">Join Game</button>
+  <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
+</div>
+
+<!-- Host Page -->
 <div id="page-host" class="page">
   <h2>Host Game</h2>
   <label>Create & share game code:</label><br />
@@ -270,23 +72,21 @@
   <button onclick="startGame()">Start Game</button>
 </div>
 
-<div id="page-join" class="page">
-  <h2>Join Game</h2>
-  <label>Game Code:</label><br />
-  <input type="text" id="join-code" maxlength="6" placeholder="6 digit code" autocomplete="off" inputmode="numeric"><br />
-  <label>Your Name:</label><br />
-  <input type="text" id="join-name" maxlength="24" placeholder="Player Name" autocomplete="off"><br />
-  <label>Team Name (optional):</label><br />
-  <input type="text" id="join-team" maxlength="24" placeholder="Team Name" autocomplete="off"><br />
-  <button onclick="joinGame()">Join</button>
-</div>
-
+<!-- Admin Panel -->
 <div id="page-admin" class="page">
   <h2>Admin Panel</h2>
   <div>Game Code: <span id="roomcode"></span></div>
   <div class="rround" id="round-label"></div>
+  <div id="question-holder">
+    <b>Current Question:</b>
+    <div id="admin-question-text"></div>
+    <img id="admin-image-display" src="" style="display:none;" alt="No image"/>
+  </div>
+  <input type="text" id="admin-question-input" placeholder="Enter question here">
+  <input type="text" id="admin-image-input" placeholder="Paste Image URL (optional)">
+  <button onclick="uploadQuestion()">Upload Question</button>
   <div class="scoreboard" id="admin-scores"></div>
-  <div style="margin: 18px 0;">
+  <div style="margin: 5px 0;">
     <button onclick="resetBuzzers()">Reset Buzzer</button>
     <button onclick="resetRound()">Reset Round</button>
     <button onclick="nextRound()">Next Round</button>
@@ -294,10 +94,26 @@
   <div id="buzzed-who"></div>
 </div>
 
+<!-- Join Page -->
+<div id="page-join" class="page">
+  <h2>Join Game</h2>
+  <label>Game Code:</label><br />
+  <input type="text" id="join-code" maxlength="6" placeholder="6 digit code" autocomplete="off" inputmode="numeric"><br />
+  <label>Your Team:</label><br />
+  <input type="text" id="join-team" maxlength="24" placeholder="Team Name"><br />
+  <button onclick="joinGame()">Join</button>
+</div>
+
+<!-- Player Panel -->
 <div id="page-player" class="page">
   <h2>Hello, <span id="pl-name"></span></h2>
   <div>Game Code: <span id="pl-room"></span></div>
   <div>Team: <span id="pl-team"></span></div>
+  <div id="question-holder">
+    <b>Current Question:</b>
+    <div id="player-question-text"></div>
+    <img id="player-image-display" src="" style="display:none;" alt="No image"/>
+  </div>
   <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
   <div id="buzz-lock-msg"></div>
   <div class="scoreboard" id="player-scores"></div>
@@ -306,6 +122,7 @@
 <audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
 
 <script>
+// --- Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
   authDomain: "buzzer-a0d53.firebaseapp.com",
@@ -316,42 +133,66 @@ const firebaseConfig = {
   appId: "1:29031182202:web:447d951b38be59b29270c3",
   measurementId: "G-NP0DMX7TKJ"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let gameID = "";
-let myRole = "";
-let myName = "";
-let myTeam = "";
-let myPID = "";
-let buzzLockSoundPlayed = false;
+let gameID = "", myRole = "", myUser = "", myTeam = "", myPID = "", buzzLockSoundPlayed = false;
 
-function showPage(id) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("show"));
-  document.getElementById(id).classList.add("show");
-  document.getElementById("backbtn").style.display = id === "page-home" ? "none" : "inline-block";
-}
-function goHome() {
-  location.reload();
-}
-function showModal(msg, t = 1800) {
+// --- Modal logic
+function showModal(msg, t=1800){
   const modal = document.getElementById("modal");
-  modal.textContent = msg;
+  const modalMsg = document.getElementById("modal-msg");
+  modalMsg.textContent = msg;
   modal.classList.add("active");
   setTimeout(() => modal.classList.remove("active"), t);
 }
 
-// Host functions
-function hostPage() {
+// --- Navigation
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("show"));
+  document.getElementById(id).classList.add("show");
+  document.getElementById("backbtn").style.display = id === "page-login" ? "none" : "inline-block";
+}
+
+// --- Login/Register functionality
+function loginUser(){
+  let username = document.getElementById("login-username").value.trim();
+  let pw = document.getElementById("login-password").value.trim();
+  if(!username || !pw) return showModal("Enter a username and password");
+  db.ref("users/"+username).get().then(snap => {
+    if(!snap.exists()) return showModal("User not registered. Click Register.");
+    if(snap.val().pw !== pw) return showModal("Incorrect password.");
+    myUser = username;
+    document.getElementById("welcome-user").textContent = myUser;
+    showPage("page-home");
+  });
+}
+function registerUser(){
+  let username = document.getElementById("login-username").value.trim();
+  let pw = document.getElementById("login-password").value.trim();
+  if(!username || !pw) return showModal("Enter a username and password");
+  db.ref("users/"+username).get().then(snap => {
+    if(snap.exists()) return showModal("User already exists.");
+    db.ref("users/"+username).set({ pw });
+    myUser = username;
+    document.getElementById("welcome-user").textContent = myUser;
+    showModal("Registered! Logging in ...", 1200);
+    setTimeout(()=>showPage("page-home"), 1100);
+  });
+}
+
+// --- Host and Admin
+function hostPage(){
   showPage("page-host");
-  let code = String(Math.floor(Math.random() * 900000 + 100000));
+  let code = String(Math.floor(Math.random()*900000+100000));
   document.getElementById("host-code").value = code;
   gameID = code;
-  db.ref("games/" + code).set({
+  db.ref("games/"+code).set({
     created: Date.now(),
     status: "waiting",
     round: 1,
+    question: "",
+    image: "",
     players: {},
     buzzed: ""
   });
@@ -362,58 +203,69 @@ function startGame() {
   showPage("page-admin");
   document.getElementById("roomcode").textContent = gameID;
   readAdmin();
+  listenQuestionAdmin();
+}
+function uploadQuestion(){
+  let qtext = document.getElementById("admin-question-input").value.trim();
+  let imgurl = document.getElementById("admin-image-input").value.trim();
+  db.ref("games/"+gameID).update({ question: qtext, image: imgurl });
+  document.getElementById("admin-question-input").value = "";
+  document.getElementById("admin-image-input").value = "";
 }
 function resetBuzzers() {
   db.ref("games/" + gameID + "/players").once("value", snap => {
     const p = snap.val() || {};
-    Object.keys(p).forEach(k => {
-      db.ref("games/" + gameID + "/players/" + k).update({ buzzed: false });
-    });
+    Object.keys(p).forEach(pid => db.ref(`games/${gameID}/players/${pid}`).update({ buzzed: false }));
   });
-  db.ref("games/" + gameID).update({ buzzed: "" });
+  db.ref("games/"+gameID).update({ buzzed: "" });
   buzzLockSoundPlayed = false;
 }
 function resetRound() {
   db.ref("games/" + gameID + "/players").once("value", snap => {
     const p = snap.val() || {};
-    Object.keys(p).forEach(k => {
-      db.ref("games/" + gameID + "/players/" + k).update({ buzzed: false, score: 0 });
-    });
+    Object.keys(p).forEach(pid => db.ref(`games/${gameID}/players/${pid}`).update({ buzzed: false, score: 0 }));
   });
-  db.ref("games/" + gameID).update({ buzzed: "" });
+  db.ref("games/"+gameID).update({ buzzed: "" });
   buzzLockSoundPlayed = false;
 }
 function nextRound() {
-  db.ref("games/" + gameID).once("value", snap => {
-    let r = (snap.val() && snap.val().round) || 1;
-    db.ref("games/" + gameID).update({ round: r + 1, buzzed: "" });
+  db.ref("games/"+gameID).once("value", snap=>{
+    let r = (snap.val() && snap.val().round)||1;
+    db.ref("games/"+gameID).update({ round: r+1, buzzed:"" });
     resetRound();
   });
 }
-
 function adminScore(delta, pid) {
   db.ref(`games/${gameID}/players/${pid}`).once("value").then(s => {
     let v = s.val();
     db.ref(`games/${gameID}/players/${pid}`).update({ score: (v.score || 0) + delta });
   });
 }
-
 function readAdmin() {
-  db.ref("games/" + gameID).on("value", snap => {
+  db.ref("games/"+gameID).on("value", snap => {
     const g = snap.val();
-    document.getElementById("round-label").textContent = "Round: " + (g.round || 1);
+    document.getElementById("round-label").textContent = "Round: "+(g.round||1);
+    document.getElementById("admin-question-text").textContent = g.question || "";
+    if(g.image && g.image.length){
+      document.getElementById("admin-image-display").src=g.image;
+      document.getElementById("admin-image-display").style.display="block";
+    }else{
+      document.getElementById("admin-image-display").src="";
+      document.getElementById("admin-image-display").style.display="none";
+    }
+    // Scores
     const p = g.players || {};
-    let arr = Object.entries(p).map(([id, v]) => ({ ...v, id }));
-    arr.sort((a, b) => (b.score || 0) - (a.score || 0));
-    let buzzed = arr.find(x => x.buzzed);
+    let arr = Object.entries(p).map(([id,v])=>({...v,id}));
+    arr.sort((a,b)=>(b.score||0)-(a.score||0));
+    let buzzed = arr.find(x=>x.buzzed);
     let who = buzzed ? `<span class="buzzed-tag">🔔 ${buzzed.name} buzzed!</span>` : "";
     document.getElementById("buzzed-who").innerHTML = who;
     let html = "";
     arr.forEach((pl, i) => {
       html += `<div class="score-row">
-      <span class="rank">${i + 1}</span>
-      <span class="pname">${pl.name}${pl.team ? ' (' + pl.team + ')' : ''}</span>
-      <span class="pscore">${pl.score || 0}</span>
+      <span class="rank">${i+1}</span>
+      <span class="pname">${pl.name}${pl.team ? ' ('+pl.team+')' : ''}</span>
+      <span class="pscore">${pl.score||0}</span>
       <span class="admin-controls">
         <button onclick="adminScore(25, '${pl.id}')">+25</button>
         <button onclick="adminScore(-25, '${pl.id}')">-25</button>
@@ -424,98 +276,105 @@ function readAdmin() {
     document.getElementById("admin-scores").innerHTML = html || "(no players yet)";
   });
 }
-// Player functions
-function joinPage() {
-  showPage("page-join");
+function listenQuestionAdmin(){
+  db.ref("games/"+gameID).on("value", snap => {
+    const g = snap.val();
+    document.getElementById("admin-question-text").textContent = g.question || "";
+    if(g.image && g.image.length){
+      document.getElementById("admin-image-display").src=g.image;
+      document.getElementById("admin-image-display").style.display="block";
+    }else{
+      document.getElementById("admin-image-display").src="";
+      document.getElementById("admin-image-display").style.display="none";
+    }
+  });
 }
-function joinGame() {
+
+// --- Join/Player
+function joinPage() { showPage("page-join"); }
+function joinGame(){
   let code = document.getElementById("join-code").value.trim();
-  let name = document.getElementById("join-name").value.trim();
   let team = document.getElementById("join-team").value.trim();
-  if (!/^\d{6}$/.test(code))
-    return showModal("Enter valid 6 digit code", 1700);
-  if (!name) return showModal("Enter your name", 1400);
-  gameID = code;
-  myName = name;
-  myTeam = team;
-  myRole = "player";
-  let myid = btoa(name + Math.random()).replace(/=/g, "");
+  if(!/^\d{6}$/.test(code)) return showModal("Enter valid 6 digit code",1600);
+  if(!myUser) return showModal("Not logged in");
+  gameID = code; myTeam = team; myRole = "player";
+  let myid = btoa(myUser+Math.random()).replace(/=/g,"");
   myPID = myid;
-  db.ref(`games/${code}`)
-    .get()
-    .then((snap) => {
-      if (!snap.exists()) {
-        showModal("Game not found", 1700);
-        return;
-      }
-      db.ref(`games/${code}/players/${myid}`)
-        .set({ name, team, score: 0, buzzed: false, joined: Date.now() })
-        .then(() => {
-          showPage("page-player");
-          document.getElementById("pl-name").textContent = name;
-          document.getElementById("pl-room").textContent = code;
-          document.getElementById("pl-team").textContent = team || "(no team)";
-          listenPlayer();
-        });
-    });
+  db.ref(`games/${code}`).get().then(snap=>{
+    if(!snap.exists()) return showModal("Game not found",1400);
+    db.ref(`games/${code}/players/${myid}`)
+      .set({name:myUser, team, score:0, buzzed:false, joined:Date.now() })
+      .then(()=>{
+        document.getElementById("pl-name").textContent = myUser;
+        document.getElementById("pl-room").textContent = code;
+        document.getElementById("pl-team").textContent = team || "(no team)";
+        showPage("page-player");
+        listenPlayer();
+        listenQuestionPlayer();
+      });
+  });
 }
 function listenPlayer() {
-  db.ref("games/" + gameID).on("value", (snap) => {
+  db.ref("games/"+gameID).on("value", snap=>{
     const g = snap.val();
     if (!g) return;
-    document.getElementById("buzz-lock-msg").textContent = g.buzzed
-      ? "Buzzer is locked!"
-      : "";
+    document.getElementById("buzz-lock-msg").textContent = g.buzzed ? "Buzzer is locked!" : "";
     let arr = Object.entries(g.players || {}).map(([id, v]) => ({ ...v, id }));
     arr.sort((a, b) => (b.score || 0) - (a.score || 0));
     let html = "";
     arr.forEach((pl, i) => {
       html += `<div class="score-row">
-        <span class="rank">${i + 1}</span>
-        <span class="pname">${pl.name}${
-          pl.team && pl.team.length ? " (" + pl.team + ")" : ""
-        }</span>
+        <span class="rank">${i+1}</span>
+        <span class="pname">${pl.name}${pl.team && pl.team.length ? ' (' + pl.team + ')' : ''}</span>
         <span class="pscore">${pl.score || 0}</span>
         ${pl.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ""}
       </div>`;
     });
     document.getElementById("player-scores").innerHTML = html || "(no players yet)";
     let buzzerPressed = g.buzzed;
-    document.getElementById("player-buzzer").disabled =
-      buzzerPressed && buzzerPressed !== myPID;
+    document.getElementById("player-buzzer").disabled = buzzerPressed && buzzerPressed !== myPID;
+    // Sound only on first buzz
     if (buzzerPressed && !buzzLockSoundPlayed) {
-      document.getElementById("buzz-audio").currentTime = 0;
-      document.getElementById("buzz-audio").play();
+      let audio = document.getElementById("buzz-audio");
+      audio.currentTime = 0;
+      audio.play();
       buzzLockSoundPlayed = true;
     }
     if (!buzzerPressed) buzzLockSoundPlayed = false;
   });
 }
-function buzz() {
-  db.ref(`games/${gameID}`)
-    .get()
-    .then((snap) => {
-      const g = snap.val();
-      if (!g || g.buzzed)
-        return showModal("Buzzer is locked!", 1200);
-      db.ref(`games/${gameID}/players/${myPID}`).update({ buzzed: true });
-      db.ref(`games/${gameID}`).update({ buzzed: myPID });
-    });
+function listenQuestionPlayer(){
+  db.ref("games/" + gameID).on("value", snap=>{
+    const g = snap.val();
+    document.getElementById("player-question-text").textContent = g.question || "";
+    let imgTag = document.getElementById("player-image-display");
+    if(g.image && g.image.length){
+      imgTag.src = g.image;
+      imgTag.style.display = "block";
+    }else{
+      imgTag.src = "";
+      imgTag.style.display = "none";
+    }
+  });
 }
+function buzz() {
+  db.ref(`games/${gameID}`).get().then((snap) => {
+    const g = snap.val();
+    if (!g || g.buzzed) return showModal("Buzzer is locked!",1200);
+    db.ref(`games/${gameID}/players/${myPID}`).update({ buzzed: true });
+    db.ref(`games/${gameID}`).update({ buzzed: myPID });
+  });
+}
+
+// --- key binding
 window.addEventListener("keydown", function (e) {
   let btn = document.getElementById("player-buzzer");
-  if (btn && !btn.disabled && (e.code === "Space" || e.keyCode === 32)) {
+  if (btn && !btn.disabled && (e.code == "Space" || e.keyCode == 32)) {
     buzz();
   }
 });
 </script>
 
-<audio
-  id="buzz-audio"
-  src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3"
-  preload="auto"
-></audio>
-
+<audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
 </body>
 </html>
-
