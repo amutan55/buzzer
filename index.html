@@ -23,7 +23,7 @@
     color: #fff;
     overflow-x: hidden;
   }
-  h1,h2,h3 {
+  h1, h2, h3 {
     font-weight: 700;
     margin-bottom: 12px;
   }
@@ -32,7 +32,7 @@
     height: calc(100vh - 80px);
     max-height: 100%;
     padding: 20px 30px;
-    animation: fadein 0.32s;
+    animation: fadein 0.3s;
     box-sizing: border-box;
     position: relative;
     overflow-y: auto;
@@ -93,30 +93,6 @@
     font-size: 1.05em;
     margin-bottom: 6px;
     user-select: none;
-  }
-  #modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: #111a;
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-  }
-  #modal.active {
-    display: flex;
-  }
-  #modal .inner {
-    background: #fff;
-    color: #232323;
-    padding: 28px 42px;
-    border-radius: var(--radius);
-    text-align: center;
-    min-width: 280px;
-    font-weight: 600;
-    font-size: 1.25em;
-    box-shadow: 0 16px 44px #0006;
   }
   .buzzer-btn {
     background: var(--accent);
@@ -205,10 +181,10 @@
     cursor: pointer;
     user-select: none;
   }
-  .admin-controls button:hover:nth-child(1) {
+  .admin-controls button:hover {
     background: #19b866;
   }
-  .admin-controls button:hover:nth-child(2) {
+  .admin-controls button.delete:hover {
     background: var(--danger);
   }
   #buzz-lock-msg {
@@ -290,7 +266,7 @@
 <div id="page-host" class="page">
   <h2>Host Game</h2>
   <label>Create & share game code:</label><br />
-  <input type="text" id="host-code" readonly /><br />
+  <input type="text" id="host-code" readonly><br />
   <button onclick="startGame()">Start Game</button>
 </div>
 
@@ -311,6 +287,7 @@
   <div class="rround" id="round-label"></div>
   <div class="scoreboard" id="admin-scores"></div>
   <div style="margin: 18px 0;">
+    <button onclick="resetBuzzers()">Reset Buzzer</button>
     <button onclick="resetRound()">Reset Round</button>
     <button onclick="nextRound()">Next Round</button>
   </div>
@@ -339,6 +316,7 @@ const firebaseConfig = {
   appId: "1:29031182202:web:447d951b38be59b29270c3",
   measurementId: "G-NP0DMX7TKJ"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -350,7 +328,7 @@ let myPID = "";
 let buzzLockSoundPlayed = false;
 
 function showPage(id) {
-  document.querySelectorAll(".page").forEach((p) => p.classList.remove("show"));
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("show"));
   document.getElementById(id).classList.add("show");
   document.getElementById("backbtn").style.display = id === "page-home" ? "none" : "inline-block";
 }
@@ -359,13 +337,12 @@ function goHome() {
 }
 function showModal(msg, t = 1800) {
   const modal = document.getElementById("modal");
-  modal.classList.add("active");
   modal.textContent = msg;
-  setTimeout(() => {
-    modal.classList.remove("active");
-  }, t);
+  modal.classList.add("active");
+  setTimeout(() => modal.classList.remove("active"), t);
 }
-// Host
+
+// Host functions
 function hostPage() {
   showPage("page-host");
   let code = String(Math.floor(Math.random() * 900000 + 100000));
@@ -386,10 +363,20 @@ function startGame() {
   document.getElementById("roomcode").textContent = gameID;
   readAdmin();
 }
-function resetRound() {
-  db.ref("games/" + gameID + "/players").once("value", (snap) => {
+function resetBuzzers() {
+  db.ref("games/" + gameID + "/players").once("value", snap => {
     const p = snap.val() || {};
-    Object.keys(p).forEach((k) => {
+    Object.keys(p).forEach(k => {
+      db.ref("games/" + gameID + "/players/" + k).update({ buzzed: false });
+    });
+  });
+  db.ref("games/" + gameID).update({ buzzed: "" });
+  buzzLockSoundPlayed = false;
+}
+function resetRound() {
+  db.ref("games/" + gameID + "/players").once("value", snap => {
+    const p = snap.val() || {};
+    Object.keys(p).forEach(k => {
       db.ref("games/" + gameID + "/players/" + k).update({ buzzed: false, score: 0 });
     });
   });
@@ -397,47 +384,47 @@ function resetRound() {
   buzzLockSoundPlayed = false;
 }
 function nextRound() {
-  db.ref("games/" + gameID).once("value", (snap) => {
+  db.ref("games/" + gameID).once("value", snap => {
     let r = (snap.val() && snap.val().round) || 1;
     db.ref("games/" + gameID).update({ round: r + 1, buzzed: "" });
     resetRound();
   });
 }
+
 function adminScore(delta, pid) {
-  db.ref(`games/${gameID}/players/${pid}`)
-    .once("value")
-    .then((s) => {
-      let v = s.val();
-      db.ref(`games/${gameID}/players/${pid}`).update({ score: (v.score || 0) + delta });
-    });
+  db.ref(`games/${gameID}/players/${pid}`).once("value").then(s => {
+    let v = s.val();
+    db.ref(`games/${gameID}/players/${pid}`).update({ score: (v.score || 0) + delta });
+  });
 }
+
 function readAdmin() {
-  db.ref("games/" + gameID).on("value", (snap) => {
+  db.ref("games/" + gameID).on("value", snap => {
     const g = snap.val();
     document.getElementById("round-label").textContent = "Round: " + (g.round || 1);
     const p = g.players || {};
-    let arr = Object.entries(p).map(([id, v]) => ({ ...v, id: id }));
+    let arr = Object.entries(p).map(([id, v]) => ({ ...v, id }));
     arr.sort((a, b) => (b.score || 0) - (a.score || 0));
-    let buzzed = arr.find((x) => x.buzzed);
+    let buzzed = arr.find(x => x.buzzed);
     let who = buzzed ? `<span class="buzzed-tag">🔔 ${buzzed.name} buzzed!</span>` : "";
     document.getElementById("buzzed-who").innerHTML = who;
     let html = "";
     arr.forEach((pl, i) => {
       html += `<div class="score-row">
-      <span class="rank">${i + 1}</span> 
+      <span class="rank">${i + 1}</span>
       <span class="pname">${pl.name}${pl.team ? ' (' + pl.team + ')' : ''}</span>
       <span class="pscore">${pl.score || 0}</span>
       <span class="admin-controls">
         <button onclick="adminScore(25, '${pl.id}')">+25</button>
         <button onclick="adminScore(-25, '${pl.id}')">-25</button>
       </span>
-      ${pl.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ""}
+      ${pl.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ''}
       </div>`;
     });
     document.getElementById("admin-scores").innerHTML = html || "(no players yet)";
   });
 }
-// Player
+// Player functions
 function joinPage() {
   showPage("page-join");
 }
@@ -445,7 +432,8 @@ function joinGame() {
   let code = document.getElementById("join-code").value.trim();
   let name = document.getElementById("join-name").value.trim();
   let team = document.getElementById("join-team").value.trim();
-  if (!/^\d{6}$/.test(code)) return showModal("Enter valid 6 digit code", 1700);
+  if (!/^\d{6}$/.test(code))
+    return showModal("Enter valid 6 digit code", 1700);
   if (!name) return showModal("Enter your name", 1400);
   gameID = code;
   myName = name;
@@ -453,41 +441,48 @@ function joinGame() {
   myRole = "player";
   let myid = btoa(name + Math.random()).replace(/=/g, "");
   myPID = myid;
-  db.ref(`games/${code}`).get().then((snap) => {
-    if (!snap.exists()) {
-      showModal("Game not found", 1700);
-      return;
-    }
-    db.ref(`games/${code}/players/${myid}`)
-      .set({ name, team, score: 0, buzzed: false, joined: Date.now() })
-      .then(() => {
-        showPage("page-player");
-        document.getElementById("pl-name").textContent = name;
-        document.getElementById("pl-room").textContent = code;
-        document.getElementById("pl-team").textContent = team || "(no team)";
-        listenPlayer();
-      });
-  });
+  db.ref(`games/${code}`)
+    .get()
+    .then((snap) => {
+      if (!snap.exists()) {
+        showModal("Game not found", 1700);
+        return;
+      }
+      db.ref(`games/${code}/players/${myid}`)
+        .set({ name, team, score: 0, buzzed: false, joined: Date.now() })
+        .then(() => {
+          showPage("page-player");
+          document.getElementById("pl-name").textContent = name;
+          document.getElementById("pl-room").textContent = code;
+          document.getElementById("pl-team").textContent = team || "(no team)";
+          listenPlayer();
+        });
+    });
 }
 function listenPlayer() {
   db.ref("games/" + gameID).on("value", (snap) => {
     const g = snap.val();
     if (!g) return;
-    document.getElementById("buzz-lock-msg").textContent = g.buzzed ? "Buzzer is locked!" : "";
-    let arr = Object.entries(g.players || {}).map(([id, v]) => ({ ...v, id: id }));
+    document.getElementById("buzz-lock-msg").textContent = g.buzzed
+      ? "Buzzer is locked!"
+      : "";
+    let arr = Object.entries(g.players || {}).map(([id, v]) => ({ ...v, id }));
     arr.sort((a, b) => (b.score || 0) - (a.score || 0));
     let html = "";
     arr.forEach((pl, i) => {
       html += `<div class="score-row">
         <span class="rank">${i + 1}</span>
-        <span class="pname">${pl.name}${pl.team && pl.team.length ? ' (' + pl.team + ')' : ''}</span>
+        <span class="pname">${pl.name}${
+          pl.team && pl.team.length ? " (" + pl.team + ")" : ""
+        }</span>
         <span class="pscore">${pl.score || 0}</span>
-        ${pl.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ''}
+        ${pl.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ""}
       </div>`;
     });
     document.getElementById("player-scores").innerHTML = html || "(no players yet)";
     let buzzerPressed = g.buzzed;
-    document.getElementById("player-buzzer").disabled = buzzerPressed && buzzerPressed !== myPID;
+    document.getElementById("player-buzzer").disabled =
+      buzzerPressed && buzzerPressed !== myPID;
     if (buzzerPressed && !buzzLockSoundPlayed) {
       document.getElementById("buzz-audio").currentTime = 0;
       document.getElementById("buzz-audio").play();
@@ -497,12 +492,15 @@ function listenPlayer() {
   });
 }
 function buzz() {
-  db.ref(`games/${gameID}`).get().then((snap) => {
-    const g = snap.val();
-    if (!g || g.buzzed) return showModal("Buzzer is locked!", 1200);
-    db.ref(`games/${gameID}/players/${myPID}`).update({ buzzed: true });
-    db.ref(`games/${gameID}`).update({ buzzed: myPID });
-  });
+  db.ref(`games/${gameID}`)
+    .get()
+    .then((snap) => {
+      const g = snap.val();
+      if (!g || g.buzzed)
+        return showModal("Buzzer is locked!", 1200);
+      db.ref(`games/${gameID}/players/${myPID}`).update({ buzzed: true });
+      db.ref(`games/${gameID}`).update({ buzzed: myPID });
+    });
 }
 window.addEventListener("keydown", function (e) {
   let btn = document.getElementById("player-buzzer");
@@ -512,7 +510,11 @@ window.addEventListener("keydown", function (e) {
 });
 </script>
 
-<audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
+<audio
+  id="buzz-audio"
+  src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3"
+  preload="auto"
+></audio>
 
 </body>
 </html>
