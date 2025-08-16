@@ -16,18 +16,26 @@
     --radius: 16px;
   }
   html, body {
-    margin:0; padding:0; height:100%; font-family:'Montserrat', Arial, sans-serif;
-    background: var(--main-bg); color:#fff; user-select:none;
+    margin: 0; padding: 0; height: 100%; font-family: 'Montserrat', Arial, sans-serif;
+    background: var(--main-bg); color: #fff; user-select: none;
   }
-  .page { display: none; max-width: 720px; margin: 0 auto; padding: 28px 32px; }
-  .show { display: block; }
-  h1,h2,h3 { font-weight: 700; margin-bottom: 24px; text-align: center; }
+  .page {
+    display: none; max-width: 720px; margin: 0 auto; padding: 28px 32px;
+  }
+  .show {
+    display: block;
+  }
+  h1, h2, h3 {
+    font-weight: 700; margin-bottom: 24px; text-align: center;
+  }
   input[type=text], input[type=password], input[type=email], input[type=file] {
     width: 100%; max-width: 420px; padding: 14px 18px; font-size: 1.2em;
-    border-radius: var(--radius); border:none; margin: 12px auto 24px auto;
+    border-radius: var(--radius); border: none; margin: 12px auto 24px auto;
     background: #344365; color: #fff; box-sizing: border-box; text-align: center;
   }
-  input::placeholder { color: #bac3e6; }
+  input::placeholder {
+    color: #bac3e6;
+  }
   button {
     display: block; margin: 18px auto; max-width: 90vw; width: 320px;
     background: var(--primary); color: #fff;
@@ -35,12 +43,18 @@
     border: none; border-radius: 48px; padding: 18px 20px;
     cursor: pointer;
     box-shadow: 0 6px 13px #2554a180;
-    user-select:none;
+    user-select: none;
     transition: background 0.2s ease;
   }
-  button:hover:not(:disabled) { background: var(--accent); color: #232323; }
-  button:disabled { background: #ddd; color: #999; cursor: not-allowed; box-shadow: none; }
-  label { color: #acbede; font-size: 1.05em; margin-bottom: 6px; display: block; user-select:none; }
+  button:hover:not(:disabled) {
+    background: var(--accent); color: #232323;
+  }
+  button:disabled {
+    background: #ddd; color: #999; cursor: not-allowed; box-shadow: none;
+  }
+  label {
+    color: #acbede; font-size: 1.05em; margin-bottom: 6px; display: block; user-select: none;
+  }
   .buzzer-btn {
     background: var(--accent); color: #141c34;
     font-size: 5rem; font-weight: 900;
@@ -49,9 +63,8 @@
     border: 12px solid #fff;
     box-shadow: 0 14px 64px #ffea6fcc;
     cursor: pointer;
+    user-select: none;
     max-width: 90vw;
-    user-select:none;
-    display: block;
   }
   .buzzer-btn:disabled {
     background: #eee; color: #888; border-color: #ccc; cursor: not-allowed; box-shadow: none;
@@ -63,31 +76,35 @@
     color: #fff;
   }
   table {
-    width: 100%; border-collapse: collapse; color:#fff;
+    width: 100%; border-collapse: collapse; color: #fff;
   }
-  thead tr { background: var(--primary); }
+  thead tr {
+    background: var(--primary);
+  }
   th, td {
-    padding: 14px 10px; border: 1px solid #1a2138;
-    text-align:center;
+    padding: 14px 10px; border: 1px solid #1a2138; text-align: center;
   }
-  tbody tr:nth-child(odd) { background: #2a2f4b; }
-  tbody tr:hover { background-color: #3b8bee90; }
+  tbody tr:nth-child(odd) {
+    background: #2a2f4b;
+  }
+  tbody tr:hover {
+    background-color: #3b8bee90;
+  }
   .buzzed-tag {
     background: var(--accent); color: #232323;
     border-radius: 14px; padding: 6px 14px;
-    font-size: 1.1em; user-select:none; font-weight: 700;
+    font-size: 1.1em; user-select: none; font-weight: 700;
   }
   #buzz-lock-msg {
     color: var(--accent);
     font-weight: 700; margin-top: 15px;
-    font-size: 1.3em;
-    text-align: center;
-    user-select:none;
+    font-size: 1.3em; text-align: center;
+    user-select: none;
   }
   #buzzed-who {
     font-size: 1.8em; color: var(--accent);
     margin: 30px 0 24px 0; text-align: center;
-    font-weight: 700; user-select:none;
+    font-weight: 700; user-select: none;
   }
   #question-text, #player-question-text {
     font-size: 2.9em; font-weight: 900; margin: 30px auto 24px auto;
@@ -102,14 +119,16 @@
     position: fixed; bottom: 24px; left: 50%;
     transform: translateX(-50%);
     font-size: 1.3em; padding: 12px 40px;
-    border-radius: 44px;
-    background: #364063; color: white;
-    border: none;
-    cursor: pointer; box-shadow: 0 5px 16px #000a;
-    user-select:none; z-index: 1100;
+    border-radius: 44px; background: #364063; color: white;
+    border: none; cursor: pointer;
+    box-shadow: 0 5px 16px #000a;
+    user-select: none; z-index: 1100;
     transition: background 0.3s ease;
   }
-  .backbtn:hover { background: var(--accent); color: #232323; }
+  .backbtn:hover {
+    background: var(--accent);
+    color: #232323;
+  }
   .center-box {
     max-width: 720px; margin: 0 auto;
     padding: 30px 24px;
@@ -129,6 +148,7 @@
 <button class="backbtn" id="backbtn" style="display:none" onclick="backButtonHandler()">← Back</button>
 <div id="modal" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); padding:18px 32px; background: #ffcf46cc; border-radius: 16px; color:#232323; font-weight:700; display:none; user-select:none; z-index:9999;"></div>
 
+<!-- Login Page -->
 <div id="page-login" class="page show">
   <div class="center-box">
     <h1>Login</h1>
@@ -140,6 +160,7 @@
   </div>
 </div>
 
+<!-- Register Page -->
 <div id="page-register" class="page">
   <div class="center-box">
     <h1>Register</h1>
@@ -154,6 +175,7 @@
   </div>
 </div>
 
+<!-- Home Page -->
 <div id="page-home" class="page">
   <div class="center-box">
     <h2>Welcome, <span id="welcome-user"></span>!</h2>
@@ -165,6 +187,7 @@
   </div>
 </div>
 
+<!-- Profile Page -->
 <div id="page-profile" class="page">
   <div class="center-box">
     <h2>Your Profile</h2>
@@ -179,8 +202,9 @@
   </div>
 </div>
 
+<!-- Admin User Management -->
 <div id="page-users" class="page">
-  <div class="center-box">
+  <div class="center-box" style="max-width: 720px;">
     <h2>User Management <span style="color:#ffe05b">(Admin)</span></h2>
     <table>
       <thead><tr><th>Avatar</th><th>Username</th><th>Email</th><th>Role</th><th>Delete</th></tr></thead>
@@ -197,19 +221,21 @@
   </div>
 </div>
 
+<!-- Host Page -->
 <div id="page-host" class="page">
   <div class="center-box">
     <h2>Host Game</h2>
     <label>Game Code:</label><br/>
-    <input type="text" id="host-code" readonly/><br/>
+    <input type="text" id="host-code" readonly /><br/>
     <button onclick="startGame()">Start Game</button>
     <button onclick="showHome()">Back</button>
     <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
 
+<!-- Admin Game Panel -->
 <div id="page-admin-panel" class="page">
-  <div class="center-box" style="max-width: 720px;">
+  <div class="center-box">
     <h2>Admin Control</h2>
     <div><b>Game Code:</b> <span id="roomcode"></span></div>
     <div><b>Round:</b> <span id="round-label"></span></div>
@@ -217,21 +243,23 @@
       <div id="question-text"></div>
       <img id="question-img" alt="Question Image" />
     </div>
-    <input type="text" id="admin-question-input" placeholder="Enter question here" /><br/>
+    <input type="text" id="admin-question-input" placeholder="Enter question here"/><br/>
     <input type="file" id="admin-image-file" accept="image/*" /><br/>
     <img id="admin-image-preview" style="display:none; max-width: 100%; max-height: 250px; margin-bottom: 14px;" />
-    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+    <button onclick="uploadQuestion()">Upload Question</button>
+    <div style="display:flex; flex-wrap:wrap; gap: 14px; margin-top:18px;">
       <button onclick="resetBuzzers()">Reset Buzzer</button>
       <button onclick="resetRound()">Reset Round</button>
       <button onclick="nextRound()">Next Round</button>
     </div>
-    <table id="admin-scores" style="width: 100%; background: #222947; color:#fff; border-radius: 14px;"></table>
+    <table id="admin-scores" style="width: 100%; background: #222947; color:#fff; border-radius: 14px; margin-top: 18px;"></table>
     <div id="buzzed-who" style="margin-top: 22px;"></div>
-    <button onclick="showHome()" style="margin-top: 12px;">Exit Admin Panel</button>
+    <button onclick="showHome()" style="margin-top: 16px;">Exit Admin Panel</button>
     <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
 
+<!-- Join Page -->
 <div id="page-join" class="page">
   <div class="center-box">
     <h2>Join Game</h2>
@@ -243,21 +271,22 @@
   </div>
 </div>
 
+<!-- Player Page -->
 <div id="page-player" class="page">
   <div class="center-box">
     <h2>Quiz Buzzer</h2>
-    <img id="player-avatar-preview" style="width:80px; height:80px; border-radius:50%; margin-bottom:18px; display:none;"/>
-    <div style="color:#ffe05b; font-weight:700; font-size:1.4em; margin-bottom:10px;">
+    <img id="player-avatar-preview" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 18px; display:none;" />
+    <div style="color: #ffe05b; font-weight: 700; font-size: 1.4em; margin-bottom: 10px;">
       Hello, <span id="pl-name"></span>!
     </div>
     <div><b>Game Code:</b> <span id="pl-room"></span></div>
     <div><b>Team:</b> <span id="pl-team"></span></div>
-    <div id="player-question-text" style="font-size:2.5em; font-weight:700; margin:30px 0 15px 0; max-width: 90vw; text-align:center;"></div>
-    <img id="player-question-img" src="" alt="Player Question Image" style="display:none; max-width:90vw; max-height:350px; border-radius:20px; margin-bottom:25px;" />
+    <div id="player-question-text" style="font-size: 2.5em; font-weight: 700; margin: 30px 0 15px 0; max-width: 90vw; text-align: center;"></div>
+    <img id="player-question-img" src="" alt="Player Question Image" style="display:none; max-width: 90vw; max-height: 350px; border-radius: 20px; margin-bottom: 25px;" />
     <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
     <div id="buzz-lock-msg"></div>
     <div class="scoreboard" id="player-scores"></div>
-    <button onclick="showHome()" style="margin-top:20px;">Leave Game</button>
+    <button onclick="showHome()" style="margin-top: 20px;">Leave Game</button>
     <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
@@ -265,6 +294,7 @@
 <audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
 
 <script>
+// Firebase configuration and initialization
 const firebaseConfig = {
   apiKey: "AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
   authDomain: "buzzer-a0d53.firebaseapp.com",
@@ -282,7 +312,7 @@ let gameID = "", myRole = "", myUser = "", myTeam = "", myPID = "", buzzLockSoun
 let pageHistory = [];
 
 function showPage(id) {
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("show"));
   document.getElementById(id).classList.add("show");
   document.getElementById("backbtn").style.display = (id === "page-login") ? "none" : "inline-block";
 }
@@ -307,7 +337,7 @@ function showHome(){
   navigateToPage("page-home");
 }
 function showProfile(){
-  db.ref("users/"+myUser).get().then(snap=>{
+  db.ref("users/" + myUser).get().then(snap=>{
     const user = snap.val();
     if(user && user.avatar){
       let avatar = document.getElementById("profile-avatar-preview");
@@ -327,7 +357,7 @@ function showModal(msg, t=1800){
   const modal = document.getElementById("modal");
   modal.textContent = msg;
   modal.style.display = "block";
-  setTimeout(()=>modal.style.display="none", t);
+  setTimeout(() => modal.style.display = "none", t);
 }
 
 document.getElementById("register-avatar").onchange = e =>{
@@ -386,7 +416,7 @@ function registerUser(){
   if(!username || !pw || !email) return showModal("All fields required.");
   if(username.toLowerCase() === "admin") return showModal("Username reserved.");
   db.ref("users/"+username).get().then(snap=>{
-    if(snap.exists()) return showModal("Username exists.");
+    if(snap.exists()) return showModal("Username already exists.");
     if(avatarFile){
       const reader = new FileReader();
       reader.onload = e=>{
@@ -516,6 +546,7 @@ function hostPage(){
   });
   myRole="admin";
 }
+
 function startGame(){
   db.ref("games/"+gameID).update({status:"live", round:1});
   navigateToPage("page-admin-panel");
@@ -547,9 +578,8 @@ function uploadQuestion(){
 }
 
 function resetBuzzers(){
-  db.ref(`games/${gameID}/players`).get().then(snap=>{
-    let players=snap.val()||{};
-    Object.keys(players).forEach(pid=>{
+  db.ref(`games/${gameID}/players`).once("value",snap=>{
+    (snap.val()||[]).forEach((_,pid)=>{
       db.ref(`games/${gameID}/players/${pid}`).update({buzzed:false});
     });
   });
@@ -557,9 +587,8 @@ function resetBuzzers(){
   buzzLockSoundPlayed=false;
 }
 function resetRound(){
-  db.ref(`games/${gameID}/players`).get().then(snap=>{
-    let players=snap.val()||{};
-    Object.keys(players).forEach(pid=>{
+  db.ref(`games/${gameID}/players`).once("value",snap=>{
+    (snap.val()||[]).forEach((_,pid)=>{
       db.ref(`games/${gameID}/players/${pid}`).update({buzzed:false,score:0});
     });
   });
@@ -567,42 +596,42 @@ function resetRound(){
   buzzLockSoundPlayed=false;
 }
 function nextRound(){
-  db.ref(`games/${gameID}`).get().then(snap=>{
+  db.ref(`games/${gameID}`).once("value").then(snap=>{
     let r=(snap.val() && snap.val().round) || 1;
     db.ref(`games/${gameID}`).update({round:r+1,buzzed:""});
     resetRound();
   });
 }
 function adminScore(delta,pid){
-  db.ref(`games/${gameID}/players/${pid}`).get().then(s=>{
+  db.ref(`games/${gameID}/players/${pid}`).once("value").then(s=>{
     let v=s.val();
     db.ref(`games/${gameID}/players/${pid}`).update({score:(v.score||0)+delta});
   });
 }
 function readAdmin(){
   db.ref(`games/${gameID}`).on("value",snap=>{
-    let g=snap.val() || {};
-    document.getElementById("round-label").textContent=g.round || 1;
-    document.getElementById("question-text").textContent=g.question || "";
-    let imgTag=document.getElementById("question-img");
+    const g=snap.val()||{};
+    document.getElementById("round-label").textContent=g.round||1;
+    document.getElementById("question-text").textContent=g.question||"";
+    const imgTag=document.getElementById("question-img");
     if(g.image){
       imgTag.src=g.image;
       imgTag.style.display="block";
-    } else {
+    }else{
       imgTag.style.display="none";
     }
-    let players=g.players || {};
-    let arr=Object.entries(players).map(([id,v])=>({...v,id}));
-    arr.sort((a,b)=>(b.score||0)-(a.score||0));
-    let buzzedID=g.buzzed;
+    const players=g.players||{};
+    const arr=Object.entries(players).map(([id,v])=>({...v,id}));
+    arr.sort((a,b)=> (b.score||0)-(a.score||0));
+    const buzzedID=g.buzzed;
     const buzzedPlayer=arr.find(x=>x.id===buzzedID);
     let who=buzzedPlayer?`<span class="buzzed-tag">🔔 ${buzzedPlayer.name}</span>`:"";
     document.getElementById("buzzed-who").innerHTML=who;
-    let html=`<thead><tr><th>Rank</th><th>Player</th><th>Score</th><th>Controls</th><th>Status</th></tr></thead><tbody>`;
+    let html=`<thead><tr><th>Rank</th><th>Player</th><th>Score</th><th>Actions</th><th>Status</th></tr></thead><tbody>`;
     arr.forEach((pl,i)=>{
       html+=`<tr>
         <td>${i+1}</td>
-        <td style="color:#ffe05b; font-weight:700;">${pl.name}${pl.team?' ('+pl.team+')':''}</td>
+        <td style="color:#ffe05b;font-weight:700;">${pl.name}${pl.team?' ('+pl.team+')':''}</td>
         <td>${pl.score||0}</td>
         <td>
           <button onclick="adminScore(25,'${pl.id}')">+25</button>
@@ -612,40 +641,36 @@ function readAdmin(){
       </tr>`;
     });
     html+="</tbody>";
-    document.getElementById("admin-scores").innerHTML=html || "<tbody><tr><td colspan='5'>No players yet</td></tr></tbody>";
+    document.getElementById("admin-scores").innerHTML=html||"<tbody><tr><td colspan=5>No players yet</td></tr></tbody>";
   });
 }
 function listenQuestionAdmin(){
   db.ref(`games/${gameID}`).on("value",snap=>{
-    const g=snap.val() || {};
-    document.getElementById("question-text").textContent=g.question || "";
-    let img=document.getElementById("question-img");
+    const g=snap.val()||{};
+    document.getElementById("question-text").textContent=g.question||"";
+    const imgTag=document.getElementById("question-img");
     if(g.image){
-      img.src=g.image;
-      img.style.display="block";
-    } else {
-      img.style.display="none";
+      imgTag.src=g.image;
+      imgTag.style.display="block";
+    }else{
+      imgTag.style.display="none";
     }
   });
 }
-function joinPage(){
-  navigateToPage("page-join");
-}
+function joinPage(){ navigateToPage("page-join"); }
 function joinGame(){
-  let code=document.getElementById("join-code").value.trim();
-  let team=document.getElementById("join-team").value.trim();
+  const code=document.getElementById("join-code").value.trim();
+  const team=document.getElementById("join-team").value.trim();
   if(!/^\d{6}$/.test(code))return showModal("Enter 6 digit game code",1600);
-  if(!myUser)return showModal("Please login first",1600);
+  if(!myUser)return showModal("Please login to join.",1600);
   gameID=code; myTeam=team; myRole="player";
-  let myid=btoa(myUser+Math.random()).replace(/=/g,"");
+  const myid=btoa(myUser+Math.random()).replace(/=/g,"");
   myPID=myid;
   db.ref(`games/${code}`).get().then(snap=>{
-    if(!snap.exists())return showModal("Game not found",1300);
+    if(!snap.exists())return showModal("Game not found.",1300);
     db.ref(`users/${myUser}`).get().then(userSnap=>{
       let avatar=(userSnap.val() && userSnap.val().avatar) || "";
-      db.ref(`games/${code}/players/${myid}`).set({
-        name:myUser, team, score:0, buzzed:false, joined:Date.now(), avatar
-      }).then(()=>{
+      db.ref(`games/${code}/players/${myid}`).set({name:myUser,team,score:0,buzzed:false,joined:Date.now(),avatar}).then(()=>{
         document.getElementById("pl-name").textContent=myUser;
         let avatarPreview=document.getElementById("player-avatar-preview");
         if(avatar){
@@ -665,24 +690,24 @@ function joinGame(){
 }
 function listenPlayer(){
   db.ref(`games/${gameID}`).on("value",snap=>{
-    const g=snap.val() || {};
-    document.getElementById("buzz-lock-msg").textContent=g.buzzed ? "Buzzer is locked!" : "";
+    const g=snap.val()||{};
+    document.getElementById("buzz-lock-msg").textContent=g.buzzed?"Buzzer is locked!":"";
     const players=g.players||{};
     let arr=Object.entries(players).map(([id,v])=>({...v,id}));
     arr.sort((a,b)=>(b.score||0)-(a.score||0));
-    let buzzedID=g.buzzed;
+    const buzzedID=g.buzzed;
     let html="";
     arr.forEach((pl,i)=>{
       html+=`<div class="score-row">
-        <span class="rank">${i+1}</span>
-        <span class="pname" style="color:#ffe05b;">${pl.name}${pl.team?' ('+pl.team+')':''}</span>
-        <span class="pscore">${pl.score||0}</span>
-        ${pl.id===buzzedID?'<span class="buzzed-tag">Buzzed</span>':""}
-        </div>`;
+      <span class="rank">${i+1}</span>
+      <span class="pname" style="color:#ffe05b;">${pl.name}${pl.team?' ('+pl.team+')':''}</span>
+      <span class="pscore">${pl.score||0}</span>
+      ${pl.id===buzzedID?'<span class="buzzed-tag">Buzzed</span>':""}
+      </div>`;
     });
     document.getElementById("player-scores").innerHTML=html||"(no players yet)";
     const playerBtn=document.getElementById("player-buzzer");
-    playerBtn.disabled=buzzedID && buzzedID !== myPID;
+    playerBtn.disabled = buzzedID && buzzedID!==myPID;
     if(buzzedID && !buzzLockSoundPlayed){
       const audio=document.getElementById("buzz-audio");
       audio.currentTime=0;
@@ -694,26 +719,27 @@ function listenPlayer(){
 }
 function listenQuestionPlayer(){
   db.ref(`games/${gameID}`).on("value",snap=>{
-    const g=snap.val() || {};
-    document.getElementById("player-question-text").textContent=g.question || "";
-    let img=document.getElementById("player-question-img");
+    const g=snap.val()||{};
+    document.getElementById("player-question-text").textContent=g.question||"";
+    const imgTag=document.getElementById("player-question-img");
     if(g.image){
-      img.src=g.image;
-      img.style.display="block";
+      imgTag.src=g.image;
+      imgTag.style.display="block";
     }else{
-      img.style.display="none";
+      imgTag.style.display="none";
     }
   });
 }
 function buzz(){
   db.ref(`games/${gameID}`).get().then(snap=>{
     const g=snap.val();
-    if(!g || g.buzzed) return showModal("Buzzer is locked!",1200);
+    if(!g||g.buzzed)return showModal("Buzzer is locked!",1200);
     db.ref(`games/${gameID}/players/${myPID}`).update({buzzed:true});
     db.ref(`games/${gameID}`).update({buzzed:myPID});
   });
 }
 </script>
+
 <audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
 </body>
 </html>
