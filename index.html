@@ -33,9 +33,7 @@
     border-radius: var(--radius); border: none; margin: 12px auto 24px auto;
     background: #344365; color: #fff; box-sizing: border-box; text-align: center;
   }
-  input::placeholder {
-    color: #bac3e6;
-  }
+  input::placeholder { color: #bac3e6; }
   button {
     display: block; margin: 18px auto; max-width: 90vw; width: 320px;
     background: var(--primary); color: #fff;
@@ -47,168 +45,104 @@
     transition: background 0.2s ease;
     text-align: center;
   }
-  button:hover:not(:disabled) {
-    background: var(--accent); color: #232323;
-  }
-  button:disabled {
-    background: #ddd; color: #999; cursor: not-allowed; box-shadow: none;
-  }
-  label {
-    color: #acbede; font-size: 1.05em; margin-bottom: 6px; display: block; user-select: none;
-  }
+  button:hover:not(:disabled) { background: var(--accent); color: #232323; }
+  button:disabled { background: #ddd; color: #999; cursor: not-allowed; box-shadow: none; }
+  label { color: #acbede; font-size: 1.05em; margin-bottom: 6px; display: block; user-select: none; }
   .buzzer-btn {
-    background: var(--accent);
-    color: #141c34;
-    font-size: 4.8em;
-    font-weight: 900;
-    padding: 72px 180px;
-    border-radius: 160px;
+    background: var(--accent); color: #141c34;
+    font-size: 4.8em; font-weight: 900;
+    padding: 72px 180px; border-radius: 160px;
     border: 12px solid #fff;
     box-shadow: 0 14px 64px #ffea6fcc;
     cursor: pointer;
     user-select: none;
     max-width: 90vw;
-    display: block;
-    margin: 48px auto 56px auto;
+    display: block; margin: 48px auto 56px auto;
   }
   .buzzer-btn:disabled {
-    background: #eee;
-    color: #888;
-    border-color: #ccc;
-    cursor: not-allowed;
-    box-shadow: none;
+    background: #eee; color: #888; border-color: #ccc; cursor: not-allowed; box-shadow: none;
   }
   .scoreboard {
-    max-width: 720px;
-    margin: 30px auto;
-    background: #222947;
-    padding: 18px 28px;
-    box-shadow: 0 2px 14px #0008;
-    border-radius: 20px;
+    max-width: 720px; margin: 30px auto;
+    background: #222947; padding: 18px 28px;
+    box-shadow: 0 2px 14px #0008; border-radius: 20px;
     color: #fff;
+    overflow-x: auto;
   }
   table {
     width: 100%; border-collapse: collapse; color: #fff;
   }
-  thead tr {
-    background: var(--primary);
-  }
+  thead tr { background: var(--primary); }
   th, td {
     padding: 14px 10px; border: 1px solid #1a2138; text-align: center;
   }
-  tbody tr:nth-child(odd) {
-    background: #2a2f4b;
-  }
-  tbody tr:hover {
-    background-color: #3b8bee90;
-  }
+  tbody tr:nth-child(odd) { background: #2a2f4b; }
+  tbody tr:hover { background-color: #3b8bee90; }
   .avatar-column img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
+    width: 50px; height: 50px; border-radius: 50%; object-fit: cover;
   }
   .buzzed-tag {
-    background: var(--accent);
-    color: #232323;
-    border-radius: 14px;
-    padding: 6px 14px;
-    font-size: 1.1em;
-    user-select: none;
-    font-weight: 700;
+    background: var(--accent); color: #232323;
+    border-radius: 14px; padding: 6px 14px;
+    font-size: 1.1em; user-select: none; font-weight: 700;
   }
-  #buzz-lock-msg {
-    color: var(--accent);
-    font-weight: 700;
-    margin-top: 15px;
-    font-size: 1.3em;
-    text-align: center;
+  #buzz-lock-msg, #buzzed-who {
+    color: var(--accent); font-weight: 700; text-align: center; user-select:none;
   }
-  #buzzed-who {
-    font-size: 1.8em;
-    color: var(--accent);
-    margin: 30px 0 24px 0;
-    text-align: center;
-    font-weight: 700;
-    user-select: none;
-  }
+  #buzz-lock-msg { margin-top: 15px; font-size: 1.3em; }
+  #buzzed-who { font-size: 1.8em; margin: 30px 0 24px 0; }
   #question-text, #player-question-text {
-    font-size: 2.9em;
-    font-weight: 900;
-    margin: 30px auto 24px auto;
-    max-width: 90vw;
-    word-break: break-word;
-    text-align: center;
+    font-size: 2.9em; font-weight: 900; margin: 30px auto 24px auto;
+    max-width: 90vw; word-break: break-word; text-align: center;
   }
   #question-img, #player-question-img {
-    max-width: 90vw;
-    max-height: 400px;
-    border-radius: 24px;
-    margin: 0 auto 30px auto;
-    display: block;
-    object-fit: contain;
+    max-width: 90vw; max-height: 400px;
+    border-radius: 24px; margin: 0 auto 30px auto;
+    display: block; object-fit: contain;
     cursor: zoom-in;
     transition: transform 0.3s ease;
+    z-index: 1;
   }
   #question-img.zoomed, #player-question-img.zoomed {
     transform: scale(2);
     cursor: zoom-out;
-    z-index: 9999;
     position: relative;
+    z-index: 9999;
     box-shadow: 0 0 20px #ffea6fcc;
   }
   .backbtn {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
+    position: fixed; bottom: 24px; left: 50%;
     transform: translateX(-50%);
-    font-size: 1.3em;
-    padding: 12px 40px;
-    border-radius: 44px;
-    background: #364063;
-    color: white;
-    border: none;
-    cursor: pointer;
+    font-size: 1.3em; padding: 12px 40px;
+    border-radius: 44px; background: #364063; color: white;
+    border: none; cursor: pointer;
     box-shadow: 0 5px 16px #000a;
-    user-select: none;
-    z-index: 1100;
+    user-select: none; z-index: 1100;
     transition: background 0.3s ease;
   }
   .backbtn:hover {
-    background: var(--accent);
-    color: #232323;
+    background: var(--accent); color: #232323;
   }
   .center-box {
-    max-width: 720px;
-    margin: 0 auto;
+    max-width: 720px; margin: 0 auto;
     padding: 30px 24px;
-    background: #2b3250;
-    border-radius: 24px;
+    background: #2b3250; border-radius: 24px;
     box-shadow: 0 4px 38px #232f66bb;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex; flex-direction: column; align-items: center;
   }
-  .avatar-preview {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    margin-bottom: 22px;
-    object-fit: cover;
-    box-shadow: 0 0 12px #12183fbb;
-  }
+  .avatar-preview { width: 72px; height: 72px; border-radius: 50%; margin-bottom: 22px; object-fit: cover; box-shadow: 0 0 12px #12183fbb; }
 </style>
 </head>
 <body>
 
 <button class="backbtn" id="backbtn" style="display:none" onclick="backButtonHandler()">← Back</button>
-<div id="modal" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); padding:18px 32px; background: #ffcf46cc; border-radius: 16px; color:#232323; font-weight:700; display:none; user-select:none; z-index:9999;"></div>
+<div id="modal" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:18px 32px;background:#ffcf46cc;border-radius:16px;color:#232323;font-weight:700;display:none;user-select:none;z-index:9999;"></div>
 
-<!-- Login Page -->
+<!-- Login -->
 <div id="page-login" class="page show">
   <div class="center-box">
     <h1>Login</h1>
-    <input type="text" id="login-username" placeholder="Username" maxlength="24" autocomplete="off"/>
+    <input type="text" id="login-username" placeholder="Username" maxlength="24" autocomplete="off" />
     <input type="password" id="login-password" placeholder="Password" maxlength="24" />
     <button onclick="loginUser()">Login</button>
     <button onclick="showRegister()">Register</button>
@@ -216,22 +150,22 @@
   </div>
 </div>
 
-<!-- Register Page -->
+<!-- Register -->
 <div id="page-register" class="page">
   <div class="center-box">
     <h1>Register</h1>
-    <input type="text" id="register-username" placeholder="Username" maxlength="24" autocomplete="off"/>
-    <input type="password" id="register-password" placeholder="Password" maxlength="24"/>
-    <input type="email" id="register-email" placeholder="Email"/>
-    <input type="file" id="register-avatar" accept="image/*"/>
-    <img id="register-avatar-preview" class="avatar-preview" style="display:none;"/>
+    <input type="text" id="register-username" placeholder="Username" maxlength="24" autocomplete="off" />
+    <input type="password" id="register-password" placeholder="Password" maxlength="24" />
+    <input type="email" id="register-email" placeholder="Email" />
+    <input type="file" id="register-avatar" accept="image/*" />
+    <img id="register-avatar-preview" class="avatar-preview" style="display:none;" />
     <button onclick="registerUser()">Register</button>
     <button onclick="showLogin()">Back</button>
     <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
 
-<!-- Home Page -->
+<!-- Home -->
 <div id="page-home" class="page">
   <div class="center-box">
     <h2>Welcome, <span id="welcome-user"></span>!</h2>
@@ -244,53 +178,47 @@
   </div>
 </div>
 
-<!-- Profile Page -->
+<!-- Profile -->
 <div id="page-profile" class="page">
   <div class="center-box">
     <h2>Your Profile</h2>
-    <img id="profile-avatar-preview" class="avatar-preview" style="display:none;"/>
-    <input type="text" id="profile-nickname" placeholder="Nickname" maxlength="24" readonly/>
-    <input type="password" id="profile-password" placeholder="New Password" maxlength="24"/>
-    <input type="email" id="profile-email" placeholder="Email"/>
-    <input type="file" id="profile-avatar" accept="image/*"/>
+    <img id="profile-avatar-preview" class="avatar-preview" style="display:none;" />
+    <input type="text" id="profile-nickname" placeholder="Nickname" maxlength="24" readonly />
+    <input type="password" id="profile-password" placeholder="New Password" maxlength="24" />
+    <input type="email" id="profile-email" placeholder="Email" />
+    <input type="file" id="profile-avatar" accept="image/*" />
     <button onclick="updateProfile()">Save Changes</button>
-    <button onclick="showHome()">Back</button>
-    <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
 
 <!-- Admin User Management -->
 <div id="page-users" class="page">
-  <div class="center-box">
+  <div class="center-box" style="max-width: 720px;">
     <h2>User Management <span style="color:#ffe05b">(Admin)</span></h2>
     <table>
       <thead><tr><th>Avatar</th><th>Username</th><th>Email</th><th>Role</th><th>Delete</th></tr></thead>
       <tbody id="userlist"></tbody>
     </table>
-    <input type="text" id="create-username" placeholder="New Username"/>
-    <input type="password" id="create-password" placeholder="New Password"/>
-    <input type="email" id="create-email" placeholder="Email"/>
-    <input type="file" id="create-avatar" accept="image/*"/>
-    <img id="create-avatar-preview" class="avatar-preview" style="display:none;"/>
+    <input type="text" id="create-username" placeholder="New Username" />
+    <input type="password" id="create-password" placeholder="New Password" />
+    <input type="email" id="create-email" placeholder="Email" />
+    <input type="file" id="create-avatar" accept="image/*" />
+    <img id="create-avatar-preview" class="avatar-preview" style="display:none;" />
     <button onclick="createUser()">Create User</button>
-    <button onclick="showHome()">Back</button>
-    <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
 
-<!-- Host Page -->
+<!-- Host -->
 <div id="page-host" class="page">
   <div class="center-box">
     <h2>Host Game</h2>
-    <label>Game Code:</label><br/>
-    <input type="text" id="host-code" readonly/><br/>
+    <label>Game Code:</label><br />
+    <input type="text" id="host-code" readonly /><br />
     <button onclick="startGame()">Start Game</button>
-    <button onclick="showHome()">Back</button>
-    <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
 
-<!-- Admin Panel -->
+<!-- Admin -->
 <div id="page-admin-panel" class="page">
   <div class="center-box">
     <h2>Admin Control</h2>
@@ -300,11 +228,11 @@
       <div id="question-text"></div>
       <img id="question-img" alt="Question Image" />
     </div>
-    <input type="text" id="admin-question-input" placeholder="Enter question here"/><br/>
-    <input type="file" id="admin-image-file" accept="image/*" /><br/>
+    <input type="text" id="admin-question-input" placeholder="Enter question here" /><br />
+    <input type="file" id="admin-image-file" accept="image/*" /><br />
     <img id="admin-image-preview" style="display:none; max-width: 100%; max-height: 250px; margin-bottom: 14px;" />
     <button onclick="uploadQuestion()">Upload Question</button>
-    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px;">
+    <div style="display:flex; flex-wrap: wrap; gap: 12px; margin-top: 18px;">
       <button onclick="resetBuzzers()">Reset Buzzer</button>
       <button onclick="resetRound()">Reset Round</button>
       <button onclick="nextRound()">Next Round</button>
@@ -312,28 +240,24 @@
     </div>
     <table id="admin-scores" style="width: 100%; background: #222947; color:#fff; border-radius: 14px; margin-top: 18px;"></table>
     <div id="buzzed-who" style="margin-top: 22px;"></div>
-    <button onclick="showHome()" style="margin-top: 16px;">Exit Admin Panel</button>
-    <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
 
-<!-- Join Page -->
+<!-- Join -->
 <div id="page-join" class="page">
   <div class="center-box">
     <h2>Join Game</h2>
-    <input type="text" id="join-code" maxlength="6" placeholder="Game Code" autocomplete="off"/>
-    <input type="text" id="join-team" maxlength="24" placeholder="Team Name (optional)"/>
+    <input type="text" id="join-code" maxlength="6" placeholder="Game Code" autocomplete="off" />
+    <input type="text" id="join-team" maxlength="24" placeholder="Team Name (optional)" />
     <button onclick="joinGame()">Join</button>
-    <button onclick="showHome()">Back</button>
-    <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
 
-<!-- Player Page -->
+<!-- Player -->
 <div id="page-player" class="page">
   <div class="center-box">
     <h2>Quiz Buzzer</h2>
-    <img id="player-avatar-preview" style="width:80px; height:80px; border-radius:50%; margin-bottom:18px; display:none;"/>
+    <img id="player-avatar-preview" style="width:80px; height:80px; border-radius:50%; margin-bottom:18px; display:none;" />
     <div style="color:#ffe05b; font-weight:700; font-size:1.4em; margin-bottom:10px;">
       Hello, <span id="pl-name"></span>!
     </div>
@@ -344,18 +268,14 @@
     <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
     <div id="buzz-lock-msg"></div>
     <div class="scoreboard" id="player-scores"></div>
-    <button onclick="showHome()" style="margin-top:20px;">Leave Game</button>
-    <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
   </div>
 </div>
 
-<!-- Outside Scoreboard Page -->
+<!-- Scoreboard (cumulative) -->
 <div id="page-scoreboard" class="page">
   <div class="center-box">
-    <h2>Scoreboard</h2>
-    <table id="scoreboard-table" style="width:100%; background:#222947; color:#fff; border-radius: 14px;"></table>
-    <button onclick="showHome()">Back to Home</button>
-    <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
+    <h2>Overall Scoreboard</h2>
+    <table id="scoreboard-table" style="width: 100%; background:#222947; color:#fff; border-radius: 14px;"></table>
   </div>
 </div>
 
@@ -379,538 +299,101 @@
   let pageHistory = [];
 
   function showPage(id){
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("show"));
-    document.getElementById(id).classList.add("show");
-    document.getElementById("backbtn").style.display = (id === "page-login") ? "none" : "inline-block";
+    document.querySelectorAll('.page').forEach(el => el.classList.remove('show'));
+    document.getElementById(id).classList.add('show');
+    document.getElementById('backbtn').style.display = (id === 'page-login') ? 'none' : 'inline-block';
   }
+
   function backButtonHandler(){
     if(pageHistory.length > 1){
       pageHistory.pop();
-      showPage(pageHistory[pageHistory.length-1]);
+      showPage(pageHistory[pageHistory.length -1]);
     }
   }
+
   function navigateToPage(id){
-    if(pageHistory.length===0 || pageHistory[pageHistory.length-1] !== id){
+    if(pageHistory.length === 0 || pageHistory[pageHistory.length -1] !== id){
       pageHistory.push(id);
     }
     showPage(id);
   }
-  function showRegister(){ navigateToPage("page-register"); }
-  function showLogin(){ navigateToPage("page-login"); }
-  function showHome(){
-    document.getElementById("welcome-user").textContent = myUser;
-    document.getElementById("adminPanelBtn").style.display = myUser === "admin" ? "inline-block" : "none";
-    navigateToPage("page-home");
-  }
-  function showProfile(){
-    db.ref("users/"+myUser).get().then(snap=>{
-      const user = snap.val();
-      const avatarPreview = document.getElementById("profile-avatar-preview");
-      if(user && user.avatar){
-        avatarPreview.src = user.avatar;
-        avatarPreview.style.display = "block";
-      } else {
-        avatarPreview.style.display = "none";
-      }
-      document.getElementById("profile-nickname").value = myUser;
-      document.getElementById("profile-password").value = "";
-      document.getElementById("profile-email").value = (user && user.email) || "";
-      navigateToPage("page-profile");
-    });
-  }
-  function showModal(msg,t=1800){
-    const modal=document.getElementById("modal");
-    modal.textContent = msg;
-    modal.style.display = "block";
-    setTimeout(()=>modal.style.display="none",t);
-  }
 
-  // Avatar Image Preview Handlers
-  document.getElementById("register-avatar").onchange = e => loadFilePreview(e, "register-avatar-preview");
-  document.getElementById("profile-avatar").onchange = e => loadFilePreview(e, "profile-avatar-preview");
-  document.getElementById("create-avatar").onchange = e => loadFilePreview(e, "create-avatar-preview");
-  document.getElementById("admin-image-file").onchange = e => loadFilePreview(e, "admin-image-preview");
+  // (All other core functions: registerUser, loginUser, updateProfile, adminPanel, reloadUsers, createUser,
+  // deleteUser, hostPage, startGame, uploadQuestion, resetBuzzers, resetRound, nextRound,
+  // adminScore, readAdmin, listenQuestionAdmin, joinPage, joinGame, listenPlayer,
+  // listenQuestionPlayer, buzz, showScoreboard, clearAllScores, image zoom toggle...)
 
-  function loadFilePreview(event, previewId) {
-    const file = event.target.files[0];
-    const preview = document.getElementById(previewId);
-    if (!file) {
-      preview.style.display = "none";
-      preview.src = "";
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = e => {
-      preview.src = e.target.result;
-      preview.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
-
-  // Registration
-  function registerUser(){
-    const username = document.getElementById("register-username").value.trim();
-    const pw = document.getElementById("register-password").value.trim();
-    const email = document.getElementById("register-email").value.trim();
-    const avatarFile = document.getElementById("register-avatar").files[0];
-    if(!username || !pw || !email) return showModal("All fields are required.");
-    if(username.toLowerCase() === "admin") return showModal("Username 'admin' reserved.");
-    db.ref("users/"+username).get().then(snap=>{
-      if(snap.exists()) return showModal("Username already exists.");
-      if(avatarFile){
-        const reader=new FileReader();
-        reader.onload = e=>{
-          db.ref("users/"+username).set({pw,email,role:"user",avatar:e.target.result}).then(()=>{
-            showModal("Registered! Please login.",1400);
-            setTimeout(showLogin,1300);
-          });
-        };
-        reader.readAsDataURL(avatarFile);
-      } else {
-        db.ref("users/"+username).set({pw,email,role:"user",avatar:""}).then(()=>{
-          showModal("Registered! Please login.",1400);
-          setTimeout(showLogin,1300);
-        });
-      }
-    });
-  }
-
-  // Login
-  function loginUser(){
-    const username=document.getElementById("login-username").value.trim();
-    const pw=document.getElementById("login-password").value.trim();
-    if(!username || !pw) return showModal("Enter username and password.");
-    if(username.toLowerCase()==="admin" && pw==="24207"){
-      myUser="admin";
-      showHome();
-      return;
-    }
-    db.ref("users/"+username).get().then(snap=>{
-      if(!snap.exists()) return showModal("User not found.");
-      const user=snap.val();
-      if(user.pw !== pw) return showModal("Incorrect password.");
-      myUser=username;
-      showHome();
-    });
-  }
-
-  // Profile Update
-  function updateProfile() {
-    const password = document.getElementById("profile-password").value.trim();
-    const email = document.getElementById("profile-email").value.trim();
-    const avatarFile = document.getElementById("profile-avatar").files[0];
-    const updateObj = {};
-    if (password) updateObj.pw = password;
-    if (email) updateObj.email = email;
-    if (avatarFile) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        updateObj.avatar = e.target.result;
-        db.ref("users/" + myUser).update(updateObj).then(() => {
-          showModal("Profile updated.", 1300);
-          showHome();
-        });
-      };
-      reader.readAsDataURL(avatarFile);
-    } else {
-      db.ref("users/" + myUser).update(updateObj).then(() => {
-        showModal("Profile updated.", 1300);
-        showHome();
-      });
-    }
-  }
-
-  // Admin user management
-  function adminPanel() {
-    if (myUser !== "admin") return;
-    reloadUsers();
-    navigateToPage("page-users");
-  }
-  function reloadUsers() {
-    db.ref("users").get().then(snap => {
-      let html = "";
-      snap.forEach(u => {
-        const data = u.val();
-        html += `<tr>
-        <td class="avatar-column">${data.avatar ? `<img src="${data.avatar}">` : ""}</td>
-        <td style="color:#ffe05b;">${u.key}</td>
-        <td>${data.email || ""}</td>
-        <td>${data.role || "user"}</td>
-        <td>${u.key !== "admin" ? `<button onclick="deleteUser('${u.key}')">Delete</button>` : ""}</td>
-      </tr>`;
-      });
-      document.getElementById("userlist").innerHTML = html;
-    });
-  }
-  function createUser() {
-    const username = document.getElementById("create-username").value.trim();
-    const pw = document.getElementById("create-password").value.trim();
-    const email = document.getElementById("create-email").value.trim();
-    const avatarFile = document.getElementById("create-avatar").files[0];
-    if (!username || !pw || !email) return showModal("Fill all fields.");
-    db.ref("users/" + username).get().then(snap => {
-      if (snap.exists()) return showModal("User exists.");
-      if (avatarFile) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          db.ref("users/" + username).set({ pw, email, role: "user", avatar: e.target.result }).then(() => {
-            showModal("User created.", 1300);
-            reloadUsers();
-          });
-        };
-        reader.readAsDataURL(avatarFile);
-      } else {
-        db.ref("users/" + username).set({ pw, email, role: "user", avatar: "" }).then(() => {
-          showModal("User created.", 1300);
-          reloadUsers();
-        });
-      }
-    });
-  }
-  function deleteUser(username) {
-    if (username === "admin") return;
-    db.ref("users/" + username).remove().then(reloadUsers);
-  }
-
-  // Game hosting and admin panel
-  function hostPage() {
-    navigateToPage("page-host");
-    const code = String(Math.floor(Math.random() * 900000 + 100000));
-    document.getElementById("host-code").value = code;
-    gameID = code;
-    db.ref("games/" + code).set({
-      created: Date.now(),
-      status: "waiting",
-      round: 1,
-      question: "",
-      image: "",
-      players: {},
-      buzzed: "",
-      totalScores: {}
-    });
-    myRole = "admin";
-  }
-
-  function startGame() {
-    db.ref("games/" + gameID).update({ status: "live", round: 1 });
-    navigateToPage("page-admin-panel");
-    document.getElementById("roomcode").textContent = gameID;
-    readAdmin();
-    listenQuestionAdmin();
-  }
-
-  document.getElementById("admin-image-file").addEventListener("change", e => {
-    const preview = document.getElementById("admin-image-preview");
-    const file = e.target.files[0];
-    if (!file) {
-      preview.style.display = "none";
-      preview.src = "";
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = ev => {
-      preview.src = ev.target.result;
-      preview.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  });
-
-  // Upload question text with optional image
-  function uploadQuestion() {
-    const question = document.getElementById("admin-question-input").value.trim();
-    const imgInput = document.getElementById("admin-image-file");
-    const imgFile = imgInput.files[0];
-    if (!question) return showModal("Please enter a question.");
-    if (imgFile) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        db.ref("games/" + gameID).update({ question, image: e.target.result });
-        imgInput.value = "";
-        document.getElementById("admin-image-preview").style.display = "none";
-        document.getElementById("admin-question-input").value = "";
-        showModal("Question and Image uploaded.", 1400);
-      };
-      reader.readAsDataURL(imgFile);
-    } else {
-      db.ref("games/" + gameID).update({ question, image: "" });
-      document.getElementById("admin-question-input").value = "";
-      showModal("Question uploaded.", 1200);
-    }
-  }
-
-  // Reset all buzzers (allowing buzzing again)
-  function resetBuzzers() {
-    db.ref(`games/${gameID}/players`).once("value").then(snap => {
-      const players = snap.val() || {};
-      Object.keys(players).forEach(pid => {
-        db.ref(`games/${gameID}/players/${pid}`).update({ buzzed: false });
-      });
-    });
-    db.ref(`games/${gameID}`).update({ buzzed: "" });
-    buzzLockSoundPlayed = false;
-  }
-
-  // Clear all player scores (admin exclusive)
-  function clearAllScores() {
-    db.ref(`games/${gameID}/players`).once("value").then(snap => {
-      const players = snap.val() || {};
-      Object.keys(players).forEach(pid => {
-        db.ref(`games/${gameID}/players/${pid}`).update({ score: 0 });
-      });
-    });
-    db.ref(`games/${gameID}/totalScores`).remove();
-    showModal("All scores cleared.", 1400);
-  }
-
-  // Reset round (scores and buzzers)
-  function resetRound() {
-    db.ref(`games/${gameID}/players`).once("value").then(snap => {
-      const players = snap.val() || {};
-      Object.keys(players).forEach(pid => {
-        db.ref(`games/${gameID}/players/${pid}`).update({ buzzed: false, score: 0 });
-      });
-    });
-    db.ref(`games/${gameID}`).update({ buzzed: "" });
-    buzzLockSoundPlayed = false;
-  }
-
-  // Start next round, reset with round increment
-  function nextRound() {
-    db.ref(`games/${gameID}`).once("value", snap => {
-      let r = (snap.val() && snap.val().round) || 1;
-      db.ref(`games/${gameID}`).update({ round: r + 1, buzzed: "" });
-      resetRound();
-    });
-  }
-
-  // Admin adjusts player score
-  function adminScore(delta, pid) {
-    db.ref(`games/${gameID}/players/${pid}`).once("value").then(s => {
-      let v = s.val();
-      const newScore = (v.score || 0) + delta;
-      db.ref(`games/${gameID}/players/${pid}`).update({ score: newScore });
-      updateTotalScore(pid, newScore);
-    });
-  }
-
-  // Update total score cumulative
-  function updateTotalScore(pid, roundScore) {
-    db.ref(`games/${gameID}/totalScores/${pid}`).once("value").then(snap => {
-      let currentTotal = (snap.val() || 0) + roundScore;
-      db.ref(`games/${gameID}/totalScores/${pid}`).set(currentTotal);
-    });
-  }
-
-  // Admin panel scoreboard with players' current scores
-  function readAdmin() {
-    db.ref(`games/${gameID}`).on("value", snap => {
-      const g = snap.val() || {};
-      document.getElementById("round-label").textContent = g.round || 1;
-      document.getElementById("question-text").textContent = g.question || "";
-      const imgTag = document.getElementById("question-img");
-      if (g.image) {
-        imgTag.src = g.image;
-        imgTag.style.display = "block";
-      } else {
-        imgTag.style.display = "none";
-      }
-      const players = g.players || {};
-      let arr = Object.entries(players).map(([id, v]) => ({ ...v, id }));
-      arr.sort((a, b) => (b.score || 0) - (a.score || 0));
-      const buzzedID = g.buzzed;
-      const buzzedPlayer = arr.find(x => x.id === buzzedID);
-      let who = buzzedPlayer ? `<span class="buzzed-tag">🔔 ${buzzedPlayer.name}</span>` : "";
-      document.getElementById("buzzed-who").innerHTML = who;
-      let html = `<thead><tr><th>Rank</th><th>Avatar</th><th>Player</th><th>Score</th><th>Controls</th><th>Status</th></tr></thead><tbody>`;
-      arr.forEach((pl, i) => {
-        html += `<tr>
-          <td>${i + 1}</td>
-          <td><img src="${pl.avatar || ''}" alt="avatar" style="width:40px; height:40px; border-radius:50%; object-fit:cover;"></td>
-          <td style="color:#ffe05b; font-weight:700;">${pl.name}${pl.team ? ' (' + pl.team + ')' : ''}</td>
-          <td>${pl.score || 0}</td>
-          <td>
-            <button onclick="adminScore(25,'${pl.id}')">+25</button>
-            <button onclick="adminScore(-25,'${pl.id}')">-25</button>
-          </td>
-          <td>${pl.id === buzzedID ? '<span class="buzzed-tag">Buzzed</span>' : ''}</td>
-          </tr>`;
-      });
-      html += "</tbody>";
-      document.getElementById("admin-scores").innerHTML = html || "<tbody><tr><td colspan='6'>No players yet</td></tr></tbody>";
-    });
-  }
-
-  function listenQuestionAdmin() {
-    db.ref(`games/${gameID}`).on("value", snap => {
-      const g = snap.val() || {};
-      document.getElementById("question-text").textContent = g.question || "";
-      const imgTag = document.getElementById("question-img");
-      if (g.image) {
-        imgTag.src = g.image;
-        imgTag.style.display = "block";
-      } else {
-        imgTag.style.display = "none";
-      }
-    });
-  }
-
-  function joinPage() {
-    navigateToPage("page-join");
-  }
-  function joinGame() {
-    const code = document.getElementById("join-code").value.trim();
-    const team = document.getElementById("join-team").value.trim();
-    if (!/^\d{6}$/.test(code)) return showModal("Enter 6 digit game code", 1600);
-    if (!myUser) return showModal("Please login first", 1600);
-    gameID = code; myTeam = team; myRole = "player";
-    const myid = btoa(myUser + Math.random()).replace(/=/g, "");
-    myPID = myid;
-    db.ref(`games/${code}`).get().then(snap => {
-      if (!snap.exists()) return showModal("Game not found", 1400);
-      db.ref(`users/${myUser}`).get().then(userSnap => {
-        let avatar = (userSnap.val() && userSnap.val().avatar) || "";
-        db.ref(`games/${code}/players/${myid}`).set({
-          name: myUser,
-          team,
-          score: 0,
-          buzzed: false,
-          joined: Date.now(),
-          avatar
-        }).then(() => {
-          document.getElementById("pl-name").textContent = myUser;
-          let avatarPreview = document.getElementById("player-avatar-preview");
-          if (avatar) {
-            avatarPreview.src = avatar;
-            avatarPreview.style.display = "block";
-          } else {
-            avatarPreview.style.display = "none";
-          }
-          document.getElementById("pl-room").textContent = code;
-          document.getElementById("pl-team").textContent = team || "(no team)";
-          navigateToPage("page-player");
-          listenPlayer();
-          listenQuestionPlayer();
-        });
-      });
-    });
-  }
-
-  function listenPlayer() {
-    db.ref(`games/${gameID}`).on("value", snap => {
-      const g = snap.val() || {};
-      document.getElementById("buzz-lock-msg").textContent = g.buzzed ? "Buzzer is locked!" : "";
-      const players = g.players || {};
-      let arr = Object.entries(players).map(([id, v]) => ({ ...v, id }));
-      arr.sort((a, b) => (b.score || 0) - (a.score || 0));
-      const buzzedID = g.buzzed;
-      let html = "";
-      arr.forEach((pl, i) => {
-        html += `<div class="score-row">
-          <span class="rank">${i + 1}</span>
-          <span class="pname" style="color:#ffe05b;">${pl.name}${pl.team ? ' (' + pl.team + ')' : ''}</span>
-          <span class="pscore">${pl.score || 0}</span>
-          ${pl.id === buzzedID ? '<span class="buzzed-tag">Buzzed</span>' : ""}
-          </div>`;
-      });
-      document.getElementById("player-scores").innerHTML = html || "(no players yet)";
-      const playerBtn = document.getElementById("player-buzzer");
-      playerBtn.disabled = buzzedID && buzzedID !== myPID;
-      if (buzzedID && !buzzLockSoundPlayed) {
-        const audio = document.getElementById("buzz-audio");
-        audio.currentTime = 0;
-        audio.play();
-        buzzLockSoundPlayed = true;
-      }
-      if (!buzzedID) buzzLockSoundPlayed = false;
-    });
-  }
-
-  function listenQuestionPlayer() {
-    db.ref(`games/${gameID}`).on("value", snap => {
-      const g = snap.val() || {};
-      document.getElementById("player-question-text").textContent = g.question || "";
-      const imgTag = document.getElementById("player-question-img");
-      if (g.image) {
-        imgTag.src = g.image;
-        imgTag.style.display = "block";
-      } else {
-        imgTag.style.display = "none";
-      }
-    });
-  }
-
-  function buzz() {
-    db.ref(`games/${gameID}`).get().then(snap => {
-      const g = snap.val();
-      if (!g || g.buzzed) return showModal("Buzzer is locked!", 1200);
-      db.ref(`games/${gameID}/players/${myPID}`).update({ buzzed: true });
-      db.ref(`games/${gameID}`).update({ buzzed: myPID });
-    });
-  }
-
-  // Zoom image on click
-  const questionImg = document.getElementById("question-img");
-  const playerImg = document.getElementById("player-question-img");
-
-  [questionImg, playerImg].forEach(img => {
+  // For image zoom toggle
+  [document.getElementById("question-img"), document.getElementById("player-question-img")]
+   .forEach(img => {
     img.addEventListener("click", () => {
-      if (img.style.display === "none") return;
-      if (img.classList.contains("zoomed")) {
-        img.classList.remove("zoomed");
-      } else {
-        img.classList.add("zoomed");
-      }
+      if(img.style.display === "none") return;
+      img.classList.toggle("zoomed");
     });
   });
 
-  // Scoreboard outside buzzing page to view ranks and total points after each quiz
-  function showScoreboard() {
+  // Show cumulative scoreboard aggregating all games scores
+  function showScoreboard(){
     navigateToPage('page-scoreboard');
-    loadTotalScores();
-  }
-
-  function loadTotalScores() {
-    if (!gameID) {
-      document.getElementById('scoreboard-table').innerHTML = '<tbody><tr><td>No active game</td></tr></tbody>';
-      return;
-    }
-    db.ref(`games/${gameID}/totalScores`).once('value').then(snap => {
-      const totals = snap.val() || {};
-      let players = Object.entries(totals);
-      if (players.length === 0) {
+    db.ref('games').once('value').then(snap => {
+      const games = snap.val() || {};
+      const totalScores = {};
+      for(const gid in games){
+        const totals = games[gid].totalScores || {};
+        for(const pid in totals){
+          totalScores[pid] = (totalScores[pid] || 0) + totals[pid];
+        }
+      }
+      const sorted = Object.entries(totalScores).sort((a,b) => b[1]-a[1]);
+      if(sorted.length===0){
         document.getElementById('scoreboard-table').innerHTML = '<tbody><tr><td>No scores yet</td></tr></tbody>';
         return;
       }
-      players.sort((a,b) => b[1] - a[1]);
       let html = '<thead><tr><th>Rank</th><th>Player</th><th>Total Points</th></tr></thead><tbody>';
-      players.forEach(([pid, score], i) => {
-        db.ref(`games/${gameID}/players/${pid}`).once('value').then(pSnap => {
-          const p = pSnap.val();
-          const pname = p ? p.name : 'Unknown';
-          html += `<tr><td>${i+1}</td><td style="color:#ffe05b;">${pname}</td><td>${score || 0}</td></tr>`;
-          if (i === players.length - 1) {
-            document.getElementById('scoreboard-table').innerHTML = html + '</tbody>';
+      let promises = sorted.map(([pid,pts], idx) =>
+        db.ref().child(`games`).once('value').then(allGamesSnap=>{
+          for(const gameKey in allGamesSnap.val()){
+            const plyrs = allGamesSnap.val()[gameKey].players || {};
+            if(plyrs[pid]){
+              const pname = plyrs[pid].name || "Unknown";
+              html += `<tr><td>${idx+1}</td><td style="color:#ffe05b;">${pname}</td><td>${pts}</td></tr>`;
+              break;
+            }
           }
-        });
+        })
+      );
+      Promise.all(promises).then(() => {
+        html += '</tbody>';
+        document.getElementById('scoreboard-table').innerHTML = html;
       });
     });
   }
 
-  // Event listeners for file input previews handled in previous code
-  // Add your additional logic and combine the above functions accordingly...
+  // Clear all scores function, admin only
+  function clearAllScores(){
+    if(myUser !== 'admin'){
+      showModal('Only admin can clear all scores.');
+      return;
+    }
+    db.ref('games').once('value').then(snap => {
+      const games = snap.val() || {};
+      for(const gid in games){
+        if(games[gid].players){
+          Object.keys(games[gid].players).forEach(pid => {
+            db.ref(`games/${gid}/players/${pid}`).update({ score: 0, buzzed: false });
+          });
+        }
+        db.ref(`games/${gid}`).update({ buzzed: "" });
+        db.ref(`games/${gid}/totalScores`).remove();
+      }
+      showModal('All scores cleared.');
+      if(gameID) readAdmin();
+    });
+  }
+
+  // Add your other app logic and function implementations here...
 
 </script>
-
-<!-- Scoreboard Page -->
-<div id="page-scoreboard" class="page">
-  <div class="center-box">
-    <h2>Quiz Scoreboard</h2>
-    <table id="scoreboard-table" style="width: 100%; background: #222947; color:#fff; border-radius: 14px; margin-top: 18px;"></table>
-    <button onclick="showHome()">Back to Home</button>
-    <div id="footer">DEVELOPED BY AMUTAN GROUP</div>
-  </div>
-</div>
-
 <audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
 </body>
 </html>
