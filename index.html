@@ -8,172 +8,181 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
 <style>
-  :root {--main-bg:#262e46;--primary:#3b8bee;--accent:#ffe05b;--danger:#e94f37;}
-  html,body{margin:0;padding:0;height:100%;font-family:'Montserrat',Arial,sans-serif;background:var(--main-bg);color:#fff;}
-  .page{display:none;max-width:95%;margin:0 auto;padding:28px;}
-  .show{display:block;}
-  button{background:var(--primary);color:#fff;font-weight:700;font-size:1.1em;border:none;border-radius:30px;padding:12px 18px;cursor:pointer;box-shadow:0 6px 13px #2554a180;margin:8px auto;display:block;}
-  button:hover:not(:disabled){background:var(--accent);color:#232;}
-  .buzzer-btn{background:var(--accent);color:#141c34;font-size:3rem;font-weight:900;padding:50px 100px;border-radius:160px;border:10px solid #fff;box-shadow:0 14px 64px #ffea6fcc;cursor:pointer;margin:20px auto;}
-  .buzzer-btn:disabled{background:#ccc;color:#888;border-color:#aaa;}
-  .scoreboard{background:#222947;padding:16px 24px;box-shadow:0 2px 14px #0008;border-radius:20px;}
-  .player-layout{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;}
-  .player-left{flex:1;min-width:300px;text-align:center;}
-  .player-right{flex:1;min-width:300px;display:flex;flex-direction:column;align-items:center;}
-  #player-question-text{font-size:2em;font-weight:800;margin-bottom:12px;}
-  #player-question-img{max-width:100%;max-height:260px;border-radius:16px;margin-bottom:12px;display:none;}
-  .toggle-scores{display:flex;gap:8px;justify-content:center;margin:10px 0;}
-  .buzzed-tag{background:var(--accent);color:#232;font-weight:700;padding:2px 6px;border-radius:10px;}
+  :root {
+    --main-bg: #262e46;
+    --primary: #3b8bee;
+    --accent: #ffe05b;
+    --danger: #e94f37;
+    --radius: 16px;
+  }
+  html, body {
+    margin: 0; padding: 0; height: 100%; font-family: 'Montserrat', Arial, sans-serif;
+    background: var(--main-bg); color: #fff; user-select: none;
+  }
+  .page { display: none; max-width: 720px; margin: 0 auto; padding: 28px 32px; }
+  .show { display: block; }
+  h1, h2, h3 { font-weight: 700; margin-bottom: 24px; text-align: center; }
+  input[type=text], input[type=password], input[type=email], input[type=file] {
+    width: 100%; max-width: 420px; padding: 14px 18px; font-size: 1.2em;
+    border-radius: var(--radius); border: none; margin: 12px auto 24px auto;
+    background: #344365; color: #fff; box-sizing: border-box; text-align: center;
+  }
+  button {
+    background: var(--primary); color: #fff; font-weight: 700; font-size: 1.3em;
+    border: none; border-radius: 48px; padding: 18px 20px; cursor: pointer; text-align: center;
+    box-shadow: 0 6px 13px #2554a180; margin: 12px auto; display: block;
+  }
+  button:hover:not(:disabled) { background: var(--accent); color: #232; }
+  .buzzer-btn {
+    background: var(--accent); color: #141c34;
+    font-size: 5rem; font-weight: 900;
+    padding: 72px 180px; border-radius: 160px; border: 12px solid #fff;
+    box-shadow: 0 14px 64px #ffea6fcc; cursor: pointer; text-align: center;
+    display: block; margin: 30px auto;
+  }
+  .scoreboard { width:100%; background: #222947; padding: 18px; border-radius: 20px; }
+  /* Player layout split */
+  .player-split { display:flex; gap:20px; justify-content:space-between; width:100%; }
+  .player-left { flex:1; }
+  .player-right { flex:1; display:flex; flex-direction:column; align-items:center; }
+  #player-question-text { font-size:2.5em; font-weight:700; margin: 20px 0; text-align:center; }
+  #player-question-img { max-width:100%; max-height:300px; border-radius:20px; margin:10px auto; display:none; }
+  .buzzed-tag { background: var(--accent); padding:4px 12px; border-radius:12px; color:#232; font-weight:700; }
 </style>
 </head>
 <body>
 <!-- === LOGIN === -->
 <div id="page-login" class="page show">
- <h1>Login</h1>
- <input id="login-username" placeholder="Username" />
- <input id="login-password" type="password" placeholder="Password" />
- <button onclick="loginUser()">Login</button>
- <button onclick="showRegister()">Register</button>
+ <div class="center-box">
+   <h1>Login</h1>
+   <input id="login-username" placeholder="Username"/>
+   <input id="login-password" type="password" placeholder="Password"/>
+   <button onclick="loginUser()">Login</button>
+   <button onclick="showRegister()">Register</button>
+ </div>
 </div>
 
 <!-- === REGISTER === -->
 <div id="page-register" class="page">
- <h1>Register</h1>
- <input id="register-username" placeholder="Username"/>
- <input id="register-password" type="password" placeholder="Password"/>
- <input id="register-email" type="email" placeholder="Email"/>
- <button onclick="registerUser()">Register</button>
- <button onclick="showLogin()">Back</button>
+ <div class="center-box">
+   <h1>Register</h1>
+   <input id="register-username" placeholder="Username"/>
+   <input id="register-password" type="password" placeholder="Password"/>
+   <input id="register-email" type="email" placeholder="Email"/>
+   <button onclick="registerUser()">Register</button>
+   <button onclick="showLogin()">Back</button>
+ </div>
 </div>
 
 <!-- === HOME === -->
 <div id="page-home" class="page">
- <h2>Welcome, <span id="welcome-user"></span>!</h2>
- <button onclick="hostPage()">Host Game</button>
- <button onclick="joinPage()">Join Game</button>
- <button onclick="showProfile()">Profile</button>
- <button onclick="showScoreboard()">Scoreboard</button>
-</div>
-
-<!-- === PROFILE === -->
-<div id="page-profile" class="page">
- <h2>Your Profile</h2>
- <input id="profile-nickname" readonly/>
- <input id="profile-password" type="password" placeholder="New Password"/>
- <input id="profile-email" type="email" placeholder="Email"/>
- <button onclick="updateProfile()">Save</button>
+ <div class="center-box">
+   <h2>Welcome, <span id="welcome-user"></span>!</h2>
+   <button onclick="hostPage()">Host Game</button>
+   <button onclick="joinPage()">Join Game</button>
+   <button onclick="showProfile()">Profile</button>
+   <button onclick="showScoreboard()">Scoreboard</button>
+ </div>
 </div>
 
 <!-- === HOST === -->
 <div id="page-host" class="page">
- <h2>Host Game</h2>
- <label>Game Code:</label>
- <input id="host-code" readonly/>
- <button onclick="startGame()">Start Game</button>
+ <div class="center-box">
+   <h2>Host Game</h2>
+   <input id="host-code" readonly/>
+   <button onclick="startGame()">Start</button>
+ </div>
 </div>
 
 <!-- === ADMIN PANEL === -->
 <div id="page-admin-panel" class="page">
- <h2>Admin Control</h2>
- <div><b>Game:</b> <span id="roomcode"></span></div>
- <div><b>Round:</b> <span id="round-label"></span></div>
- <div id="question-text"></div>
- <input id="admin-question-input" placeholder="Enter question"/>
- <button onclick="uploadQuestion()">Upload Question</button>
- <div><button onclick="resetBuzzers()">Reset Buzzers</button></div>
- <table id="admin-scores" style="width:100%;margin-top:10px;"></table>
- <div id="team-controls"></div>
+ <div class="center-box">
+   <h2>Admin Panel</h2>
+   <div><b>Game:</b> <span id="roomcode"></span></div>
+   <div id="question-text"></div>
+   <input id="admin-question-input" placeholder="Enter question"/>
+   <button onclick="uploadQuestion()">Upload</button>
+   <table id="admin-scores"></table>
+   <div id="team-controls"></div>
+ </div>
 </div>
 
 <!-- === JOIN === -->
 <div id="page-join" class="page">
- <h2>Join Game</h2>
- <input id="join-code" maxlength="6" placeholder="Game Code"/>
- <input id="join-team" placeholder="Team (optional)"/>
- <button onclick="joinGame()">Join</button>
+ <div class="center-box">
+   <h2>Join</h2>
+   <input id="join-code" placeholder="Game Code"/>
+   <input id="join-team" placeholder="Team"/>
+   <button onclick="joinGame()">Join</button>
+ </div>
 </div>
 
 <!-- === PLAYER === -->
 <div id="page-player" class="page">
- <h2>Quiz Buzzer</h2>
- <div class="player-layout">
-   <div class="player-left">
-     <div id="player-question-text"></div>
-     <img id="player-question-img"/>
-   </div>
-   <div class="player-right">
-     <div>Hello, <span id="pl-name"></span>!</div>
-     <div><b>Game:</b> <span id="pl-room"></span></div>
-     <div><b>Team:</b> <span id="pl-team"></span></div>
-     <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
-     <div id="buzz-lock-msg"></div>
-     <div class="toggle-scores">
-       <button onclick="scoreView='individual';renderScores();">Individual</button>
-       <button onclick="scoreView='team';renderScores();">Team</button>
+ <div class="center-box">
+   <h2>Quiz Buzzer</h2>
+   <div class="player-split">
+     <div class="player-left">
+       <div id="player-question-text"></div>
+       <img id="player-question-img"/>
      </div>
-     <div class="scoreboard" id="player-scores"></div>
+     <div class="player-right">
+       <div>Hello, <span id="pl-name"></span>!</div>
+       <div><b>Game:</b> <span id="pl-room"></span></div>
+       <div><b>Team:</b> <span id="pl-team"></span></div>
+       <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
+       <div id="buzz-lock-msg"></div>
+       <div class="toggle-scores">
+         <button onclick="scoreView='individual';renderScores();">Individual</button>
+         <button onclick="scoreView='team';renderScores();">Team</button>
+       </div>
+       <div class="scoreboard" id="player-scores"></div>
+     </div>
    </div>
  </div>
-</div>
-
-<!-- === SCOREBOARD === -->
-<div id="page-scoreboard" class="page">
- <h2>Overall Scores</h2>
- <table id="scoreboard-table"></table>
 </div>
 
 <audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
 
 <script>
-// Firebase init (replace with real config if deploying)
-const firebaseConfig={apiKey:"...",authDomain:"...",databaseURL:"...",projectId:"...",storageBucket:"...",messagingSenderId:"...",appId:"..."};
-firebase.initializeApp(firebaseConfig); const db=firebase.database();
+// Firebase init (dummy config)
+const firebaseConfig={apiKey:"..",authDomain:"..",databaseURL:"..",projectId:".."};
+firebase.initializeApp(firebaseConfig);const db=firebase.database();
 
-// Globals
-let myUser="",myPID="",myTeam="",myRole="",gameID="",buzzPlayed=false;let currentGameSnapshot=null;let scoreView="individual";
+let myUser="",myPID="",myTeam="",gameID="";let scoreView="individual";let buzzPlayed=false;let currentGameSnapshot={};
 
-// Navigation helpers
+// Page switch
 function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));document.getElementById(id).classList.add("show");}
-function showRegister(){showPage("page-register");} function showLogin(){showPage("page-login");}
-function showModal(m){alert(m);}
 
 // Auth placeholders
-function loginUser(){myUser=document.getElementById("login-username").value.trim();if(!myUser)return alert("Enter username");showHome();}
-function registerUser(){alert("Registered, now login");showLogin();}
-function updateProfile(){alert("Profile updated");}
+function loginUser(){myUser=document.getElementById("login-username").value;showHome();}
+function registerUser(){showPage("page-login");}
+function showRegister(){showPage("page-register");}
+function showLogin(){showPage("page-login");}
 function showHome(){document.getElementById("welcome-user").textContent=myUser;showPage("page-home");}
-function showProfile(){showPage("page-profile");}
+function showProfile(){alert("Profile here");}
 
 // Host
-function hostPage(){showPage("page-host");const code=String(Math.floor(Math.random()*900000+100000));document.getElementById("host-code").value=code;gameID=code;myRole="admin";db.ref("games/"+code).set({created:Date.now(),round:1,players:{},buzzed:"",question:""});}
-function startGame(){db.ref("games/"+gameID).update({status:"live"});showPage("page-admin-panel");readAdmin();}
-function uploadQuestion(){const q=document.getElementById("admin-question-input").value;db.ref("games/"+gameID).update({question:q});}
+function hostPage(){showPage("page-host");gameID=String(Math.floor(Math.random()*900000+100000));document.getElementById("host-code").value=gameID;db.ref("games/"+gameID).set({players:{},buzzed:"",question:""});}
+function startGame(){showPage("page-admin-panel");readAdmin();}
+function uploadQuestion(){let q=document.getElementById("admin-question-input").value;db.ref("games/"+gameID).update({question:q});}
 
 // Join
 function joinPage(){showPage("page-join");}
-function joinGame(){const code=document.getElementById("join-code").value;const team=document.getElementById("join-team").value;gameID=code;myTeam=team;myPID=btoa(myUser+Math.random()).replace(/=/g,"");db.ref("games/"+code+"/players/"+myPID).set({name:myUser,team,score:0});document.getElementById("pl-name").textContent=myUser;document.getElementById("pl-room").textContent=code;document.getElementById("pl-team").textContent=team;showPage("page-player");listenPlayer();}
+function joinGame(){gameID=document.getElementById("join-code").value;myTeam=document.getElementById("join-team").value;myPID=btoa(myUser+Math.random());db.ref("games/"+gameID+"/players/"+myPID).set({name:myUser,team:myTeam,score:0});document.getElementById("pl-name").textContent=myUser;document.getElementById("pl-room").textContent=gameID;document.getElementById("pl-team").textContent=myTeam;showPage("page-player");listenPlayer();}
 
 // Buzz
-function buzz(){db.ref("games/"+gameID).get().then(s=>{const g=s.val();if(g.buzzed)return;db.ref("games/"+gameID+"/players/"+myPID).update({buzzed:true});db.ref("games/"+gameID).update({buzzed:myPID});});}
+function buzz(){db.ref("games/"+gameID).once("value").then(s=>{let g=s.val();if(g.buzzed)return;db.ref("games/"+gameID+"/players/"+myPID).update({buzzed:true});db.ref("games/"+gameID).update({buzzed:myPID});});}
 document.addEventListener("keydown",e=>{if(document.getElementById("page-player").classList.contains("show")&&e.code==="Space"){e.preventDefault();buzz();}});
 
-// Player listening
-function listenPlayer(){db.ref("games/"+gameID).on("value",snap=>{const g=snap.val()||{};currentGameSnapshot=g;document.getElementById("player-question-text").textContent=g.question||"";document.getElementById("buzz-lock-msg").textContent=g.buzzed?"Locked":"";
-renderScores();if(g.buzzed&&!buzzPlayed){document.getElementById("buzz-audio").play();buzzPlayed=true;}if(!g.buzzed)buzzPlayed=false;});}
+// Player listen
+function listenPlayer(){db.ref("games/"+gameID).on("value",snap=>{let g=snap.val()||{};currentGameSnapshot=g;document.getElementById("player-question-text").textContent=g.question||"";document.getElementById("buzz-lock-msg").textContent=g.buzzed?"Locked":"";renderScores();if(g.buzzed&&!buzzPlayed){document.getElementById("buzz-audio").play();buzzPlayed=true;}if(!g.buzzed) buzzPlayed=false;});}
+function renderScores(){if(!currentGameSnapshot)return;let g=currentGameSnapshot;let html="";if(scoreView==="individual"){let arr=Object.entries(g.players||{}).map(([id,v])=>({...v,id}));arr.sort((a,b)=>(b.score||0)-(a.score||0));arr.forEach((pl,i)=>{html+=`${i+1}. <b style="color:#ffe05b">${pl.name}${pl.team?"("+pl.team+")":""}</b> ${pl.score||0} ${(pl.id===g.buzzed)?"<span class='buzzed-tag'>Buzzed</span>":""}<br>`;});}else{let ts={};Object.values(g.players||{}).forEach(pl=>{let t=pl.team||"(no team)";ts[t]=(ts[t]||0)+(pl.score||0);});Object.entries(ts).sort((a,b)=>b[1]-a).forEach(([team,pts],i)=>{html+=`${i+1}. <b style="color:#ffe05b">${team}</b> ${pts}<br>`;});}document.getElementById("player-scores").innerHTML=html||"(no players)";}
 
-// Render scores
-function renderScores(){if(!currentGameSnapshot)return;let g=currentGameSnapshot;let html="";if(scoreView==="individual"){let arr=Object.entries(g.players||{}).map(([id,v])=>({...v,id}));arr.sort((a,b)=>(b.score||0)-(a.score||0));arr.forEach((pl,i)=>{html+=`${i+1}. <b style="color:#ffe05b">${pl.name}${pl.team?"("+pl.team+")":""}</b> ${pl.score||0} ${(pl.id===g.buzzed)?"<span class='buzzed-tag'>Buzzed</span>":""}<br>`;});} else {let ts={};Object.values(g.players||{}).forEach(pl=>{let t=pl.team||"(no team)";ts[t]=(ts[t]||0)+(pl.score||0);});let arr=Object.entries(ts).sort((a,b)=>b[1]-a);arr.forEach(([t,pts],i)=>{html+=`${i+1}. <b style="color:#ffe05b">${t}</b> ${pts}<br>`;});}document.getElementById("player-scores").innerHTML=html||"(no players)";}
-
-// Admin panel
-function readAdmin(){db.ref("games/"+gameID).on("value",snap=>{const g=snap.val()||{};document.getElementById("roomcode").textContent=gameID;document.getElementById("round-label").textContent=g.round;document.getElementById("question-text").textContent=g.question||"";let arr=Object.entries(g.players||{}).map(([id,v])=>({...v,id}));arr.sort((a,b)=>(b.score||0)-(a.score||0));let html="<tr><th>Player</th><th>Score</th><th>Actions</th></tr>";arr.forEach(pl=>{html+=`<tr><td>${pl.name}${pl.team?"("+pl.team+")":""}</td><td>${pl.score||0}</td><td><button onclick="adminScore(25,'${pl.id}')">+25</button><button onclick="adminScore(-25,'${pl.id}')">-25</button></td></tr>`;});document.getElementById("admin-scores").innerHTML=html;let teams={};arr.forEach(pl=>{if(pl.team)teams[pl.team]=true;});let th="";Object.keys(teams).forEach(t=>{th+=`${t} <button onclick="adminTeamScore(25,'${t}')">+25</button><button onclick="adminTeamScore(-25,'${t}')">-25</button><br>`;});document.getElementById("team-controls").innerHTML=th;});}
+// Admin side
+function readAdmin(){db.ref("games/"+gameID).on("value",snap=>{let g=snap.val()||{};document.getElementById("roomcode").textContent=gameID;document.getElementById("question-text").textContent=g.question||"";let arr=Object.entries(g.players||{}).map(([id,v])=>({...v,id}));arr.sort((a,b)=>(b.score||0)-(a.score||0));let html="<tr><th>Player</th><th>Score</th><th>Actions</th></tr>";arr.forEach(pl=>{html+=`<tr><td>${pl.name}${pl.team?"("+pl.team+")":""}</td><td>${pl.score||0}</td><td><button onclick="adminScore(25,'${pl.id}')">+25</button><button onclick="adminScore(-25,'${pl.id}')">-25</button></td></tr>`;});document.getElementById("admin-scores").innerHTML=html;let teams={};arr.forEach(pl=>{if(pl.team)teams[pl.team]=true;});let th="";Object.keys(teams).forEach(t=>{th+=`${t} <button onclick="adminTeamScore(25,'${t}')">+25</button><button onclick="adminTeamScore(-25,'${t}')">-25</button><br>`;});document.getElementById("team-controls").innerHTML=th;});}
 function adminScore(delta,pid){db.ref(`games/${gameID}/players/${pid}`).once("value").then(s=>{let v=s.val();db.ref(`games/${gameID}/players/${pid}`).update({score:(v.score||0)+delta});});}
 function adminTeamScore(delta,team){db.ref(`games/${gameID}/players`).once("value").then(s=>{let ps=s.val()||{};Object.entries(ps).forEach(([pid,pl])=>{if(pl.team===team)db.ref(`games/${gameID}/players/${pid}`).update({score:(pl.score||0)+delta});});});}
-
-// Reset
-function resetBuzzers(){db.ref("games/"+gameID).update({buzzed:""});db.ref("games/"+gameID+"/players").once("value").then(s=>{(s.val()||{});});}
-
-// Scoreboard (placeholder combine scores)
-function showScoreboard(){showPage("page-scoreboard");document.getElementById("scoreboard-table").innerHTML="<tr><td>Not implemented fully here</td></tr>";}
 </script>
 </body>
 </html>
