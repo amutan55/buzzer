@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Buzzer</title>
+<title>Quiz Buzzer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -16,21 +16,23 @@
     --radius: 16px;
   }
   html, body {
-    margin:0; padding:0; height:100%; font-family:'Montserrat', Arial, sans-serif;
+    margin: 0; padding: 0; height: 100%; font-family: 'Montserrat', Arial, sans-serif;
     background: var(--main-bg); color: #fff;
-    user-select:none;
+    user-select: none;
   }
   .page {
-    display: none; max-width: 720px; margin: 0 auto; padding: 28px 32px;
+    display: none; max-width: 720px; margin: 0 auto; padding: 28px 32px; box-sizing: border-box;
   }
-  .show { display: block; }
-  h1,h2,h3 {
-    font-weight:700; margin-bottom: 24px; text-align:center;
+  .show {
+    display: block;
+  }
+  h1, h2, h3 {
+    font-weight: 700; margin-bottom: 24px; text-align: center;
   }
   input[type=text], input[type=password], input[type=email], input[type=file] {
     width: 100%; max-width: 420px; padding: 14px 18px; font-size: 1.2em;
     border-radius: var(--radius); border: none; margin: 12px auto 24px auto;
-    background: #344365; color: #fff; box-sizing: border-box; text-align: center;
+    background: #344365; color: #fff; text-align: center;
   }
   input::placeholder { color: #bac3e6; }
   button, .buzzer-btn {
@@ -52,8 +54,16 @@
     margin: 18px auto;
     display: block;
   }
-  button:hover:not(:disabled), .buzzer-btn:hover:not(:disabled) { background: var(--accent); color: #232323; }
-  button:disabled, .buzzer-btn:disabled { background: #ddd; color: #999; cursor: not-allowed; box-shadow: none; }
+  button:hover:not(:disabled), .buzzer-btn:hover:not(:disabled) {
+    background: var(--accent);
+    color: #232323;
+  }
+  button:disabled, .buzzer-btn:disabled {
+    background: #ddd;
+    color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
   .buzzer-btn {
     background: var(--accent);
     color: #141c34;
@@ -64,7 +74,8 @@
     border: 8px solid #fff;
     box-shadow: 0 8px 32px #ffea6fcc;
     margin: 38px auto;
-    min-width: 0; max-width: none;
+    min-width: 0;
+    max-width: none;
     text-align: center;
   }
   .backbtn {
@@ -88,199 +99,232 @@
     background: var(--accent);
     color: #232323;
   }
-  .scoreboard {
+  .center-box {
     max-width: 720px;
-    margin: 30px auto;
-    background: #222947;
-    padding: 18px 28px;
-    box-shadow: 0 2px 14px #0008;
-    border-radius: 20px;
-    color: #fff;
-    overflow-x: auto;
-  }
-  table {
-    width: 100%; border-collapse: collapse; color: #fff;
-  }
-  thead tr {
-    background: var(--primary);
-  }
-  th, td {
-    padding: 14px 10px; border: 1px solid #1a2138; text-align: center;
-  }
-  tbody tr:nth-child(odd) {
-    background: #2a2f4b;
-  }
-  tbody tr:hover {
-    background-color: #3b8bee90;
-  }
-  .avatar-column img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  .buzzed-tag {
-    background: var(--accent);
-    color: #232323;
-    border-radius: 14px;
-    padding: 6px 14px;
-    font-size: 1.1em;
-    user-select: none;
-    font-weight: 700;
-  }
-  #buzz-lock-msg, #buzzed-who {
-    color: var(--accent);
-    font-weight: 700;
-    text-align: center;
-    user-select: none;
-  }
-  #buzz-lock-msg {
-    margin-top: 15px;
-    font-size: 1.3em;
-  }
-  #buzzed-who {
-    font-size: 1.8em;
-    margin: 30px 0 24px 0;
-  }
-  #question-text, #player-question-text {
-    font-size: 2.9em;
-    font-weight: 900;
-    margin: 30px auto 24px auto;
-    max-width: 90vw;
-    word-break: break-word;
-    text-align: center;
-  }
-  #question-img, #player-question-img {
-    max-width: 90vw;
-    max-height: 400px;
+    margin: 0 auto;
+    padding: 30px 24px;
+    background: #2b3250;
     border-radius: 24px;
-    margin: 0 auto 30px auto;
-    display: block;
-    object-fit: contain;
-    cursor: zoom-in;
-    transition: transform 0.3s ease;
-    z-index: 1;
+    box-shadow: 0 4px 38px #232f66bb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  #question-img.zoomed, #player-question-img.zoomed {
-    transform: scale(2);
-    cursor: zoom-out;
-    position: relative;
-    z-index: 9999;
-    box-shadow: 0 0 20px #ffea6fcc;
+  .avatar-preview {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin-bottom: 22px;
+    object-fit: cover;
+    box-shadow: 0 0 12px #12183fbb;
   }
   .flex-main {
     display: flex;
     min-height: 100vh;
-    align-items: stretch;
-    justify-content: stretch;
+    background: var(--main-bg);
   }
   .left-panel {
     flex: 1 1 50%;
+    padding: 2rem;
     background: #21253e;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0 16px;
-    min-width: 0;
   }
   .right-panel {
     flex: 1 1 50%;
+    padding: 2rem;
     background: #293054;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    min-width: 350px;
-    padding: 0 32px 40px 32px;
   }
-  #buzzer-container {
-    margin-top: 48px;
-    text-align: center;
+  #question-img {
+    max-width: 90%;
+    max-height: 60vh;
+    border-radius: 24px;
+    object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+  }
+  #question-img.zoomed {
+    transform: scale(2);
+    cursor: zoom-out;
+    position: relative;
+    z-index: 9999;
+    box-shadow: 0 0 25px var(--accent);
+  }
+  #question-text {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-top: 1rem;
+    max-width: 95%;
+    text-align: left;
+    line-height: 1.2;
+  }
+  .scoreboard {
+    margin-top: 2rem;
     width: 100%;
-  }
-  .toggle-btns {
-    margin: 24px 0 12px 0;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-  .toggle-btns button {
-    width: 140px;
-  }
-  #host-controls {
-    margin-top: 26px;
-    padding: 14px 22px;
-    background: #193048;
+    max-width: 420px;
+    background-color: #222947;
     border-radius: 20px;
+    padding: 1rem 1.5rem;
+    font-size: 1.2rem;
+  }
+  .scoreboard table {
     width: 100%;
-    max-width: 400px;
-    color: #ffe05b;
+    border-collapse: collapse;
+  }
+  .scoreboard th, .scoreboard td {
+    padding: 10px;
+    border: 1px solid #1a2138;
+    text-align: center;
+  }
+  .scoreboard th {
+    background-color: var(--primary);
     font-weight: 700;
   }
-  #host-controls input, #host-controls button {
-    font-size: 1em;
-    border-radius: 10px;
+  .scoreboard tbody tr:nth-child(odd) {
+    background-color: #2a2f4b;
   }
-  #host-controls input {
-    padding: 8px 12px;
-    width: 100px;
-    margin-right: 12px;
-    border: none;
+  .scoreboard tbody tr:hover {
+    background-color: #3b8bee90;
   }
-  #host-controls button {
-    width: 100px;
-    padding: 9px 0;
-    border: none;
-    cursor: pointer;
+  .btn-group {
+    margin: 1rem 0;
+    display: flex;
+    gap: 1rem;
   }
-  @media (max-width: 900px) {
+  .btn-group button {
+    flex: 1;
+    max-width: 120px;
+  }
+  #buzz-lock-msg {
+    margin-top: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.3rem;
+    user-select: none;
+    text-align: center;
+  }
+  
+  @media(max-width: 900px) {
     .flex-main {
       flex-direction: column;
     }
     .left-panel, .right-panel {
-      min-width: 0;
-      width: 100%;
+      flex: 1 1 100%;
+      padding: 1rem;
     }
-    #question-img, #player-question-img {
+    #question-img.zoomed {
+      transform: none;
+      cursor: default;
+      z-index: auto;
+      box-shadow: none;
       max-height: 250px;
+    }
+    #question-text {
+      text-align: center;
+      font-size: 2rem;
     }
   }
 </style>
 </head>
 <body>
-<audio id="buzz-audio" preload="auto">
-  <source src="https://cdn.pixabay.com/audio/2022/06/14/audio_123e37b08f.mp3" type="audio/mp3" />
-</audio>
-
 <button class="backbtn" id="backbtn" style="display:none;" onclick="backButtonHandler()">← Back</button>
+<div id="modal" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  background:#ffcf46cc;padding:18px 32px;border-radius:16px;color:#232323;
+  font-weight:700;display:none;user-select:none;z-index:9999;"></div>
 
-<div class="flex-main">
-  <div class="left-panel">
-    <img id="question-img" src="" alt="Question Image" />
-    <div id="question-text"></div>
+<!-- Pages -->
+<div id="page-login" class="page show center-box">
+  <h1>Login</h1>
+  <input id="login-username" type="text" placeholder="Username" maxlength="24" autocomplete="off" />
+  <input id="login-password" type="password" placeholder="Password" maxlength="24" />
+  <button onclick="loginUser()">Login</button>
+  <button onclick="showRegister()">Register</button>
+</div>
+
+<div id="page-register" class="page center-box">
+  <h1>Register</h1>
+  <input id="register-username" type="text" placeholder="Username" maxlength="24" autocomplete="off" />
+  <input id="register-password" type="password" placeholder="Password" maxlength="24" />
+  <input id="register-email" type="email" placeholder="Email" />
+  <button onclick="registerUser()">Register</button>
+  <button onclick="showLogin()">Back to Login</button>
+</div>
+
+<div id="page-home" class="page center-box">
+  <h2>Welcome, <span id="welcome-user"></span>!</h2>
+  <button onclick="hostGame()">Host Game</button>
+  <button onclick="joinGamePage()">Join Game</button>
+  <button onclick="showProfile()">Profile</button>
+  <button id="adminPanelBtn" style="display:none;" onclick="showAdminPanel()">Admin Panel</button>
+  <button onclick="showScoreboard('player')">View Scoreboard</button>
+</div>
+
+<div id="page-profile" class="page center-box">
+  <h2>Profile</h2>
+  <input id="profile-email" type="email" placeholder="Email" />
+  <input id="profile-password" type="password" placeholder="Change Password" />
+  <button onclick="updateProfile()">Save Changes</button>
+</div>
+
+<div id="page-admin-panel" class="page center-box">
+  <h2>Admin Panel - <span id="room-code"></span></h2>
+  <div>
+    <input id="admin-question-input" type="text" placeholder="Enter Question" style="width:100%;margin-bottom:1rem;"/>
+    <input id="admin-image-input" type="file" accept="image/*" style="margin-bottom:1rem;"/>
+    <button onclick="uploadQuestion()">Upload Question</button>
   </div>
-  <div class="right-panel">
-    <div id="buzzer-container">
+  <table id="admin-scores" style="margin-top:20px; width:100%;"></table>
+  <button onclick="resetBuzzers()">Reset Buzzers</button>
+  <button onclick="resetScores()">Reset Scores</button>
+  <button onclick="nextRound()">Next Round</button>
+  <button onclick="showHome()">Back to Home</button>
+</div>
+
+<div id="page-join" class="page center-box">
+  <h2>Join Game</h2>
+  <input id="join-game-code" type="text" maxlength="6" placeholder="Game Code" />
+  <input id="join-team" type="text" maxlength="24" placeholder="Team (optional)" />
+  <button onclick="joinGame()">Join</button>
+  <button onclick="showHome()">Back to Home</button>
+</div>
+
+<div id="page-player" class="page">
+  <div class="flex-main">
+    <div class="left-panel">
+      <img id="question-img" alt="Question" />
+      <div id="question-text"></div>
+    </div>
+    <div class="right-panel">
       <button id="buzzer-btn" class="buzzer-btn">BUZZ!</button>
       <div id="buzz-lock-msg"></div>
-    </div>
-    <div class="toggle-btns">
-      <button id="individual-score-btn">Individual Scores</button>
-      <button id="team-score-btn">Team Scores</button>
-    </div>
-    <div id="scoreboard-box" class="scoreboard"></div>
-    <div id="host-controls" style="display:none;">
-      <label for="host-teamname">Team Name:</label>
-      <input id="host-teamname" placeholder="Team Name" />
-      <label for="host-points">Points:</label>
-      <input id="host-points" type="number" value="10" />
-      <button id="add-points-btn">Add Points</button>
+
+      <div class="btn-group">
+        <button id="score-individual-btn">Individual Scores</button>
+        <button id="score-team-btn">Team Scores</button>
+      </div>
+
+      <div id="scoreboard" class="scoreboard"></div>
+      <div id="host-controls" class="center-box" style="display:none; margin-top: 24px;">
+        <input id="host-team" type="text" placeholder="Team Name" style="width: 140px; margin-right: 8px;" />
+        <input id="host-points" type="number" value="10" style="width: 80px; margin-right: 8px;" />
+        <button onclick="addPoints()">Add Points</button>
+      </div>
+
+      <button style="margin-top: 16px;" onclick="leaveGame()">Leave Game</button>
     </div>
   </div>
 </div>
 
+<audio id="buzz-sound" src="https://cdn.pixabay.com/audio/2022/06/14/audio_123e37b08f.mp3" preload="auto"></audio>
+
 <script>
+// Firebase config and initialization
 const firebaseConfig = {
   apiKey: "AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
   authDomain: "buzzer-a0d53.firebaseapp.com",
@@ -291,170 +335,334 @@ const firebaseConfig = {
   appId: "1:29031182202:web:447d951b38be59b29270c3",
   measurementId: "G-NP0DMX7TKJ"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Demo data you replace with real user/game initialization
-let isHost = true; // Set to false for normal players
-let myUser = "host"; // host or player username
-let myPID = "pid_host"; // player's unique ID in DB
+// Global variables simulating logged in user and game state
+let myUser = null;
+let myPID = null;
 let myTeam = null;
-let gameID = "123456";
+let gameID = null;
+let isHost = false;
 
-document.getElementById('host-controls').style.display = isHost ? 'block' : 'none';
+// Page stack for back button
+let pageStack = [];
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
+  pageStack.push(id);
+  document.getElementById('backbtn').style.display = (id === 'page-login' || pageStack.length === 1) ? 'none' : 'block';
+}
+
+function backButtonHandler() {
+  if (pageStack.length > 1) {
+    pageStack.pop();
+    const prev = pageStack[pageStack.length - 1];
+    showPage(prev);
+  }
+}
+
+// Show specific pages
+function showLogin() { showPage('page-login'); }
+function showRegister() { showPage('page-register'); }
+function showHome() { showPage('page-home'); }
+function showProfile() { showPage('page-profile'); }
+function showAdminPanel() { showPage('page-admin-panel'); }
+function showJoinPage() { showPage('page-join'); }
+function showPlayerPage() { showPage('page-player'); }
+
+// Modal display
+function showModal(msg, duration=1500) {
+  const modal = document.getElementById('modal');
+  modal.textContent = msg;
+  modal.style.display = 'block';
+  setTimeout(() => modal.style.display = 'none', duration);
+}
+
+// ---------- Auth Logic ----------
+function registerUser() {
+  const username = document.getElementById('register-username').value.trim();
+  const password = document.getElementById('register-password').value.trim();
+  const email = document.getElementById('register-email').value.trim();
+  if (!username || !password || !email) { showModal('Fill all fields'); return; }
+  db.ref('users/'+username).get().then(snap=>{
+    if(snap.exists()) { showModal('Username exists'); return; }
+    db.ref('users/'+username).set({pw: password, email, role: 'user', avatar: ''}).then(()=>{
+      showModal('Registered! Please login.');
+      showLogin();
+    });
+  });
+}
+function loginUser() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  if (!username || !password) { showModal('Fill username and password'); return; }
+  db.ref('users/'+username).get().then(snap=>{
+    if(!snap.exists()) { showModal('User not found'); return; }
+    const u = snap.val();
+    if(u.pw !== password) { showModal('Incorrect password'); return; }
+    myUser = username;
+    myPID = btoa(username).slice(0,10); // Mock player ID
+    myTeam = null;
+    isHost = (username === 'admin');
+    document.getElementById('welcome-user').textContent = myUser;
+    document.getElementById('adminPanelBtn').style.display = isHost ? 'block' : 'none';
+    showHome();
+  });
+}
+
+// ------------- Host & Join -------------
+
+function hostGame() {
+  gameID = '' + Math.floor(100000 + Math.random() * 900000);
+  isHost = true;
+  myTeam = null;
+  myPID = btoa(myUser+"_"+Date.now()).slice(0,12);
+  db.ref('games/'+gameID).set({
+    created: Date.now(),
+    status: 'live',
+    round: 1,
+    question: '',
+    image: '',
+    buzzed: '',
+    players: {},
+    totalScores: {}
+  });
+  showAdminPanel();
+  document.getElementById('room-code').textContent = gameID;
+  listenAdminGame();
+}
+function joinGame() {
+  const code = document.getElementById('join-game-code').value.trim();
+  const team = document.getElementById('join-team').value.trim();
+  if (!code.match(/^\d{6}$/)) { showModal('Invalid game code'); return; }
+  gameID = code;
+  myPID = btoa(myUser+"_"+Date.now()).slice(0,12);
+  myTeam = team || null;
+  db.ref('games/'+gameID+'/players/'+myPID).set({
+    name: myUser,
+    team: myTeam,
+    score: 0,
+    buzzed: false,
+    joined: Date.now()
+  });
+  isHost = false;
+  listenPlayerGame();
+  showPlayerPage();
+}
+
+// ---------- Admin Page Logic ----------
+function uploadQuestion() {
+  const question = document.getElementById('admin-question-input').value.trim();
+  const fileInput = document.getElementById('admin-image-input');
+  if (!question) { showModal('Enter question first'); return; }
+  if (fileInput.files.length > 0) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      db.ref('games/'+gameID).update({question: question, image: event.target.result});
+      showModal('Question uploaded');
+      fileInput.value = '';
+      document.getElementById('admin-question-input').value = '';
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    db.ref('games/'+gameID).update({question: question, image: ''});
+    showModal('Question uploaded');
+    document.getElementById('admin-question-input').value = '';
+  }
+}
+
+function resetBuzzers() {
+  db.ref('games/'+gameID+'/players').once('value').then(snap => {
+    snap.forEach(child => {
+      db.ref('games/'+gameID+'/players/'+child.key).update({buzzed:false});
+    });
+    db.ref('games/'+gameID).update({buzzed:""});
+  });
+}
+function resetScores() {
+  db.ref('games/'+gameID+'/players').once('value').then(snap => {
+    snap.forEach(child => {
+      db.ref('games/'+gameID+'/players/'+child.key).update({score:0, buzzed:false});
+    });
+    db.ref('games/'+gameID).update({buzzed:""});
+  });
+}
+function nextRound() {
+  db.ref('games/'+gameID).once('value').then(snap => {
+    let round = snap.val().round || 1;
+    db.ref('games/'+gameID).update({round: round+1, buzzed:""});
+    resetScores();
+  });
+}
+
+function reloadAdminScores() {
+  db.ref('games/'+gameID+'/players').once('value').then(snap => {
+    let players = snap.val() || {};
+    let entries = Object.entries(players);
+    entries.sort((a,b) => (b[1].score || 0) - (a[1].score || 0));
+    let html = `<thead><tr><th>Player</th><th>Team</th><th>Score</th><th>Adjust</th><th>Buzzed</th></tr></thead><tbody>`;
+    db.ref('games/'+gameID).once('value').then(gsnap=>{
+      const buzzed = gsnap.val().buzzed||"";
+      entries.forEach(([pid,pl])=>{
+        html += `<tr>
+          <td>${pl.name}</td>
+          <td>${pl.team|| '-'}</td>
+          <td>${pl.score||0}</td>
+          <td>
+            <button onclick="adjustScore('${pid}',25)">+25</button>
+            <button onclick="adjustScore('${pid}',-25)">-25</button>
+          </td>
+          <td>${pid===buzzed ? '<span class="buzzed-tag">Yes</span>': ''}</td>
+          </tr>`;
+      });
+      html += "</tbody>";
+      document.getElementById('admin-scores').innerHTML = html;
+    });
+  });
+}
+
+function adjustScore(pid, delta) {
+  db.ref('games/'+gameID+'/players/'+pid+'/score').transaction(old=> (old||0) + delta);
+  reloadAdminScores();
+}
+
+function listenAdminGame() {
+  db.ref('games/'+gameID).on('value', snap => {
+    const g = snap.val() || {};
+    document.getElementById('room-code').textContent = gameID;
+    document.getElementById('question-text').textContent = g.question || "";
+    const img = document.getElementById('question-img');
+    if(g.image) { img.src = g.image; img.style.display = 'block'; } else { img.style.display = 'none'; }
+    reloadAdminScores();
+  });
+}
+
+// -------- Player Page Logic --------
+const buzzAudio = document.getElementById('buzz-sound');
 const buzzerBtn = document.getElementById('buzzer-btn');
-const buzzAudio = document.getElementById('buzz-audio');
-const questionImg = document.getElementById('question-img');
-const questionText = document.getElementById('question-text');
 const buzzLockMsg = document.getElementById('buzz-lock-msg');
-const scoreboardBox = document.getElementById('scoreboard-box');
-const individualScoreBtn = document.getElementById('individual-score-btn');
-const teamScoreBtn = document.getElementById('team-score-btn');
-const addPointsBtn = document.getElementById('add-points-btn');
+const scoreboardDiv = document.getElementById('scoreboard');
+const scoreIndividualBtn = document.getElementById('score-individual-btn');
+const scoreTeamBtn = document.getElementById('score-team-btn');
+const hostControlsDiv = document.getElementById('host-controls');
 
 let buzzerLocked = false;
-let lastBuzz = 0;
-let scoreboardMode = 'individual';
+let lastBuzzTime = 0;
+let currentScoreboardMode = "individual";
 
-// Function to play buzzer sound instantly
+if (isHost) {
+  hostControlsDiv.style.display = 'block';
+}
+
 function playBuzzSound() {
   buzzAudio.currentTime = 0;
-  buzzAudio.play().catch(()=>{});
+  buzzAudio.play().catch(() => {});
 }
 
-// Function to trigger buzz with fast debounce (16 ms) for spacebar and mouse
-function triggerBuzz() {
+function tryBuzz() {
   if (buzzerLocked) return;
-  let now = performance.now();
-  if (now - lastBuzz < 16) return;
-  lastBuzz = now;
-  // Update buzz in firebase
-  db.ref(`games/${gameID}`).update({ buzzed: myPID });
-  db.ref(`games/${gameID}/players/${myPID}`).update({ buzzed: true });
+  const now = performance.now();
+  if(now - lastBuzzTime < 12) return; // ~80fps debounce
+  lastBuzzTime = now;
+  db.ref(`games/${gameID}/players/${myPID}`).update({buzzed: true});
+  db.ref(`games/${gameID}`).update({buzzed: myPID});
   playBuzzSound();
-  updateBuzzLock(true);
 }
 
-// Disable buzzer according to game state
-function updateBuzzLock(lock) {
-  buzzerLocked = lock;
-  buzzLockMsg.textContent = lock ? "Buzzer Locked!" : "";
-  buzzerBtn.disabled = lock;
-}
-
-// Listen to buzz state changes in DB to update buzzer lock state
-db.ref(`games/${gameID}/buzzed`).on('value', snap => {
-  const val = snap.val();
-  if (val && val !== myPID) {
-    updateBuzzLock(true);
-  } else {
-    updateBuzzLock(false);
-  }
-});
-
-// Listen to question data updates (text and image)
-db.ref(`games/${gameID}`).on('value', snap => {
-  const data = snap.val() || {};
-  questionText.textContent = data.question || "Waiting for question...";
-  if (data.image) {
-    questionImg.src = data.image;
-    questionImg.style.display = 'block';
-  } else {
-    questionImg.style.display = 'none';
-  }
-});
-
-// Zoom toggle on question image
-questionImg.addEventListener('click', () => {
-  if (questionImg.style.display === 'none') return;
-  questionImg.classList.toggle('zoomed');
-});
-
-// Handle buzzer interaction
-buzzerBtn.addEventListener('click', triggerBuzz);
-window.addEventListener('keydown', e => {
-  if (e.code === "Space" || e.keyCode === 32) {
+buzzerBtn.onclick = tryBuzz;
+window.addEventListener("keydown", e=>{
+  if(e.code === "Space" || e.keyCode === 32){
     e.preventDefault();
-    triggerBuzz();
+    tryBuzz();
   }
 });
 
-// Load scoreboard - individual or team mode
+// Update buzzer lock UI based on buzzed player in DB
+db.ref(`games/${gameID}/buzzed`).on('value', snap=>{
+  const buzzedId = snap.val();
+  if (buzzedId && buzzedId !== myPID) {
+    buzzerLocked = true;
+    buzzLockMsg.textContent = "Buzzer Locked";
+    buzzerBtn.disabled = true;
+  } else {
+    buzzerLocked = false;
+    buzzLockMsg.textContent = "";
+    buzzerBtn.disabled = false;
+  }
+});
+
+// Load scoreboard helper
 function loadScoreboard(mode) {
-  scoreboardMode = mode;
-  if (!gameID) return;
-  db.ref(`games/${gameID}/players`).once("value").then(snap => {
-    const players = snap.val() || {};
-    let arr = Object.entries(players).map(([id, p]) => ({...p, id}));
-    if (mode === 'individual') {
-      arr.sort((a, b) => (b.score || 0) - (a.score || 0));
+  currentScoreboardMode = mode;
+  db.ref(`games/${gameID}/players`).once('value').then(snap=>{
+    const playersObj = snap.val() || {};
+    const players = Object.entries(playersObj).map(([pid,p])=>({pid,...p}));
+    if(mode==="individual"){
+      players.sort((a,b)=>(b.score||0)-(a.score||0));
       let html = `<table><thead><tr><th>Player</th><th>Team</th><th>Score</th></tr></thead><tbody>`;
-      arr.forEach(p => {
-        html += `<tr><td>${p.name || p.id}</td><td>${p.team || "-"}</td><td>${p.score||0}</td></tr>`;
+      players.forEach(p=>{
+        html += `<tr><td>${p.name}</td><td>${p.team||'-'}</td><td>${p.score||0}</td></tr>`;
       });
       html += "</tbody></table>";
-      scoreboardBox.innerHTML = html;
+      scoreboardDiv.innerHTML = html;
     } else {
-      let teamScores = {};
-      arr.forEach(p => {
+      // aggregate per team
+      const teamMap = {};
+      players.forEach(p => {
         if (!p.team) return;
-        teamScores[p.team] = (teamScores[p.team] || 0) + (p.score||0);
+        teamMap[p.team] = (teamMap[p.team]||0) + (p.score||0);
       });
-      const sortedTeams = Object.entries(teamScores).sort(([,a], [,b]) => b - a);
-      let html = `<table><thead><tr><th>Team</th><th>Total Points</th></tr></thead><tbody>`;
-      sortedTeams.forEach(([team, score]) => {
+      const sortedTeams = Object.entries(teamMap).sort((a,b) => b[1]-a[1]);
+      let html = `<table><thead><tr><th>Team</th><th>Total Score</th></tr></thead><tbody>`;
+      sortedTeams.forEach(([team,score])=>{
         html += `<tr><td>${team}</td><td>${score}</td></tr>`;
       });
       html += "</tbody></table>";
-      scoreboardBox.innerHTML = html;
+      scoreboardDiv.innerHTML = html;
     }
   });
 }
+scoreIndividualBtn.onclick = ()=>loadScoreboard("individual");
+scoreTeamBtn.onclick = ()=>loadScoreboard("team");
+loadScoreboard("individual");
 
-// Initialize scoreboard buttons and load individual by default
-individualScoreBtn.onclick = () => loadScoreboard('individual');
-teamScoreBtn.onclick = () => loadScoreboard('team');
-loadScoreboard('individual');
-
-// Host controls: add points to team
-addPointsBtn.onclick = () => {
-  const team = document.getElementById('host-teamname').value.trim();
-  const pts = parseInt(document.getElementById('host-points').value, 10);
-  if(!team || isNaN(pts)) return alert('Enter valid team and points');
+// Host adds points to team
+document.getElementById('host-add-points').onclick = () => {
+  const teamName = document.getElementById('host-team').value.trim();
+  const points = parseInt(document.getElementById('host-points').value);
+  if (!teamName) { alert("Enter team name"); return; }
+  if (isNaN(points)) { alert("Points must be a number"); return; }
   db.ref(`games/${gameID}/players`).once('value').then(snap => {
     snap.forEach(playerSnap => {
       const p = playerSnap.val();
-      if(p.team === team) {
-        let key = playerSnap.key;
-        let pScore = p.score || 0;
-        db.ref(`games/${gameID}/players/${key}/score`).set(pScore + pts);
+      if (p.team === teamName) {
+        db.ref(`games/${gameID}/players/${playerSnap.key}/score`).transaction(s => (s || 0) + points);
       }
     });
+    loadScoreboard(currentScoreboardMode);
   });
 };
 
-// Player leaves
+// Player leave game
 function leaveGame() {
   if (!myPID) return;
   db.ref(`games/${gameID}/players/${myPID}`).remove();
   db.ref(`games/${gameID}/buzzed`).once("value").then(snap => {
     if (snap.val() === myPID) db.ref(`games/${gameID}/buzzed`).remove();
   });
-  alert('You left the game.');
-  // Redirect or reset UI here as required
+  showLogin();
 }
 
-// Dummy initial setup - replace these in your app
-if(!myUser) myUser = "guest";
-document.getElementById("pl-name")?.textContent = myUser || "";
-document.getElementById("pl-room")?.textContent = gameID || "";
-document.getElementById("pl-team")?.textContent = myTeam || "";
-if (typeof isHost !== "undefined" && isHost) {
-  document.getElementById('host-controls').style.display = 'block';
-} else {
-  document.getElementById('host-controls').style.display = 'none';
-}
+// Question image zoom toggle
+document.getElementById('question-img').addEventListener('click', function(){
+  this.classList.toggle('zoomed');
+});
+
+// Add your navigation and other functional logic for login, register, admin panel, etc., based on previous responses
+
 </script>
 </body>
 </html>
-
