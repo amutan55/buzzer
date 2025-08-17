@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Quiz Buzzer Pro - Multi Page SPA</title>
+<title>Quiz Buzzer </title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -14,91 +14,166 @@
     --accent: #ffe05b;
     --danger: #e94f37;
     --radius: 16px;
-    --btn-bg: var(--primary);
-    --btn-hover-bg: var(--accent);
   }
-
+  /* Global styles */
   html, body {
-    margin:0; padding:0; min-height:100vh; font-family: 'Montserrat', Arial, sans-serif;
-    background: var(--main-bg); color: #fff;
+    margin:0; padding:0; height:100%; background: var(--main-bg); color:#fff; font-family: 'Montserrat', Arial, sans-serif; user-select:none;
   }
   a {
-    text-decoration: none; color: var(--btn-bg); font-weight: 700; cursor: pointer;
-    display: inline-block; padding: 10px 22px; border-radius: 32px;
-    border: 2px solid var(--btn-bg); background-color: transparent;
-    transition: all .3s ease;
-    margin: 0 8px;
+    color: var(--primary);
+    text-decoration: none;
   }
   a:hover {
-    color: var(--main-bg);
-    background-color: var(--btn-hover-bg);
-    border-color: var(--btn-hover-bg);
-  }
-  header {
-    background: #232a55;
-    padding: 12px 24px;
-    box-shadow: 0 4px 12px #0006;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  header h1 {
-    font-weight: 900;
-    font-size: 1.6rem;
-    margin: 0;
     color: var(--accent);
   }
+  header {
+    background:#232a55; padding:15px 24px; box-shadow: 0 4px 12px #0006;
+    position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center;
+  }
+  header h1 {
+    margin:0; font-weight:900; font-size:1.6rem; color: var(--accent);
+  }
   nav a {
-    font-size: 1.1rem;
+    margin-left: 18px; font-weight:700; font-size: 1.1rem; cursor: pointer;
   }
-  main {
-    padding: 24px;
-    max-width: 720px;
-    margin: 0 auto;
+  #main-content {
+    max-width: 900px;
+    margin: 30px auto;
+    background: #2b3250;
+    border-radius: 24px;
+    padding: 34px 32px;
+    min-height: 75vh;
+    box-sizing: border-box;
+    box-shadow: 0 8px 28px #000c;
   }
-  h2 {
-    font-weight: 700;
-    margin-bottom: 18px;
-  }
+  h2 { font-weight:700; margin-bottom:28px; text-align:center; }
+
   input[type=text], input[type=password], input[type=email], input[type=number], input[type=file] {
-    width: 100%; max-width: 400px;
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    font-size: 1.1rem;
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto 24px auto;
+    padding: 16px 20px;
+    font-size: 1.2em;
     border-radius: var(--radius);
     border: none;
     background: #344365;
-    color: #fff;
+    color: white;
+    text-align: center;
     box-sizing: border-box;
+    user-select: text;
+  }
+  input::placeholder {
+    color: #bac3e6;
   }
   button {
-    background: var(--btn-bg);
-    border: none;
-    border-radius: 48px;
-    color: #fff;
-    font-size: 1.2rem;
+    display: block;
+    margin: 24px auto 12px auto;
+    padding: 18px 36px;
+    font-size: 1.3rem;
     font-weight: 700;
-    padding: 14px 28px;
+    border-radius: 48px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
     cursor: pointer;
-    box-shadow: 0 6px 12px #2554a1aa;
-    transition: background .25s ease;
+    box-shadow: 0 8px 24px #2554a1bb;
+    transition: background 0.3s ease;
+    user-select: none;
+    min-width: 180px;
+    max-width: 320px;
   }
-  button:hover {
-    background: var(--btn-hover-bg);
+  button:hover:enabled {
+    background: var(--accent);
     color: #232323;
   }
-  .buzzer-btn {
-    font-size: 3.5rem;
+  button:disabled {
+    background: #999;
+    color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  /* Centered container for all forms */
+  .center-box {
+    max-width: 480px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .avatar-preview {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    object-fit: cover;
+    box-shadow: 0 0 16px #12183fbb;
+    user-select: none;
+  }
+  /* Buzzer page layout */
+  .flex-main {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+  }
+  #question-section {
+    flex: 5;
+    background: #2b3250;
+    border-radius: 24px;
+    padding: 28px 36px;
+    user-select: none;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  #question-text, #player-question-text {
+    font-size: 3rem;
     font-weight: 900;
-    padding: 48px 100px;
-    border-radius: 90px;
-    border: 8px solid #fff;
+    max-width: 90vw;
+    text-align: center;
+    margin-bottom: 28px;
+    user-select: none;
+    word-break: break-word;
+  }
+  #question-img, #player-question-img {
+    max-width: 90vw;
+    max-height: 70vh;
+    border-radius: 24px;
+    object-fit: contain;
+    cursor: zoom-in;
+    user-select: none;
+    box-shadow: 0 0 42px var(--accent);
+    transition: transform 0.3s ease;
+  }
+  #question-img.zoomed, #player-question-img.zoomed {
+    transform: scale(2.1);
+    cursor: zoom-out;
+    position: relative;
+    z-index: 9999;
+  }
+  #control-section {
+    flex: 4;
+    background: #293054;
+    border-radius: 24px;
+    padding: 36px 24px;
+    box-sizing: border-box;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .buzzer-btn {
     background: var(--accent);
     color: #141c34;
-    box-shadow: 0 10px 30px #ffea6fcc;
+    font-size: 4rem;
+    font-weight: 900;
+    padding: 50px 120px;
+    border-radius: 90px;
+    border: 10px solid #fff;
+    box-shadow: 0 8px 36px #ffea6fcc;
+    cursor: pointer;
+    min-width: 100%;
+    max-width: none;
+    text-align: center;
+    transition: background 0.3s ease;
     user-select: none;
   }
   .buzzer-btn:disabled {
@@ -108,64 +183,115 @@
     cursor: not-allowed;
     box-shadow: none;
   }
+  #buzz-lock-msg {
+    color: var(--accent);
+    font-weight: 700;
+    margin-top: 15px;
+    font-size: 1.4rem;
+    min-height: 28px;
+    text-align: center;
+  }
+  .btn-group {
+    margin: 20px 0;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    width: 100%;
+  }
+  .btn-group button {
+    flex: 1;
+    padding: 14px 0;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 24px;
+    background: var(--primary);
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    user-select: none;
+    max-width: 180px;
+  }
+  .btn-group button:hover:not(:disabled) {
+    background: var(--accent);
+    color: #232323;
+  }
   .scoreboard {
     background-color: #222947;
-    padding: 16px;
     border-radius: 20px;
-    color: #fff;
-    max-height: 380px;
+    padding: 16px 20px;
+    width: 100%;
+    max-height: 350px;
     overflow-y: auto;
-    box-shadow: 0 3px 22px #0008;
+    box-shadow: 0 4px 24px #000a;
   }
-  table {
+  .scoreboard table {
     width: 100%;
     border-collapse: collapse;
     color: #fff;
   }
-  th, td {
-    padding: 12px 14px;
+  .scoreboard th, .scoreboard td {
+    padding: 12px 16px;
     border: 1px solid #1a2138;
     text-align: center;
   }
-  thead tr {
+  .scoreboard thead tr {
     background-color: var(--primary);
   }
-  tbody tr:nth-child(odd) {
+  .scoreboard tbody tr:nth-child(odd) {
     background-color: #2a2f4b;
   }
-  tbody tr:hover {
+  .scoreboard tbody tr:hover {
     background-color: #3b8bee90;
   }
-  .avatar-preview {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 0 12px #12183fbb;
-    margin-bottom: 15px;
+  #host-controls {
+    width: 100%;
+    margin-top: 28px;
+    background: #364063;
+    border-radius: 22px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 6px 20px #0008;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
   }
-  #modal {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #ffcf46cc;
-    padding: 16px 32px;
-    border-radius: 16px;
-    color: #232323;
-    font-weight: 700;
-    user-select: none;
-    display: none;
-    z-index: 9999;
-    font-size: 1.1rem;
-  }
-  #buzz-lock-msg {
-    color: var(--accent);
-    font-weight: 700;
-    margin-top: 18px;
+  #host-controls input {
+    width: 130px;
+    padding: 14px 16px;
+    font-size: 1.2rem;
+    border-radius: 20px;
+    border: none;
     text-align: center;
-    min-height: 24px;
-    user-select: none;
+  }
+  #host-controls button {
+    min-width: 150px;
+    font-size: 1.3rem;
+  }
+  #leave-game-btn {
+    margin-top: 30px;
+    background: var(--danger);
+    border-radius: 40px;
+    font-weight: 700;
+  }
+  @media(max-width: 830px) {
+    .show {
+      flex-direction: column;
+      height: auto;
+    }
+    #question-section, #control-section {
+      max-width: 100%;
+      margin: 0 auto 30px;
+      padding: 20px 24px;
+    }
+    #question-img, #player-question-img {
+      max-height: 300px;
+    }
+    .buzzer-btn {
+      font-size: 3rem;
+      padding: 36px 80px;
+    }
   }
 </style>
 </head>
@@ -174,26 +300,28 @@
 <header>
   <h1>Quiz Buzzer Pro</h1>
   <nav>
-    <a href="#" onclick="navigate('login')">Login</a>
-    <a href="#" onclick="navigate('register')">Register</a>
-    <a href="#" onclick="navigate('home')" id="nav-home" style="display:none;">Home</a>
-    <a href="#" onclick="navigate('profile')" id="nav-profile" style="display:none;">Profile</a>
-    <a href="#" onclick="navigate('host')" id="nav-host" style="display:none;">Host Game</a>
-    <a href="#" onclick="navigate('join')" id="nav-join" style="display:none;">Join Game</a>
-    <a href="#" onclick="navigate('adminPanel')" id="nav-admin" style="display:none;">Admin Panel</a>
-    <a href="#" onclick="navigate('scoreboard')" id="nav-scoreboard" style="display:none;">Scoreboard</a>
-    <a href="#" onclick="logout()" id="nav-logout" style="display:none; color: var(--danger);">Logout</a>
+    <a href="#" id="nav-login" onclick="navigate('login')">Login</a>
+    <a href="#" id="nav-register" onclick="navigate('register')">Register</a>
+    <a href="#" id="nav-home" onclick="navigate('home')" style="display:none;">Home</a>
+    <a href="#" id="nav-profile" onclick="navigate('profile')" style="display:none;">Profile</a>
+    <a href="#" id="nav-host" onclick="navigate('host')" style="display:none;">Host Game</a>
+    <a href="#" id="nav-join" onclick="navigate('join')" style="display:none;">Join Game</a>
+    <a href="#" id="nav-admin" onclick="navigate('adminPanel')" style="display:none;">Admin Panel</a>
+    <a href="#" id="nav-scoreboard" onclick="navigate('scoreboard')" style="display:none;">Overall Scoreboard</a>
+    <a href="#" id="nav-logout" onclick="logout()" style="display:none; color: var(--danger);">Logout</a>
   </nav>
 </header>
 
-<main id="main-content">
-  <!-- Content will be loaded here -->
+<main id="main-content" role="main" tabindex="-1">
+  <!-- Pages render here -->
 </main>
 
 <div id="modal"></div>
 
+<audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
+
 <script>
-  // Firebase Initialization
+  // Firebase Init
   const firebaseConfig = {
     apiKey: "AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
     authDomain: "buzzer-a0d53.firebaseapp.com",
@@ -206,16 +334,41 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // Global State
+  // Global state
   let currentUser = null;
   let currentRole = null;
   let gameID = "";
   let playerID = "";
   let teamName = "";
-
   let buzzLockSoundPlayed = false;
+  let currentScoreboardMode = 'individual';
 
-  // Utility: Show modal message
+  // Navigation helper
+  const navLinks = {
+    login: document.getElementById('nav-login'),
+    register: document.getElementById('nav-register'),
+    home: document.getElementById('nav-home'),
+    profile: document.getElementById('nav-profile'),
+    host: document.getElementById('nav-host'),
+    join: document.getElementById('nav-join'),
+    admin: document.getElementById('nav-admin'),
+    scoreboard: document.getElementById('nav-scoreboard'),
+    logout: document.getElementById('nav-logout'),
+  };
+
+  function updateNav(){
+    const loggedIn = !!currentUser;
+    navLinks.login.style.display = loggedIn ? 'none' : 'inline-block';
+    navLinks.register.style.display = loggedIn ? 'none' : 'inline-block';
+    navLinks.home.style.display = loggedIn ? 'inline-block' : 'none';
+    navLinks.profile.style.display = loggedIn ? 'inline-block' : 'none';
+    navLinks.host.style.display = loggedIn ? 'inline-block' : 'none';
+    navLinks.join.style.display = loggedIn ? 'inline-block' : 'none';
+    navLinks.scoreboard.style.display = loggedIn ? 'inline-block' : 'none';
+    navLinks.admin.style.display = (currentRole === 'admin') ? 'inline-block' : 'none';
+    navLinks.logout.style.display = loggedIn ? 'inline-block' : 'none';
+  }
+
   function showModal(msg, duration=1800){
     const modal = document.getElementById('modal');
     modal.textContent = msg;
@@ -224,150 +377,120 @@
     modal._timer = setTimeout(() => modal.style.display = 'none', duration);
   }
 
-  // Navigation and views
+  // Navigation - SPA style (hash based could be used but here simple render)
   const content = document.getElementById('main-content');
 
-  function setNavLinks(){
-    document.getElementById('nav-home').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-profile').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-host').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-join').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-scoreboard').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-admin').style.display = currentRole === "admin" ? 'inline-block' : 'none';
-    document.getElementById('nav-logout').style.display = currentUser ? 'inline-block' : 'none';
-  }
-
   function navigate(page){
-    // Clear current listeners
-    if(window.cleanupListener) {
-      window.cleanupListener();
-      window.cleanupListener = null;
-    }
     switch(page){
-      case 'login':        renderLogin(); break;
-      case 'register':     renderRegister(); break;
-      case 'home':         if(!currentUser) { navigate('login'); return; } renderHome(); break;
-      case 'profile':      if(!currentUser) { navigate('login'); return; } renderProfile(); break;
-      case 'host':         if(!currentUser) { navigate('login'); return; } renderHost(); break;
-      case 'join':         if(!currentUser) { navigate('login'); return; } renderJoin(); break;
-      case 'adminPanel':   if(currentRole !== "admin") { navigate('home'); return; } renderAdminPanel(); break;
-      case 'scoreboard':   if(!currentUser) { navigate('login'); return; } renderOverallScoreboard(); break;
-      case 'playerGame':   if(!currentUser) { navigate('login'); return; } renderPlayerGame(); break;
+      case 'login': renderLogin(); break;
+      case 'register': renderRegister(); break;
+      case 'home': if(!currentUser) {navigate('login'); return;} renderHome(); break;
+      case 'profile': if(!currentUser) {navigate('login'); return;} renderProfile(); break;
+      case 'host': if(!currentUser) {navigate('login'); return;} renderHost(); break;
+      case 'join': if(!currentUser) {navigate('login'); return;} renderJoin(); break;
+      case 'adminPanel': if(currentRole !== 'admin'){navigate('home'); return;} renderAdminPanel(); break;
+      case 'scoreboard': if(!currentUser) {navigate('login'); return;} renderOverallScoreboard(); break;
+      case 'playerGame': if(!currentUser) {navigate('login'); return;} renderPlayerGame(); break;
       default: renderLogin();
     }
-    setNavLinks();
+    updateNav();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function clearContent(){
-    content.innerHTML = "";
-  }
-
-  // -- LOGIN PAGE --
+  /*** Render functions for different pages ***/
+  // LOGIN PAGE
   function renderLogin(){
-    clearContent();
     content.innerHTML = `
-      <h2>Login</h2>
-      <input id="login-username" placeholder="Username" autocomplete="off" />
-      <input id="login-password" placeholder="Password" type="password" />
-      <button id="login-btn">Login</button>
-      <p>Don't have an account? <a href="#" id="goRegister">Register here</a></p>
-    `;
+      <div class="center-box" style="max-width: 480px;">
+        <h2>Login</h2>
+        <input id="login-username" placeholder="Username" autocomplete="off" />
+        <input id="login-password" placeholder="Password" type="password" />
+        <button id="login-btn">Login</button>
+        <p style="text-align:center; margin-top: 20px;">Don't have an account? <a href="#" id="go-register">Register</a></p>
+      </div>`;
     document.getElementById('login-btn').onclick = loginUser;
-    document.getElementById('goRegister').onclick = (e) => { e.preventDefault(); navigate('register'); };
+    document.getElementById('go-register').onclick = e=>{e.preventDefault(); navigate('register');};
   }
-
-  // -- REGISTER PAGE --
+  // REGISTER PAGE
   function renderRegister(){
-    clearContent();
     content.innerHTML = `
-      <h2>Register</h2>
-      <input id="register-username" placeholder="Username" autocomplete="off" />
-      <input id="register-password" placeholder="Password" type="password" />
-      <input id="register-email" placeholder="Email" type="email" />
-      <input id="register-avatar" type="file" accept="image/*" />
-      <img id="register-avatar-preview" class="avatar-preview" style="display:none;" />
-      <button id="register-btn">Register</button>
-      <p>Already have an account? <a href="#" id="goLogin">Login here</a></p>
-    `;
+      <div class="center-box" style="max-width: 480px;">
+        <h2>Register</h2>
+        <input id="register-username" placeholder="Username" autocomplete="off" />
+        <input id="register-password" placeholder="Password" type="password" />
+        <input id="register-email" placeholder="Email" type="email" />
+        <input id="register-avatar" type="file" accept="image/*" />
+        <img id="register-avatar-preview" class="avatar-preview" style="display:none;" />
+        <button id="register-btn">Register</button>
+        <p style="text-align:center; margin-top: 20px;">Already have an account? <a href="#" id="go-login">Login</a></p>
+      </div>`;
     const avatarInput = document.getElementById('register-avatar');
-    const avatarPreview = document.getElementById('register-avatar-preview');
     avatarInput.addEventListener('change', e => {
       const file = avatarInput.files[0];
+      const preview = document.getElementById('register-avatar-preview');
       if(!file){
-        avatarPreview.style.display = "none";
+        preview.style.display = "none";
         return;
       }
       const reader = new FileReader();
-      reader.onload = e => {
-        avatarPreview.src = e.target.result;
-        avatarPreview.style.display = "block";
+      reader.onload = e=>{
+        preview.src = e.target.result;
+        preview.style.display = "block";
       };
       reader.readAsDataURL(file);
     });
     document.getElementById('register-btn').onclick = registerUser;
-    document.getElementById('goLogin').onclick = (e) => { e.preventDefault(); navigate('login'); };
+    document.getElementById('go-login').onclick = e=>{e.preventDefault(); navigate('login');};
   }
-
-  // -- HOME PAGE --
+  // HOME PAGE
   function renderHome(){
-    clearContent();
     content.innerHTML = `
-      <h2>Welcome, ${currentUser}!</h2>
-      <div style="text-align:center; margin-top:20px;">
-        <a href="#" id="goHost" class="btn">Host Game</a>
-        <a href="#" id="goJoin" class="btn">Join Game</a>
-        <a href="#" id="goProfile" class="btn">Profile</a>
-        <a href="#" id="goScoreboard" class="btn">Overall Scoreboard</a>
-        ${currentRole === 'admin' ? '<a href="#" id="goAdmin" class="btn" style="background: var(--danger);">Admin Panel</a>' : ''}
+      <div class="center-box" style="max-width: 480px;">
+        <h2>Welcome, ${currentUser}!</h2>
+        <a href="#" onclick="navigate('host')" class="btn-link">Host Game</a>
+        <a href="#" onclick="navigate('join')" class="btn-link">Join Game</a>
+        <a href="#" onclick="navigate('profile')" class="btn-link">Profile</a>
+        <a href="#" onclick="navigate('scoreboard')" class="btn-link">Overall Scoreboard</a>
+        ${currentRole === 'admin' ? `<a href="#" onclick="navigate('adminPanel')" class="btn-link" style="color: var(--danger);">Admin Panel</a>` : ''}
       </div>
     `;
-    document.getElementById('goHost').onclick = e => { e.preventDefault(); navigate('host'); };
-    document.getElementById('goJoin').onclick = e => { e.preventDefault(); navigate('join'); };
-    document.getElementById('goProfile').onclick = e => { e.preventDefault(); navigate('profile'); };
-    document.getElementById('goScoreboard').onclick = e => { e.preventDefault(); navigate('scoreboard'); };
-    if(currentRole === 'admin'){
-      document.getElementById('goAdmin').onclick = e => { e.preventDefault(); navigate('adminPanel'); };
-    }
+    styleLinksAsButtons();
   }
-
-  // -- PROFILE PAGE --
+  // PROFILE PAGE
   function renderProfile(){
-    clearContent();
     db.ref('users/' + currentUser).get().then(snap=>{
       const user = snap.val() || {};
-      const avatarSrc = user.avatar || '';
       content.innerHTML = `
-        <h2>Your Profile</h2>
-        <img id="profile-avatar-preview" class="avatar-preview" src="${avatarSrc}" style="${avatarSrc ? '' : 'display:none;'}"/>
-        <input id="profile-email" placeholder="Email" type="email" value="${user.email || ''}" />
-        <input id="profile-password" placeholder="New Password" type="password" />
-        <input id="profile-avatar" type="file" accept="image/*" />
-        <button id="saveProfileBtn">Save Changes</button>
+        <div class="center-box" style="max-width:480px;">
+          <h2>Your Profile</h2>
+          <img id="profile-avatar-preview" class="avatar-preview" src="${user.avatar || ''}" style="${user.avatar?'':'display:none;'}"/>
+          <input id="profile-email" placeholder="Email" type="email" value="${user.email||''}" />
+          <input id="profile-password" placeholder="New Password" type="password" />
+          <input id="profile-avatar" type="file" accept="image/*" />
+          <button id="save-profile-btn">Save Changes</button>
+        </div>
       `;
       const avatarInput = document.getElementById('profile-avatar');
       const avatarPreview = document.getElementById('profile-avatar-preview');
       avatarInput.addEventListener('change', e => {
         const file = avatarInput.files[0];
         if(!file){
-          avatarPreview.style.display = "none";
-          avatarPreview.src = "";
+          avatarPreview.style.display = "none"; avatarPreview.src = "";
           return;
         }
         const reader = new FileReader();
-        reader.onload = e => {
+        reader.onload = e=>{
           avatarPreview.src = e.target.result;
           avatarPreview.style.display = "block";
         };
         reader.readAsDataURL(file);
       });
-      document.getElementById('saveProfileBtn').onclick = updateProfile;
+      document.getElementById('save-profile-btn').onclick = updateProfile;
     });
   }
-
-  // -- HOST PAGE --
+  // HOST GAME PAGE
   function renderHost(){
-    clearContent();
-    const code = (Math.floor(Math.random()*900000)+100000).toString();
+    const code = String(Math.floor(Math.random()*900000)+100000);
     gameID = code;
     currentRole = 'admin';
     db.ref('games/'+code).set({
@@ -376,187 +499,405 @@
       round: 1,
       question: '',
       image: '',
-      players: {},
+      players:{},
       buzzer: '',
       totalScores: {}
     });
     content.innerHTML = `
-      <h2>Host Game</h2>
-      <input id="host-code" readonly value="${code}" />
-      <button id="startGameBtn">Start Game</button>
-    `;
-    document.getElementById('startGameBtn').onclick = () => {
+      <div class="center-box" style="max-width:480px;">
+        <h2>Host Game</h2>
+        <label for="host-code">Game Code</label>
+        <input id="host-code" readonly value="${code}" />
+        <button id="start-game-btn">Start Game</button>
+      </div>`;
+    document.getElementById('start-game-btn').onclick = () => {
       db.ref('games/'+gameID).update({status:'live', round:1});
       navigate('adminPanel');
     };
   }
-
-  // -- JOIN PAGE --
+  // JOIN GAME PAGE
   function renderJoin(){
-    clearContent();
     content.innerHTML = `
-      <h2>Join Game</h2>
-      <input id="join-code" placeholder="Game Code (6 digits)" maxlength="6" />
-      <input id="join-team" placeholder="Team Name (optional)" maxlength="24" />
-      <button id="joinGameBtn">Join</button>
-    `;
-    document.getElementById('joinGameBtn').onclick = joinGame;
+      <div class="center-box" style="max-width:480px;">
+        <h2>Join Game</h2>
+        <input id="join-code" maxlength="6" placeholder="Enter 6-digit Game Code" />
+        <input id="join-team" maxlength="24" placeholder="Team Name (optional)" />
+        <button id="join-game-btn">Join Game</button>
+      </div>`;
+    document.getElementById('join-game-btn').onclick = joinGame;
   }
-
-  // -- ADMIN PANEL --
+  // ADMIN PANEL PAGE
   function renderAdminPanel(){
-    clearContent();
     content.innerHTML = `
-      <h2>Admin Panel - Game <span id="roomcode"></span></h2>
-      <div id="question-section" style="margin-bottom: 12px;">
-        <div id="question-text" style="font-size:2rem; font-weight: 700; min-height: 3rem; margin-bottom: 10px;"></div>
-        <img id="question-img" alt="Question Image" style="max-width: 100%; max-height: 240px; border-radius: 16px; cursor: zoom-in;"/>
+      <style>
+        #admin-layout {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+        #question-area {
+          flex: 2;
+          background: #2b3250;
+          padding: 18px 20px;
+          border-radius: 24px;
+          box-sizing: border-box;
+        }
+        #controls-area {
+          flex: 1.2;
+          background: #293054;
+          border-radius: 24px;
+          padding: 20px;
+          box-sizing: border-box;
+          display:flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          gap: 18px;
+        }
+        #admin-question-input {
+          width: 100%;
+          padding: 12px 14px;
+          border-radius: 12px;
+          border: none;
+          font-size: 1.1rem;
+          box-sizing: border-box;
+        }
+        #admin-image-file {
+          border-radius: 12px;
+          border: none;
+        }
+        #admin-image-preview {
+          max-width: 100%;
+          max-height: 200px;
+          border-radius: 16px;
+          margin-top: 8px;
+          display: none;
+          user-select: none;
+        }
+        #host-controls {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          flex-wrap: wrap;
+        }
+        #host-controls > input {
+          padding: 10px 12px;
+          border-radius: 12px;
+          border: none;
+          text-align: center;
+          font-size: 1.1rem;
+          min-width: 130px;
+        }
+        #host-controls > button {
+          min-width: 120px;
+          padding: 12px 0;
+          font-weight: 700;
+          font-size: 1.15rem;
+          border-radius: 22px;
+          border: none;
+          cursor: pointer;
+          background: var(--primary);
+          color: white;
+          transition: background 0.3s ease;
+          user-select: none;
+        }
+        #host-controls > button:hover {
+          background: var(--accent);
+          color: #232323;
+        }
+        .admin-buttons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          justify-content: center;
+        }
+        .admin-buttons button {
+          padding: 11px 20px;
+          border-radius: 24px;
+          font-weight: 700;
+          font-size: 1.15rem;
+          border: none;
+          cursor: pointer;
+          min-width: 140px;
+          user-select: none;
+          background: var(--primary);
+          color: white;
+          transition: background 0.3s ease;
+        }
+        .admin-buttons button:hover {
+          background: var(--accent);
+          color: #232323;
+        }
+        .admin-buttons button.danger {
+          background: var(--danger);
+        }
+        .admin-buttons button.danger:hover {
+          background: #e14a32;
+        }
+        #buzzed-who {
+          font-weight: 700;
+          color: var(--accent);
+          text-align: center;
+          margin-top: 12px;
+          user-select: none;
+        }
+        .scoreboard {
+          max-height: 280px;
+          overflow-y: auto;
+          background: #222947;
+          border-radius: 20px;
+          padding: 16px 20px;
+          box-sizing: border-box;
+          box-shadow: 0 3px 22px #0008;
+        }
+      </style>
+      <h2>Admin Control - Game <span id="roomcode"></span></h2>
+      <div id="admin-layout">
+        <section id="question-area">
+          <div id="question-text" style="font-weight: 700; font-size: 2rem; min-height: 3rem;"></div>
+          <img id="question-img" alt="Question Image" />
+        </section>
+        <section id="controls-area">
+          <input id="admin-question-input" placeholder="Enter question text" />
+          <input id="admin-image-file" type="file" accept="image/*" />
+          <img id="admin-image-preview" />
+          <button id="uploadQuestionBtn">Upload Question & Image</button>
+          <div id="host-controls">
+            <input id="host-team" placeholder="Team Name" />
+            <input id="host-points" type="number" value="10" />
+            <button id="addPointsBtn">Add Points</button>
+          </div>
+          <div class="admin-buttons">
+            <button id="resetBuzzersBtn">Reset Buzzers</button>
+            <button id="resetRoundBtn">Reset Round</button>
+            <button id="nextRoundBtn">Next Round</button>
+            <button id="clearScoresBtn" class="danger">Clear All Scores</button>
+            <button id="backHomeBtn" class="danger">Back to Home</button>
+          </div>
+          <div class="scoreboard" id="admin-scoreboard"></div>
+          <div id="buzzed-who"></div>
+        </section>
       </div>
-      <input id="admin-question-input" type="text" placeholder="Enter question here" />
-      <input id="admin-image-file" type="file" accept="image/*" />
-      <img id="admin-image-preview" style="display:none; max-width: 100%; max-height: 250px; margin-bottom: 14px;" />
-      <button id="uploadQuestionBtn">Upload Question & Image</button>
-      <div id="host-controls" style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; align-items: center;">
-        <input id="host-team" placeholder="Team Name" />
-        <input id="host-points" type="number" value="10" style="width: 80px;" />
-        <button id="addPointsBtn">Add Points to Team</button>
-      </div>
-      <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
-        <button id="resetBuzzersBtn">Reset Buzzers</button>
-        <button id="resetRoundBtn">Reset Round</button>
-        <button id="nextRoundBtn">Next Round</button>
-        <button id="clearScoresBtn">Clear All Scores</button>
-        <button id="backToHomeBtn" style="background: var(--danger);">Back to Home</button>
-      </div>
-      <div class="scoreboard" id="admin-scoreboard" style="margin-top: 20px;"></div>
-      <div id="buzzed-who" style="margin-top: 12px; font-weight: 700; color: var(--accent); text-align: center;"></div>
     `;
     document.getElementById('roomcode').textContent = gameID;
 
-    // Event handlers
+    const imgInput = document.getElementById('admin-image-file');
+    const imgPreview = document.getElementById('admin-image-preview');
+    imgInput.addEventListener('change', e=>{
+      if(imgInput.files.length){
+        const reader = new FileReader();
+        reader.onload = e =>{
+          imgPreview.src = e.target.result;
+          imgPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(imgInput.files[0]);
+      } else {
+        imgPreview.style.display = 'none';
+      }
+    });
+
     document.getElementById('uploadQuestionBtn').onclick = uploadQuestion;
     document.getElementById('addPointsBtn').onclick = addPoints;
     document.getElementById('resetBuzzersBtn').onclick = resetBuzzers;
     document.getElementById('resetRoundBtn').onclick = resetRound;
     document.getElementById('nextRoundBtn').onclick = nextRound;
     document.getElementById('clearScoresBtn').onclick = clearAllScores;
-    document.getElementById('backToHomeBtn').onclick = ()=>navigate('home');
-
-    let imgFileInput = document.getElementById('admin-image-file');
-    imgFileInput.addEventListener('change', e=>{
-      const preview = document.getElementById('admin-image-preview');
-      if(imgFileInput.files.length > 0){
-        const reader = new FileReader();
-        reader.onload = ev => {
-          preview.src = ev.target.result;
-          preview.style.display = 'block';
-        };
-        reader.readAsDataURL(imgFileInput.files[0]);
-      } else {
-        preview.style.display = 'none';
-        preview.src = '';
-      }
-    });
+    document.getElementById('backHomeBtn').onclick = () => navigate('home');
 
     loadAdminGame();
   }
 
-  // -- PLAYER GAME --
+  // PLAYER GAME PAGE
   function renderPlayerGame(){
-    clearContent();
     content.innerHTML = `
-      <div style="flex: 1; display:flex; flex-direction: column; align-items: center;">
-        <div id="player-question-text" style="font-size:2.7rem; font-weight: 900; margin-bottom: 24px; text-align:center;"></div>
-        <img id="player-question-img" alt="Question Image" style="max-width: 100%; max-height: 240px; border-radius: 16px; cursor: zoom-in;"/>
-      </div>
-      <div style="flex: 1; display:flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap:10px;">
-        <button id="player-buzzer" class="buzzer-btn">BUZZ!</button>
-        <div id="buzz-lock-msg" class="buzz-lock-msg"></div>
-        <div class="btn-group">
-          <button id="score-individual-btn">Individual Scores</button>
-          <button id="score-team-btn">Team Scores</button>
-        </div>
-        <div class="scoreboard" id="player-scoreboard"></div>
-        <div id="host-controls" style="margin-top: 15px; display: none; justify-content: center; gap: 12px;">
-          <input placeholder="Team Name" id="host-team" />
-          <input type="number" value="10" id="host-points" style="width: 80px;" />
-          <button id="addPointsBtnPlayer">Add Points</button>
-        </div>
-        <button id="leaveGameBtn" style="margin-top: 20px; background: var(--danger);">Leave Game</button>
+      <style>
+        #player-layout {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          user-select: none;
+        }
+        #question-section, #control-section {
+          flex: 1 1 45%;
+          background: #2b3250;
+          border-radius: 24px;
+          padding: 28px 26px;
+          box-sizing: border-box;
+          min-width: 320px;
+        }
+        #player-question-text {
+          font-size: 2.7rem;
+          font-weight: 900;
+          margin-bottom: 28px;
+          text-align: center;
+          word-break: break-word;
+          user-select: none;
+        }
+        #player-question-img {
+          max-width: 100%;
+          max-height: 320px;
+          border-radius: 24px;
+          cursor: zoom-in;
+          object-fit: contain;
+          box-shadow: 0 0 40px var(--accent);
+          transition: transform 0.3s ease;
+          user-select: none;
+        }
+        #player-question-img.zoomed {
+          transform: scale(2);
+          cursor: zoom-out;
+          position: relative;
+          z-index: 9999;
+        }
+        .buzzer-btn {
+          background: var(--accent);
+          border-radius: 90px;
+          border: 10px solid #fff;
+          box-shadow: 0 8px 36px #ffea6fcc;
+          color: #141c34;
+          cursor: pointer;
+          font-size: 4rem;
+          font-weight: 900;
+          margin-bottom: 20px;
+          padding: 46px 120px;
+          text-align: center;
+          user-select: none;
+          width: 100%;
+          max-width: none;
+          transition: background 0.3s ease;
+        }
+        .buzzer-btn:disabled {
+          background: #ddd;
+          border-color: #ccc;
+          color: #888;
+          cursor: not-allowed;
+          box-shadow: none;
+        }
+        #buzz-lock-msg {
+          margin-bottom: 20px;
+          text-align: center;
+          font-weight: 700;
+          font-size: 1.4rem;
+          color: var(--accent);
+        }
+        .btn-group {
+          display: flex;
+          gap: 18px;
+          margin-bottom: 20px;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .btn-group button {
+          flex: 1 1 140px;
+          font-weight: 700;
+          font-size: 1.2rem;
+          border-radius: 30px;
+          padding: 14px 0;
+          border: none;
+          cursor: pointer;
+          background-color: var(--primary);
+          color: white;
+          transition: background 0.3s ease;
+          user-select: none;
+        }
+        .btn-group button:hover:not(:disabled) {
+          background-color: var(--accent);
+          color: #232323;
+        }
+        .scoreboard {
+          background-color: #222947;
+          border-radius: 20px;
+          padding: 16px 20px;
+          max-height: 350px;
+          overflow-y: auto;
+          box-sizing: border-box;
+          box-shadow: 0 4px 24px #000a;
+        }
+        button#leave-game-btn {
+          margin-top: 20px;
+          background-color: var(--danger);
+          color: white;
+          border-radius: 44px;
+          padding: 14px 28px;
+          font-weight: 700;
+          font-size: 1.3rem;
+          border: none;
+          cursor: pointer;
+          user-select: none;
+          align-self: center;
+          max-width: 320px;
+        }
+        button#leave-game-btn:hover {
+          background-color: #e14a32;
+        }
+      </style>
+      <div id="player-layout">
+        <section id="question-section">
+          <div id="player-question-text"></div>
+          <img id="player-question-img" alt="Question Image" />
+        </section>
+        <section id="control-section">
+          <button id="player-buzzer" class="buzzer-btn" disabled>BUZZ!</button>
+          <div id="buzz-lock-msg"></div>
+          <div class="btn-group">
+            <button id="score-individual-btn" class="btn">Individual Scores</button>
+            <button id="score-team-btn" class="btn">Team Scores</button>
+          </div>
+          <div class="scoreboard" id="player-scoreboard"></div>
+          <div id="host-controls" style="display:none; justify-content: center; gap:12px; margin-top: 18px;">
+            <input type="text" id="host-team" placeholder="Team Name" />
+            <input type="number" id="host-points" value="10" style="width: 90px;" />
+            <button id="host-add-points-btn" class="btn">Add Points</button>
+          </div>
+          <button id="leave-game-btn">Leave Game</button>
+        </section>
       </div>
     `;
+    // Event listeners
     document.getElementById('player-buzzer').onclick = tryBuzz;
-    document.getElementById('leaveGameBtn').onclick = leaveGame;
-    document.getElementById('score-individual-btn').onclick = () => {currentScoreboardMode = 'individual'; listenPlayerGame();}
-    document.getElementById('score-team-btn').onclick = () => {currentScoreboardMode = 'team'; listenPlayerGame();}
-    document.getElementById('addPointsBtnPlayer').onclick = addPoints;
+    document.getElementById('leave-game-btn').onclick = leaveGame;
+    document.getElementById('score-individual-btn').onclick = () => { currentScoreboardMode = 'individual'; listenPlayerGame(); };
+    document.getElementById('score-team-btn').onclick = () => { currentScoreboardMode = 'team'; listenPlayerGame(); };
+    document.getElementById('host-add-points-btn').onclick = addPoints;
+
     listenPlayerGame();
     listenQuestionPlayer();
   }
 
-  // -- OVERALL SCOREBOARD --
-  function renderOverallScoreboard(){
-    clearContent();
-    content.innerHTML = `
-      <h2>Overall Scoreboard</h2>
-      <div class="scoreboard" style="max-height:600px; overflow-y:auto;">
-        <table id="overall-scoreboard-table"></table>
-      </div>
-      <button onclick="navigate('home')" style="margin-top: 24px;">Back to Home</button>
-    `;
-    loadOverallScoreboard();
-  }
-
-  // -- Data Manipulation Functions (partial for brevity) --
-
-  // Show or hide nav links depending on login and role
-  function updateNav(){
-    document.getElementById('nav-home').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-profile').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-host').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-join').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-scoreboard').style.display = currentUser ? 'inline-block' : 'none';
-    document.getElementById('nav-admin').style.display = currentRole === 'admin' ? 'inline-block' : 'none';
-    document.getElementById('nav-logout').style.display = currentUser ? 'inline-block' : 'none';
-  }
-
-  // Login logic
+  // -- LOGIN REGISTER LOGIC --
   function loginUser(){
     const u = document.getElementById('login-username').value.trim();
     const p = document.getElementById('login-password').value.trim();
-    if(!u || !p) return showModal('Fill username and password');
-    if(u.toLowerCase()==='admin' && p==='24207'){
+    if(!u || !p){ showModal('Fill username and password'); return; }
+    if(u.toLowerCase() === 'admin' && p === '24207'){
       currentUser = 'admin';
       currentRole = 'admin';
       updateNav();
       navigate('home');
       return;
     }
-    db.ref('users/'+u).get().then(snap=>{
+    db.ref('users/' + u).get().then(snap => {
       if(!snap.exists()) return showModal('User not found');
       const user = snap.val();
       if(user.pw !== p) return showModal('Wrong password');
-      currentUser = u;
-      currentRole = user.role || 'user';
+      currentUser = u; currentRole = user.role || 'user';
       updateNav();
       navigate('home');
     });
   }
 
-  // Register logic
   function registerUser(){
     const u = document.getElementById('register-username').value.trim();
     const p = document.getElementById('register-password').value.trim();
     const e = document.getElementById('register-email').value.trim();
     const avatarFile = document.getElementById('register-avatar').files[0];
-    if(!u || !p|| !e) return showModal('All fields required');
-    if(u.toLowerCase() === 'admin') return showModal('Username "admin" reserved');
-    db.ref('users/'+u).get().then(snap=>{
-      if(snap.exists()) return showModal('Username already exists');
+    if(!u || !p || !e){ showModal('All fields required'); return; }
+    if(u.toLowerCase() === 'admin'){ showModal('Username "admin" reserved'); return; }
+    db.ref('users/' + u).get().then(snap=>{
+      if(snap.exists()){ showModal('Username exists'); return; }
       const saveUser = (avatarData) => {
         db.ref('users/'+u).set({pw:p,email:e,role:'user',avatar:avatarData || ''}).then(()=>{
           showModal('Registered! Please login');
-          setTimeout(()=>navigate('login'), 1500);
+          setTimeout(()=>navigate('login'),1500);
         });
       };
       if(avatarFile){
@@ -569,21 +910,46 @@
     });
   }
 
-  // Profile logic implemented earlier should be adjusted similarly...
+  // PROFILE UPDATE
+  function updateProfile(){
+    const pw = document.getElementById('profile-password').value.trim();
+    const email = document.getElementById('profile-email').value.trim();
+    const avatarFile = document.getElementById('profile-avatar').files[0];
+    let updateObj = {};
+    if(pw) updateObj.pw = pw;
+    if(email) updateObj.email = email;
+    if(avatarFile){
+      const reader = new FileReader();
+      reader.onload = e => {
+        updateObj.avatar = e.target.result;
+        db.ref('users/'+currentUser).update(updateObj).then(() => {
+          showModal('Profile updated');
+          navigate('home');
+        });
+      };
+      reader.readAsDataURL(avatarFile);
+    } else {
+      db.ref('users/'+currentUser).update(updateObj).then(() => {
+        showModal('Profile updated');
+        navigate('home');
+      });
+    }
+  }
 
-  // Join game logic
+  // JOIN GAME LOGIC
   function joinGame(){
     const code = document.getElementById('join-code').value.trim();
     teamName = document.getElementById('join-team').value.trim() || null;
-    if(!/^\d{6}$/.test(code)) return showModal('Enter a valid 6-digit game code');
-    if(!currentUser) return showModal('Please login first');
+    if(!/^\d{6}$/.test(code)){ showModal('Enter valid 6-digit code'); return; }
+    if(!currentUser){ showModal('Login first'); return; }
     gameID = code;
     playerID = btoa(currentUser + Math.random()).replace(/=/g, '');
     currentRole = 'player';
-    db.ref('games/'+gameID).get().then(snap=>{
-      if(!snap.exists()) return showModal('Game not found');
-      db.ref('users/'+currentUser).get().then(usnap=>{
-        const avatar = usnap.val()?.avatar || '';
+
+    db.ref('games/' + gameID).get().then(snap=>{
+      if(!snap.exists()){ showModal('Game not found'); return; }
+      db.ref('users/' + currentUser).get().then(userSnap=>{
+        const avatar = userSnap.val()?.avatar || '';
         db.ref(`games/${gameID}/players/${playerID}`).set({
           name: currentUser,
           team: teamName,
@@ -591,49 +957,52 @@
           buzzed: false,
           avatar,
           joined: Date.now()
-        }).then(()=>{
+        }).then(() => {
           navigate('playerGame');
         });
       });
     });
   }
 
-  // Listen player UI and buzz buzzer
+  // PLAYER BUZZ
   let lastBuzzTime = 0;
   function tryBuzz(){
     const now = performance.now();
-    if(now - lastBuzzTime < 10) return; // very fast debounce
+    if(now - lastBuzzTime < 10) return; // ~100fps debounce
     lastBuzzTime = now;
     db.ref(`games/${gameID}/buzzer`).once('value').then(snap=>{
-      if(snap.val()) return showModal('Buzzer locked!');
+      if(snap.val()){
+        showModal('Buzzer locked!');
+        return;
+      }
       db.ref(`games/${gameID}/players/${playerID}`).update({buzzed:true});
       db.ref(`games/${gameID}`).update({buzzer: playerID});
-      const buzzAudio = document.getElementById('buzz-audio');
+      let buzzAudio = document.getElementById('buzz-audio');
       buzzAudio.currentTime = 0;
-      buzzAudio.play().catch(()=>{});
+      buzzAudio.play().catch(() => {});
     });
   }
-
-  // Listen player game to update buzz/button/scoreboard
+  // PLAYER GAME LISTENERS & SCOREBOARD
   function listenPlayerGame(){
     db.ref('games/'+gameID).on('value', snap=>{
       const g = snap.val() || {};
       const buzzer = g.buzzer || '';
       const players = g.players || {};
       const playerList = Object.entries(players).map(([id,val])=>({...val,id}));
-      playerList.sort((a,b) => (b.score||0)-(a.score||0));
+      playerList.sort((a,b)=>(b.score||0)-(a.score||0));
+
       buildPlayerScoreboard(playerList);
 
       const buzzBtn = document.getElementById('player-buzzer');
       if(buzzer && buzzer !== playerID){
         buzzBtn.disabled = true;
-        document.getElementById('buzz-lock-msg').textContent = `Buzzer locked by ${players[buzzer]?.name || 'someone'}`;
+        document.getElementById('buzz-lock-msg').textContent = "Buzzer locked by "+(players[buzzer]?.name || "someone");
       } else {
         buzzBtn.disabled = false;
-        document.getElementById('buzz-lock-msg').textContent = '';
+        document.getElementById('buzz-lock-msg').textContent = "";
       }
 
-      if(buzzer && buzzer !== playerID && !buzzLockSoundPlayed){
+      if(buzzer && buzzer!== playerID && !buzzLockSoundPlayed){
         buzzLockSoundPlayed = true;
         const buzzAudio = document.getElementById('buzz-audio');
         buzzAudio.currentTime = 0;
@@ -643,34 +1012,219 @@
       }
     });
   }
-
   function buildPlayerScoreboard(playerList){
     if(currentScoreboardMode === 'individual'){
-      let html = '<table><thead><tr><th>Player</th><th>Team</th><th>Score</th></tr></thead><tbody>';
-      playerList.forEach(p => {
+      let html = "<table><thead><tr><th>Player</th><th>Team</th><th>Score</th></tr></thead><tbody>";
+      for(const p of playerList){
         html += `<tr><td>${p.name}</td><td>${p.team || '-'}</td><td>${p.score || 0}</td></tr>`;
-      });
-      html += '</tbody></table>';
+      }
+      html += "</tbody></table>";
       document.getElementById('player-scoreboard').innerHTML = html;
     } else {
       const teamScores = {};
-      playerList.forEach(p => {
-        if(p.team) teamScores[p.team] = (teamScores[p.team]||0) + (p.score||0);
-      });
-      const sorted = Object.entries(teamScores).sort((a,b) => b[1] - a[1]);
-      let html = '<table><thead><tr><th>Team</th><th>Total Score</th></tr></thead><tbody>';
-      sorted.forEach(([team,score])=> {
+      for(const p of playerList){
+        if(p.team) teamScores[p.team] = (teamScores[p.team] || 0) + (p.score || 0);
+      }
+      let html = "<table><thead><tr><th>Team</th><th>Total Score</th></tr></thead><tbody>";
+      Object.entries(teamScores).sort((a,b)=>b[1]-a[1]).forEach(([team,score])=>{
         html += `<tr><td>${team}</td><td>${score}</td></tr>`;
       });
-      html += '</tbody></table>';
+      html += "</tbody></table>";
       document.getElementById('player-scoreboard').innerHTML = html;
     }
   }
 
-  // Show overall scoreboard with accumulated scores
+  // ADD TEAM POINTS
+  function addPoints(){
+    let team = document.getElementById('host-team')?.value || '';
+    team = team.trim();
+    const pts = parseInt(document.getElementById('host-points')?.value || "0");
+    if(!team){ showModal("Enter team name"); return; }
+    if(isNaN(pts)){ showModal("Invalid points"); return; }
+    db.ref(`games/${gameID}/players`).once('value').then(snap=>{
+      snap.forEach(child=>{
+        const val = child.val();
+        if(val.team === team){
+          db.ref(`games/${gameID}/players/${child.key}/score`).transaction(old=>(old||0)+pts);
+          db.ref(`games/${gameID}/totalScores/${child.key}`).transaction(old=>(old||0)+pts);
+        }
+      });
+    }).then(() => {
+      showModal(`Added ${pts} points to team "${team}"`);
+    });
+  }
+
+  // LEAVE GAME
+  function leaveGame(){
+    if(!playerID || !gameID) return;
+    db.ref(`games/${gameID}/players/${playerID}`).remove();
+    db.ref(`games/${gameID}/buzzer`).once('value').then(snap=>{
+      if(snap.val() === playerID) db.ref(`games/${gameID}/buzzer`).remove();
+    });
+    playerID = "";
+    gameID = "";
+    teamName = "";
+    currentRole = "";
+    navigate('home');
+  }
+
+  // ADMIN GAME DATA LOADERS
+  function loadAdminGame(){
+    db.ref(`games/${gameID}`).on('value',snap=>{
+      const game = snap.val() || {};
+      document.getElementById('roomcode').textContent = gameID;
+      document.getElementById('round-label').textContent = game.round || 1;
+      document.getElementById('question-text').textContent = game.question || "";
+      const img = document.getElementById('question-img');
+      if(game.image){
+        img.src = game.image;
+        img.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+      }
+      const players = game.players || {};
+      let arr = Object.entries(players).map(([id,p])=>({...p,id}));
+      arr.sort((a,b)=> (b.score||0)-(a.score||0));
+      let buzzer = game.buzzer || "";
+      let buzzedPlayer = buzzer && players[buzzer] ? players[buzzer].name : "";
+      document.getElementById('buzzed-who').innerHTML = buzzedPlayer ? `<span class="buzzed-tag">🔔 ${buzzedPlayer}</span>` : "";
+      let html = `<thead><tr>
+        <th>Rank</th><th>Player</th><th>Team</th><th>Score</th><th>Adjust</th><th>Status</th>
+      </tr></thead><tbody>`;
+      for(let i=0; i<arr.length; i++){
+        let pl=arr[i];
+        html += `<tr>
+          <td>${i+1}</td>
+          <td style="color:#ffe05b;">${pl.name}</td>
+          <td>${pl.team || '-'}</td>
+          <td>${pl.score || 0}</td>
+          <td>
+            <button onclick="adjustScore('${pl.id}', 25)">+25</button>
+            <button onclick="adjustScore('${pl.id}', -25)">-25</button>
+          </td>
+          <td>${pl.id === buzzer ? '<span class="buzzed-tag">Buzzed</span>' : ''}</td>
+        </tr>`;
+      }
+      html += "</tbody>";
+      document.getElementById('admin-scoreboard').innerHTML = html;
+      showHostControls(currentRole === 'admin');
+    });
+  }
+
+  function adjustScore(pid, delta){
+    db.ref(`games/${gameID}/players/${pid}/score`).transaction(old=> (old||0) + delta);
+    db.ref(`games/${gameID}/totalScores/${pid}`).transaction(old=> (old||0)+delta);
+  }
+
+  function showHostControls(show){
+    document.getElementById('host-controls').style.display = show ? 'flex' : 'none';
+  }
+
+  // UPLOAD QUESTION
+  function uploadQuestion(){
+    const question = document.getElementById('admin-question-input').value.trim();
+    const fileInput = document.getElementById('admin-image-file');
+    if(!question){
+      showModal('Please enter a question');
+      return;
+    }
+    if(fileInput.files.length){
+      const reader = new FileReader();
+      reader.onload = e=>{
+        db.ref(`games/${gameID}`).update({question, image: e.target.result});
+        fileInput.value = "";
+        document.getElementById('admin-question-input').value = "";
+        document.getElementById('admin-image-preview').style.display = 'none';
+        showModal('Question and image uploaded');
+      }
+      reader.readAsDataURL(fileInput.files[0]);
+    } else {
+      db.ref(`games/${gameID}`).update({question, image: ""});
+      document.getElementById('admin-question-input').value = "";
+      showModal('Question uploaded (no image)');
+    }
+  }
+
+  // RESET and NEXT ROUND FUNCTIONS
+  function resetBuzzers(){
+    db.ref(`games/${gameID}/players`).once('value').then(snap=>{
+      snap.forEach(child => {
+        db.ref(`games/${gameID}/players/${child.key}`).update({buzzed:false});
+      });
+      db.ref(`games/${gameID}`).update({buzzer:''});
+      buzzLockSoundPlayed = false;
+    });
+  }
+  function resetRound(){
+    db.ref(`games/${gameID}/players`).once('value').then(snap=>{
+      snap.forEach(child=>{
+        db.ref(`games/${gameID}/players/${child.key}`).update({score:0,buzzed:false});
+      });
+      db.ref(`games/${gameID}`).update({buzzer:''});
+      buzzLockSoundPlayed = false;
+    });
+  }
+  function nextRound(){
+    db.ref(`games/${gameID}`).once('value').then(snap=>{
+      let round = (snap.val()&&snap.val().round)||1;
+      db.ref(`games/${gameID}`).update({round: round+1, buzzer:''});
+      resetBuzzers();
+    });
+  }
+
+  function clearAllScores(){
+    if(currentRole !== 'admin'){
+      showModal('Only admin can clear scores.');
+      return;
+    }
+    db.ref('games').once('value').then(snap=>{
+      let games = snap.val() || {};
+      for(let gid in games){
+        if(games[gid].players){
+          for(let pid in games[gid].players){
+            db.ref(`games/${gid}/players/${pid}`).update({score:0, buzzed:false});
+          }
+        }
+        db.ref(`games/${gid}`).update({buzzer:''});
+        db.ref(`games/${gid}/totalScores`).remove();
+      }
+      showModal('All scores cleared');
+      if(gameID) loadAdminGame();
+    });
+  }
+
+  // PLAYER question listeners
+  function listenQuestionPlayer(){
+    db.ref(`games/${gameID}/question`).on('value', snap=>{
+      document.getElementById('player-question-text').textContent = snap.val() || "";
+    });
+    db.ref(`games/${gameID}/image`).on('value', snap=>{
+      const img = document.getElementById('player-question-img');
+      if(snap.val()){
+        img.src = snap.val();
+        img.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+      }
+    });
+  }
+
+  // OVERALL SCOREBOARD
+  function renderOverallScoreboard(){
+    clearContent();
+    content.innerHTML = `
+      <h2>Overall Scoreboard</h2>
+      <div class="scoreboard" style="max-height: 600px; overflow-y:auto;">
+        <table id="overall-scoreboard-table"></table>
+      </div>
+      <button style="margin-top: 20px; display: block; cursor: pointer; padding: 14px 32px; font-weight:700; border-radius: 44px; border:none; background: var(--primary); color:#fff; margin-left:auto; margin-right:auto;" onclick="navigate('home')">Back to Home</button>
+    `;
+    loadOverallScoreboard();
+  }
+
   function loadOverallScoreboard(){
-    db.ref("games").once("value").then(snap=>{
-      const games = snap.val()||{};
+    db.ref('games').once('value').then(snap=>{
+      const games = snap.val() || {};
       const totals = {};
       for(const gid in games){
         if(!games[gid].totalScores) continue;
@@ -678,28 +1232,25 @@
           totals[pid] = (totals[pid]||0)+games[gid].totalScores[pid];
         }
       }
-      let sorted = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
-
-      if(sorted.length === 0){
+      let entries = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+      if(entries.length === 0){
         document.getElementById('overall-scoreboard-table').innerHTML = "<tbody><tr><td colspan='3'>No scores yet</td></tr></tbody>";
         return;
       }
-      let promises = sorted.map(([pid], i) => {
-        return db.ref("games").get().then(snapshot => {
-          let foundName = "Unknown";
-          snapshot.forEach(gameSnap =>{
-            const p = gameSnap.val().players?.[pid];
-            if(p && p.name){
-              foundName = p.name;
-              return true;
+
+      Promise.all(entries.map(([pid],i) =>
+        db.ref('games').once('value').then(all =>{
+          let name = 'Unknown';
+          all.forEach(game=>{
+            if(game.val().players && game.val().players[pid]){
+              name = game.val().players[pid].name;
             }
           });
-          sorted[i].push(foundName);
-        });
-      });
-      Promise.all(promises).then(() =>{
-        let html = '<thead><tr><th>Rank</th><th>Player</th><th>Total Points</th></tr></thead><tbody>';
-        sorted.forEach(([pid,score,name],i) =>{
+          entries[i].push(name);
+        })
+      )).then(() => {
+        let html = `<thead><tr><th>Rank</th><th>Player</th><th>Total Points</th></tr></thead><tbody>`;
+        entries.forEach(([pid,score,name],i) => {
           html += `<tr><td>${i+1}</td><td style="color:#ffe05b;">${name}</td><td>${score}</td></tr>`;
         });
         html += '</tbody>';
@@ -708,7 +1259,9 @@
     });
   }
 
-  // Logout function
+  function clearContent(){ content.innerHTML = ''; }
+
+  // Logout
   function logout(){
     currentUser = null;
     currentRole = null;
@@ -719,14 +1272,12 @@
     navigate('login');
   }
 
-  // Initialization on page load
-  document.addEventListener('DOMContentLoaded', () => {
+  // Initiate SPA
+  window.onload = () => {
     updateNav();
     navigate('login');
-  });
+  };
 
 </script>
-
-<audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
 </body>
 </html>
