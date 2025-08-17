@@ -1,80 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Quiz Buzzer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap">
-  <style>
-    body {
-      margin:0; padding:0; height:100vh;
-      font-family:'Montserrat', Arial, sans-serif; background: #262e46; color: #fff; user-select:none;
-    }
-    .flex-main {
-      display: flex; min-height: 100vh; align-items: stretch; justify-content: stretch;
-      background: var(--main-bg, #262e46);
-    }
-    .left-panel {
-      flex: 1 1 50%; background: #21253e; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 16px;
-      min-width: 0;
-    }
-    .right-panel {
-      flex: 1 1 50%; background: #293054; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 340px; padding: 0 24px;
-    }
-    #quiz-image {
-      max-width: 90%; max-height: 60vh; border-radius: 26px; margin: 0 0 30px 0; box-shadow: 0 2px 28px #0007; display: block; object-fit: contain; cursor:zoom-in;
-      transition: transform .3s cubic-bezier(.44,1.34,.59,1.2), box-shadow .3s;
-    }
-    #quiz-image.zoomed {
-      transform: scale(1.7);
-      z-index: 9999;
-      box-shadow: 0 0 30px #ffe05bcc;
-      cursor: zoom-out;
-    }
-    #quiz-question {
-      font-size: 2.7em; font-weight: 800; text-align: left; max-width: 95%; margin-bottom: 16px;
-    }
-    .buzzer-btn {
-      background: #ffe05b; color: #262e46;
-      font-size: 2.8em; font-weight: 900;
-      padding: 48px 90px;
-      border-radius: 80px; border: 7px solid #fff;
-      box-shadow: 0 10px 32px #ffea6f99;
-      cursor: pointer;
-      user-select: none;
-      text-align: center;
-      margin: 45px auto 28px auto;
-      display: block;
-      transition: background .2s;
-      width: 320px;
-    }
-    .buzzer-btn:active { background: #eec908;}
-    .scoreboard {
-      margin: 24px auto 18px auto; background: #38365d;
-      border-radius: 24px; box-shadow: 0 2px 16px #0006; color: #fff; width: 100%; max-width: 420px; padding: 24px 28px;
-      font-size: 1.3em;
-    }
-    .team-scoreboard {
-      margin: 8px auto 18px auto; background: #263063;
-      border-radius: 24px; color: #ffe05b; width: 100%; max-width: 420px; padding: 14px 22px;
-      font-size: 1.07em;
-    }
-    table { width:100%; color:#fff; border-collapse:collapse;}
-    th, td { padding:8px 8px;}
-    th {color:#ffe05b;}
-    .toggle-btns { display:flex; align-items:center; justify-content:center; gap:20px; margin:21px;}
-    #buzz-lock-msg { font-size:1.22em; color:#ffe05b; font-weight:700; margin:15px;text-align:center;}
-    /* Responsive for mobile: stack panels, shrink image */
-    @media(max-width:900px){
-      .flex-main { flex-direction: column;}
-      .left-panel,.right-panel { min-width:0;width:100%;}
-      #quiz-image { max-width:95vw; max-height:220px;}
-      .buzzer-btn { font-size:1.85em; padding:17px 22px; width: 98%;}
-      .scoreboard, .team-scoreboard { max-width: 99vw; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Quiz Buzzer Pro Split & Full Features</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap">
+<style>
+  :root {
+    --main-bg: #262e46;
+    --primary: #3b8bee;
+    --accent: #ffe05b;
+    --radius: 16px;
+  }
+  html, body {
+    margin:0; padding:0; height:100%; font-family:'Montserrat', Arial, sans-serif;
+    background: var(--main-bg); color: #fff;
+    user-select:none;
+  }
+  .flex-main {
+    display: flex; min-height: 100vh; align-items: stretch; justify-content: stretch;
+    background: var(--main-bg, #262e46);
+  }
+  .left-panel {
+    flex: 1 1 50%; background: #21253e; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 16px;
+    min-width: 0;
+  }
+  .right-panel {
+    flex: 1 1 50%; background: #293054; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 340px; padding: 0 24px;
+  }
+  #quiz-image {
+    max-width: 90%; max-height: 60vh; border-radius: 26px; margin: 0 0 30px 0; box-shadow: 0 2px 28px #0007; display: block; object-fit: contain; cursor:zoom-in;
+    transition: transform .3s cubic-bezier(.44,1.34,.59,1.2), box-shadow .3s;
+  }
+  #quiz-image.zoomed {
+    transform: scale(1.7);
+    z-index: 9999;
+    box-shadow: 0 0 30px #ffe05bcc;
+    cursor: zoom-out;
+  }
+  #quiz-question {
+    font-size: 2.7em; font-weight: 800; text-align: left; max-width: 97%; margin-bottom: 18px;
+    line-height:1.18;
+  }
+  .buzzer-btn {
+    background: #ffe05b; color: #262e46;
+    font-size: 2.7em; font-weight: 900;
+    padding: 48px 90px;
+    border-radius: 80px; border: 7px solid #fff;
+    box-shadow: 0 10px 32px #ffea6f99;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+    margin: 45px auto 32px auto;
+    width: 320px;
+    transition: background .2s;
+  }
+  .buzzer-btn:active { background: #eec908;}
+  .scoreboard {
+    margin: 24px auto 18px auto; background: #38365d;
+    border-radius: 24px; box-shadow: 0 2px 16px #0006; color: #fff; width: 100%; max-width: 420px; padding: 24px 28px;
+    font-size: 1.2em;
+  }
+  .team-scoreboard {
+    margin: 8px auto 18px auto; background: #263063;
+    border-radius: 24px; color: #ffe05b; width: 100%; max-width: 420px; padding: 14px 22px;
+    font-size: 1.10em;
+  }
+  table { width:100%; color:#fff; border-collapse:collapse;}
+  th, td { padding:8px 8px;}
+  th {color:#ffe05b;}
+  .toggle-btns { display:flex; align-items:center; justify-content:center; gap:20px; margin:21px;}
+  #buzz-lock-msg { font-size:1.22em; color:#ffe05b; font-weight:700; margin:15px;text-align:center;}
+  /* Responsive for mobile: stack panels, shrink image */
+  @media(max-width:900px){
+    .flex-main { flex-direction: column;}
+    .left-panel,.right-panel { min-width:0;width:100%;}
+    #quiz-image { max-width:95vw; max-height:220px;}
+    .buzzer-btn { font-size:1.35em; padding:18px 10px; width:94vw;}
+    .scoreboard, .team-scoreboard { max-width: 99vw; }
+  }
+  .admin-box {
+    background: #193048; padding: 22px 20px; border-radius: 18px; margin: 32px 0; max-width: 460px; width: 100%;
+    color: #ffe05b; box-shadow: 0 8px 28px #0006;
+    font-size: 1.12em;
+  }
+</style>
 </head>
 <body>
 <audio id="buzz-audio">
@@ -82,11 +94,12 @@
 </audio>
 <div class="flex-main">
   <div class="left-panel">
+    <!-- Large question and image (zoomable) -->
     <img id="quiz-image" src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg" alt="Question Visual" />
     <div id="quiz-question">Where was this photo taken?</div>
   </div>
   <div class="right-panel">
-    <div style="width:100%;align-items:center;display:flex;flex-direction:column;">
+    <div id="buzz-top-area" style="width:100%;align-items:center;display:flex;flex-direction:column;">
       <button id="buzzer-btn" class="buzzer-btn">BUZZ!</button>
       <div id="buzz-lock-msg"></div>
       <div class="toggle-btns">
@@ -94,21 +107,21 @@
         <button onclick="showScoreboard('team')">Team Scores</button>
       </div>
       <div id="scoreboard-box"></div>
-      <div id="host-controls" style="display:none;">
-        <hr style="margin: 16px 0;"> 
-        <div>
-          <strong>Add Points: </strong>
-          <input id="host-teamname" type="text" placeholder="Team name" style="width:90px;"/>
-          <input id="host-points" type="number" value="10" style="width:60px;"/>
-          <button onclick="addPointsToTeam()">Add to Team</button>
-        </div>
+    </div>
+    <div id="admin-controls" class="admin-box" style="display:none;">
+      <b>Host Panel - Add Points to Team</b><br>
+      <div style="margin:7px 0;">
+        <input id="host-teamname" type="text" placeholder="Team name" style="width:90px;"/>
+        <input id="host-points" type="number" value="10" style="width:60px;"/>
+        <button onclick="addPointsToTeam()">Add</button>
       </div>
+      <span style="font-size:0.93em;">(Assign team points directly and instantly updates scoreboard.)</span>
     </div>
   </div>
 </div>
 
 <script>
-// Firebase
+// --- CONFIGURATION (replace with your hosting/join logic) ---
 const firebaseConfig = {
   apiKey: "AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
   authDomain: "buzzer-a0d53.firebaseapp.com",
@@ -122,64 +135,76 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ---- Sample user/game state (replace with real login/assignments!) ----
-let isHost = false; // set true for host/admin, false for normal player/viewer!
+let isHost = false; // Set true for host panel
 let myUser = isHost ? "HOST" : "player1";
 let myTeam = isHost ? null : "Red";
 let myPID = isHost ? null : "pid123";
-let gameID = "111111"; // Sample; use your joining/hosting code
-// ----------------------------------------------------------------------
+let gameID = "111111"; // Change to real/game code
 
-// Buzzer Setup
-let buzzerDisabled = false, lastBuzz=0;
+// -------- Buzzer logic (mouse+spacebar, fast/sensitive, sound) -------
+let buzzerDisabled = false, lastBuzz = 0;
 const buzzerBtn = document.getElementById("buzzer-btn");
 function triggerBuzzer(e){
-  if (buzzerDisabled) return;
+  if(buzzerDisabled) return;
   let now = performance.now();
-  if (now - lastBuzz < 12) return; // ultra fast, ~80 FPS
+  if(now - lastBuzz < 12) return; // ~80 fps
   lastBuzz = now;
-  // Set buzzed for player
-  db.ref(`games/${gameID}/players/${myPID}`).update({ buzzed:true });
-  db.ref(`games/${gameID}`).update({ buzzed:myPID });
-  // Play sound instantly!
-  const audio=document.getElementById("buzz-audio");
-  audio.currentTime = 0;
-  audio.volume = 1.0;
+  db.ref(`games/${gameID}/players/${myPID}`).update({buzzed:true});
+  db.ref(`games/${gameID}`).update({buzzed:myPID});
+  // Play sound instantly
+  const audio = document.getElementById("buzz-audio");
+  audio.currentTime = 0; audio.volume = 1.0;
   audio.play().catch(()=>{});
 }
 buzzerBtn.onclick = triggerBuzzer;
 window.addEventListener("keydown", function(ev){
-  if(ev.code==="Space" || ev.keyCode===32){
-    triggerBuzzer();
-    ev.preventDefault();
-  }
+  if(ev.code==="Space"||ev.keyCode===32){ triggerBuzzer(); ev.preventDefault();}
 });
 
+// Buzz locked
 function showBuzzLock(msg="") {
   document.getElementById('buzz-lock-msg').textContent = msg;
   buzzerDisabled = !!msg;
 }
-window.showBuzzLock = showBuzzLock;
-
-// Zoom for image
+// Image zoom logic
 document.getElementById("quiz-image").onclick = function(){
   this.classList.toggle("zoomed");
 };
 
-// Leave/Remove player logic (plug into your Leave/Exit logic)
-function playerLeaves() {
-  if(myPID) db.ref(`games/${gameID}/players/${myPID}`).remove();
-  // optionally remove buzzed if this player was buzzed
-  db.ref(`games/${gameID}/buzzed`).once("value").then(snap=>{
-    if(snap.val() === myPID) db.ref(`games/${gameID}/buzzed`).remove();
+// ------- Scoreboard: toggle between player and team -----
+function showScoreboard(mode) {
+  db.ref(`games/${gameID}/players`).once("value").then(snap=>{
+    let playersObj=snap.val()||{};
+    let arr = [];
+    Object.entries(playersObj).forEach(([pid,info])=>{info.pid=pid; arr.push(info);});
+    if(mode==="player"){
+      arr.sort((a,b) => (b.score||0)-(a.score||0));
+      let html = `<div class="scoreboard"><b>Individual Scores</b><table><thead><tr><th>Player</th><th>Team</th><th>Score</th></tr></thead><tbody>`;
+      arr.forEach(u=>html+=`<tr><td>${u.name}</td><td>${u.team||"-"}</td><td>${u.score||0}</td></tr>`);
+      html+= "</tbody></table></div>";
+      document.getElementById("scoreboard-box").innerHTML = html;
+    } else {
+      let teamS={};
+      arr.forEach(u=>{
+        if(!u.team)return;
+        teamS[u.team]=(teamS[u.team]||0)+(u.score||0);
+      });
+      let teamsArr = Object.entries(teamS).map(([team,score])=>({team,score}));
+      teamsArr.sort((a,b)=>b.score-a.score);
+      let html = `<div class="team-scoreboard"><b>Team Scores</b><table><thead><tr><th>Team</th><th>Total</th></tr></thead><tbody>`;
+      teamsArr.forEach(t=>html+=`<tr><td style="font-weight:bold">${t.team}</td><td>${t.score}</td></tr>`);
+      html+="</tbody></table></div>";
+      document.getElementById("scoreboard-box").innerHTML = html;
+    }
   });
 }
+showScoreboard('player'); // Default
 
-// Host UI/Team Points (host only)
-if(isHost) document.getElementById("host-controls").style.display = "";
+// Host team points panel: show/manage only if host+admin
+if(isHost) document.getElementById("admin-controls").style.display="";
 function addPointsToTeam() {
   const team = document.getElementById("host-teamname").value.trim();
-  const pts = parseInt(document.getElementById("host-points").value,10) || 0;
+  const pts = parseInt(document.getElementById("host-points").value,10)||0;
   db.ref(`games/${gameID}/players`).once("value").then(snap=>{
     snap.forEach(player=>{
       let info=player.val();
@@ -187,50 +212,20 @@ function addPointsToTeam() {
         db.ref(`games/${gameID}/players/${player.key}/score`).transaction(score=>(score||0)+pts);
       }
     });
+    showScoreboard(scoreboardMode);
   });
-  alert(`Added ${pts} points to team ${team}`);
 }
-
-// Live scoreboard: toggle individual/team view
 let scoreboardMode = 'player';
-function showScoreboard(mode) {
-  scoreboardMode = mode;
-  db.ref(`games/${gameID}/players`).once("value").then(snap=>{
-    let playersObj=snap.val()||{};
-    let arr = [];
-    Object.entries(playersObj).forEach(([pid, info]) => {
-      info.pid=pid; arr.push(info);
-    });
-    if(mode==="player"){
-      arr.sort((a,b) => (b.score||0)-(a.score||0));
-      let html = `<div class="scoreboard"><b>Individual Scores</b><table><thead><tr><th>Player</th><th>Team</th><th>Score</th></tr></thead><tbody>`;
-      arr.forEach(u =>
-        html += `<tr><td>${u.name}</td><td>${u.team||"-"}</td><td>${u.score||0}</td></tr>`
-      );
-      html += "</tbody></table></div>";
-      document.getElementById("scoreboard-box").innerHTML = html;
-    } else {
-      // team mode
-      let teamS = {};
-      arr.forEach(u=>{
-        if(!u.team) return;
-        teamS[u.team] = (teamS[u.team]||0)+(u.score||0);
-      });
-      let teamsArr = Object.entries(teamS).map(([team,score])=>({team,score}));
-      teamsArr.sort((a,b)=>b.score-a.score);
-      let html = `<div class="team-scoreboard"><b>Team Scores</b><table><thead><tr><th>Team</th><th>Total</th></tr></thead><tbody>`;
-      teamsArr.forEach(t=>
-        html += `<tr><td style="font-weight:bold">${t.team}</td><td>${t.score}</td></tr>`
-      );
-      html += "</tbody></table></div>";
-      document.getElementById("scoreboard-box").innerHTML = html;
-    }
+// Expose globally for button toggle
+window.showScoreboard = function(m){scoreboardMode=m;showScoreboard(m);};
+
+// Player leaves logic (removes from scoreboard instantly)
+function playerLeaves() {
+  if(myPID) db.ref(`games/${gameID}/players/${myPID}`).remove();
+  db.ref(`games/${gameID}/buzzed`).once("value").then(snap=>{
+    if(snap.val() === myPID) db.ref(`games/${gameID}/buzzed`).remove();
   });
 }
-showScoreboard('player'); // Initially show individuals
-
-// SHOW question/image left, buzzer and scores right, working sound, super-fast buzzer, team points admin, all requirements.
-// Extend as needed for login, register, admin user management, and game host/join manage.
 </script>
 </body>
 </html>
