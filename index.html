@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Buzzer</title>
+<title>Quiz Buzzer Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -47,6 +47,7 @@
     margin: 24px auto;
   }
   .buzzer-btn:disabled { background: #aaa; color: #555; border-color: #666; box-shadow: none; }
+  /* Flex layout for player page */
   .player-layout { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; align-items: center; }
   .player-left { flex: 1; min-width: 320px; max-width: 550px; text-align: center; }
   .player-right { flex: 1; min-width: 240px; max-width: 420px; text-align: center; }
@@ -86,60 +87,38 @@
     width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
     box-shadow: 0 0 12px #12183fbb; margin-bottom: 14px; display: none;
   }
-  .backbtn {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.3em;
-    padding: 12px 40px;
-    border-radius: 44px;
-    background: #364063;
-    color: white;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 5px 16px #000a;
-    user-select: none;
-    z-index: 1100;
-    transition: background 0.3s ease;
-  }
-  .backbtn:hover {
-    background: var(--accent);
-    color: #232323;
-  }
-  select.role-dropdown { font-size:1em; margin: 0 auto; border-radius:10px; padding:5px 10px;}
 </style>
 </head>
 <body>
-<button class="backbtn" id="backbtn" style="display:none" onclick="backButtonHandler()">← Back</button>
+
 <div id="modal"></div>
 
-<!-- LOGIN -->
+<!-- LOGIN PAGE -->
 <div id="page-login" class="page show">
   <div class="center-box">
     <h1>Login</h1>
-    <input id="login-username" class="input-box" autocomplete="off" placeholder="Username"/>
-    <input type="password" id="login-password" class="input-box" placeholder="Password"/>
+    <input id="login-username" class="input-box" autocomplete="off" placeholder="Username" />
+    <input type="password" id="login-password" class="input-box" placeholder="Password" />
     <button onclick="loginUser()">Login</button>
     <button onclick="showRegister()">Register</button>
   </div>
 </div>
 
-<!-- REGISTER -->
+<!-- REGISTER PAGE -->
 <div id="page-register" class="page">
   <div class="center-box">
     <h1>Register</h1>
-    <input id="register-username" class="input-box" autocomplete="off" placeholder="Username"/>
-    <input type="password" id="register-password" class="input-box" placeholder="Password"/>
-    <input id="register-email" class="input-box" placeholder="Email"/>
-    <input type="file" id="register-avatar" accept="image/*"/>
-    <img id="register-avatar-preview" class="avatar-preview"/>
+    <input id="register-username" class="input-box" autocomplete="off" placeholder="Username" />
+    <input type="password" id="register-password" class="input-box" placeholder="Password" />
+    <input id="register-email" class="input-box" placeholder="Email" />
+    <input type="file" id="register-avatar" accept="image/*" />
+    <img id="register-avatar-preview" class="avatar-preview" />
     <button onclick="registerUser()">Register</button>
     <button onclick="showLogin()">Back</button>
   </div>
 </div>
 
-<!-- HOME -->
+<!-- HOME PAGE -->
 <div id="page-home" class="page">
   <div class="center-box">
     <h2>Welcome, <span id="welcome-user"></span></h2>
@@ -152,81 +131,72 @@
   </div>
 </div>
 
-<!-- PROFILE -->
-<div id="page-profile" class="page">
-  <div class="center-box">
-    <h2>Your Profile</h2>
-    <img id="profile-avatar-preview" class="avatar-preview"/>
-    <input id="profile-nickname" class="input-box" readonly/>
-    <input id="profile-password" type="password" class="input-box" placeholder="New Password"/>
-    <input id="profile-email" class="input-box" placeholder="Email"/>
-    <input type="file" id="profile-avatar" accept="image/*"/>
-    <button onclick="updateProfile()">Save Changes</button>
-  </div>
-</div>
-
-<!-- HOST PAGE -->
+<!-- HOST PAGE (Code + Admin Controls) -->
 <div id="page-host" class="page">
   <div class="center-box">
     <h2>Host Game</h2>
     <label>Game Code:</label>
-    <input id="host-code" class="input-box" readonly/>
+    <input id="host-code" class="input-box" readonly />
     <button onclick="startGame()">Start Game</button>
+
+    <!-- Admin controls (after starting game) -->
+    <div id="host-admin-controls" style="margin-top: 30px; display:none;">
+      <button onclick="resetBuzzers()">Reset Buzzer</button>
+      <button id="unlock-buzzer-btn" onclick="unlockBuzzers()" style="display:none;">Unlock Buzzers</button>
+      <button onclick="lockBuzzers()">Lock Buzzers</button>
+      <button onclick="nextRound()">Next Round</button>
+      <button onclick="clearAllScores()">Clear Scores</button>
+      <div id="buzzed-who" style="margin-top: 12px; font-weight: bold;"></div>
+      <div id="admin-scores" style="margin-top: 20px;"></div>
+    </div>
   </div>
 </div>
 
-<!-- ADMIN PANEL -->
+<!-- ADMIN PANEL (Optional for Admins) -->
 <div id="page-admin-panel" class="page">
   <div class="center-box">
     <h2>Admin Panel</h2>
     <div><b>Game Code:</b> <span id="roomcode"></span></div>
     <div><b>Round:</b> <span id="round-label"></span></div>
     <div id="question-text"></div>
-    <img id="question-img"/>
-    <input id="admin-question-input" class="input-box" placeholder="Enter question"/>
-    <input type="file" id="admin-image-file" accept="image/*"/>
-    <img id="admin-image-preview" class="avatar-preview"/>
+    <img id="question-img" />
+    <input id="admin-question-input" class="input-box" placeholder="Enter question" />
+    <input type="file" id="admin-image-file" accept="image/*" />
+    <img id="admin-image-preview" class="avatar-preview" />
     <button onclick="uploadQuestion()">Upload Question</button>
-    <br>
-    <button onclick="resetBuzzers()">Reset Buzzer</button>
-    <button id="unlock-buzzer-btn" onclick="unlockBuzzers()" style="display:none;">Unlock Buzzer</button>
-    <button onclick="lockBuzzers()">Lock Buzzers</button>
-    <button onclick="nextRound()">Next Round</button>
-    <button onclick="clearAllScores()">Clear Scores</button>
-    <div id="buzzed-who"></div>
-    <div id="admin-scores"></div>
-    <div id="admin-userlist"></div>
+    <br />
+    <div id="admin-userlist" style="margin-top:10px;"></div>
   </div>
 </div>
 
-<!-- JOIN -->
+<!-- JOIN PAGE -->
 <div id="page-join" class="page">
   <div class="center-box">
     <h2>Join Game</h2>
-    <input id="join-code" class="input-box" maxlength="6" placeholder="Game Code"/>
-    <input id="join-team" class="input-box" maxlength="24" placeholder="Team (optional)"/>
+    <input id="join-code" class="input-box" maxlength="6" placeholder="Game Code" />
+    <input id="join-team" class="input-box" maxlength="24" placeholder="Team (optional)" />
     <button onclick="joinGame()">Join</button>
   </div>
 </div>
 
-<!-- PLAYER -->
+<!-- PLAYER PAGE -->
 <div id="page-player" class="page">
   <div class="center-box">
     <div class="player-layout">
       <div class="player-left">
         <div id="player-question-text"></div>
-        <img id="player-question-img"/>
+        <img id="player-question-img" />
       </div>
       <div class="player-right">
         <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
-        <div id="buzz-lock-msg"></div>
-        <div class="scoreboard" id="player-scores"></div>
+        <div id="buzz-lock-msg" style="margin-top: 10px; font-weight: bold;"></div>
+        <div class="scoreboard" id="player-scores" style="margin-top:20px;"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SCOREBOARD -->
+<!-- SCOREBOARD PAGE -->
 <div id="page-scoreboard" class="page">
   <div class="center-box">
     <h2>Overall Scoreboard</h2>
@@ -253,40 +223,40 @@ const db = firebase.database();
 let gameID = "", myUser = "", myPID = "", myTeam = "", buzzLockSoundPlayed = false;
 let pageHistory = [];
 
-function showModal(msg) {
+function showModal(msg){
   const m=document.getElementById("modal");
   m.textContent=msg;
   m.style.display="block";
   setTimeout(()=>m.style.display="none",1800);
 }
-function showPage(id) {
+function showPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
   document.getElementById(id).classList.add("show");
-  document.getElementById("backbtn").style.display=id==="page-login"?"none":"inline-block";
 }
-function navigateToPage(id) {
+function navigateToPage(id){
   if(pageHistory.length===0||pageHistory[pageHistory.length-1]!==id){
     pageHistory.push(id);
   }
   showPage(id);
 }
-function backButtonHandler() {
+function backButtonHandler(){
   if(pageHistory.length>1){
     pageHistory.pop();
     showPage(pageHistory[pageHistory.length-1]);
   }
 }
 
-function showRegister() { navigateToPage("page-register"); }
-function showLogin() { navigateToPage("page-login"); }
-function showHome() {
-  document.getElementById("welcome-user").textContent = myUser;
+// Navigation helpers
+function showRegister(){navigateToPage("page-register");}
+function showLogin(){navigateToPage("page-login");}
+function showHome(){
+  document.getElementById("welcome-user").textContent=myUser;
   db.ref("users/"+myUser).get().then(snap=>{
-    document.getElementById("adminPanelBtn").style.display=(snap.val()?.role==="admin")?"block":"none";
+    document.getElementById("adminPanelBtn").style.display= (snap.val()?.role==="admin") ? "block" : "none";
   });
   navigateToPage("page-home");
 }
-function logoutUser() {
+function logoutUser(){
   myUser="";
   myPID="";
   myTeam="";
@@ -295,127 +265,163 @@ function logoutUser() {
   showLogin();
   showModal("Logged out");
 }
-function showProfile() { navigateToPage("page-profile"); }
-function hostPage() {
-  const code=String(Math.floor(Math.random()*900000+100000));
-  gameID=code;
-  document.getElementById("host-code").value=code;
+function showProfile(){navigateToPage("page-profile");}
+function hostPage(){
+  const code = String(Math.floor(Math.random()*900000+100000));
+  gameID = code;
+  document.getElementById("host-code").value = code;
   db.ref("games/"+code).set({
-    created:Date.now(),
-    status:"waiting",
-    round:1,
-    question:"",
-    image:"",
-    players:{},
-    buzzed:"",
-    lock:false
+    created: Date.now(),
+    status: "waiting",
+    round: 1,
+    question: "",
+    image: "",
+    players: {},
+    buzzed: "",
+    lock: false
   });
+  // Show host controls container initially hidden
+  document.getElementById("host-admin-controls").style.display = "none";
   navigateToPage("page-host");
 }
-function startGame() {
-  db.ref("games/"+gameID).update({status:"live",round:1});
-  document.getElementById("roomcode").textContent=gameID;
+function startGame(){
+  db.ref("games/"+gameID).update({status: "live", round: 1}).then(()=>{
+    showModal("Game started! Use host page controls below.");
+    // After starting game, show controls and load current scores, buzzed etc.
+    document.getElementById("host-admin-controls").style.display = "block";
+    refreshHostAdminData();
+  });
+}
+function refreshHostAdminData(){
   listenAdmin();
-  readAdminUserlist();
-  navigateToPage("page-admin-panel");
   updateUnlockButton();
 }
-function joinPage() { navigateToPage("page-join"); }
-function adminPanel() {
+function joinPage(){navigateToPage("page-join");}
+function adminPanel(){
   db.ref("users/"+myUser).get().then(snap=>{
-    if(snap.val()?.role!=="admin"){showModal("Only admins can access!"); return;}
+    if(snap.val()?.role!=="admin"){
+      showModal("Only admins can access!");
+      return;
+    }
     readAdmin();
     readAdminUserlist();
     navigateToPage("page-admin-panel");
   });
 }
-function showScoreboard() { navigateToPage("page-scoreboard"); }
+function showScoreboard(){navigateToPage("page-scoreboard");}
 
-function readAvatar(input,previewId){
+// Avatar preview
+function readAvatar(input, previewId){
   if(input.files[0]){
-    let reader=new FileReader();
-    reader.onload=(e)=>{let img=document.getElementById(previewId); img.src=e.target.result; img.style.display="block";};
-    reader.readAsDataURL(input.files[0]);
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById(previewId);
+      img.src = e.target.result;
+      img.style.display = "block";
+    };
+    reader.readAsDataURL(input.files);
   }
 }
 ["register-avatar","profile-avatar","admin-image-file"].forEach(id=>{
-  document.getElementById(id).addEventListener("change",e=>readAvatar(e.target,id==="admin-image-file"?"admin-image-preview":id+"-preview"));
+  document.getElementById(id).addEventListener("change", e=> readAvatar(e.target, id === "admin-image-file" ? "admin-image-preview" : id+"-preview"));
 });
-function registerUser() {
-  const username = document.getElementById("register-username").value.trim();
-  const pw = document.getElementById("register-password").value.trim();
-  const email = document.getElementById("register-email").value.trim();
-  const avatarFile = document.getElementById("register-avatar").files[0];
-  if (!username || !pw || !email) return showModal("Fill all fields.");
-  db.ref("users/"+username).get().then(snap => {
-    if (snap.exists()) return showModal("Username exists.");
-    if (avatarFile) {
-      let reader=new FileReader();
-      reader.onload=e=>{db.ref("users/"+username).set({pw,email,role:"user",avatar:e.target.result}).then(()=>{showModal("Registered!"); setTimeout(showLogin,1400);});};
+
+// Auth functions
+function registerUser(){
+  const username = document.getElementById("register-username").value.trim(),
+        pw = document.getElementById("register-password").value.trim(),
+        email = document.getElementById("register-email").value.trim(),
+        avatarFile = document.getElementById("register-avatar").files;
+  if(!username||!pw||!email) return showModal("Fill all fields");
+  db.ref("users/"+username).get().then(snap=>{
+    if(snap.exists()) return showModal("Username exists");
+    if(avatarFile){
+      const reader = new FileReader();
+      reader.onload = e => {
+        db.ref("users/"+username).set({pw,email,role:"user",avatar:e.target.result}).then(()=>{
+          showModal("Registered! Please login.");
+          setTimeout(showLogin,1400);
+        });
+      };
       reader.readAsDataURL(avatarFile);
     } else {
-      db.ref("users/"+username).set({pw,email,role:"user",avatar:""}).then(()=>{showModal("Registered!"); setTimeout(showLogin,1400);});
+      db.ref("users/"+username).set({pw,email,role:"user",avatar:""}).then(()=>{
+        showModal("Registered! Please login.");
+        setTimeout(showLogin,1400);
+      });
     }
   });
 }
-function loginUser() {
-  const username = document.getElementById("login-username").value.trim();
-  const pw = document.getElementById("login-password").value.trim();
+function loginUser(){
+  const username = document.getElementById("login-username").value.trim(),
+        pw = document.getElementById("login-password").value.trim();
   if(username.toLowerCase()==="admin"&&pw==="24207"){
-    myUser="admin";
+    myUser = "admin";
     showHome();
     return;
   }
   db.ref("users/"+username).get().then(snap=>{
-    if(!snap.exists()) return showModal("User not found.");
-    if(snap.val().pw!==pw) return showModal("Incorrect password.");
-    myUser=username;
+    if(!snap.exists()) return showModal("User not found");
+    if(snap.val().pw!==pw) return showModal("Incorrect password");
+    myUser = username;
     showHome();
   });
 }
-function updateProfile() {
-  const email=document.getElementById("profile-email").value.trim(),
-        password=document.getElementById("profile-password").value.trim(),
-        avatarFile=document.getElementById("profile-avatar").files[0];
-  let updateObj={};
-  if(email)updateObj.email=email;
-  if(password)updateObj.pw=password;
+function updateProfile(){
+  const email = document.getElementById("profile-email").value.trim(),
+        password = document.getElementById("profile-password").value.trim(),
+        avatarFile = document.getElementById("profile-avatar").files[0];
+  let updateObj = {};
+  if(email) updateObj.email = email;
+  if(password) updateObj.pw = password;
   if(avatarFile){
-    let reader=new FileReader();
-    reader.onload=e=>{
-      updateObj.avatar=e.target.result;
-      db.ref("users/"+myUser).update(updateObj).then(()=>{showModal("Profile updated.");showHome();});
+    const reader = new FileReader();
+    reader.onload = e=>{
+      updateObj.avatar = e.target.result;
+      db.ref("users/"+myUser).update(updateObj).then(()=>{
+        showModal("Profile updated");
+        showHome();
+      });
     };
     reader.readAsDataURL(avatarFile);
   } else {
-    db.ref("users/"+myUser).update(updateObj).then(()=>{showModal("Profile updated.");showHome();});
+    db.ref("users/"+myUser).update(updateObj).then(()=>{
+      showModal("Profile updated");
+      showHome();
+    });
   }
 }
 
+// Host admin controls functions
 function uploadQuestion(){
-  const question=document.getElementById("admin-question-input").value.trim();
-  const file=document.getElementById("admin-image-file").files[0];
+  const question = document.getElementById("admin-question-input").value.trim();
+  const file = document.getElementById("admin-image-file").files[0];
   if(!question) return showModal("Please enter a question.");
   if(file){
-    let reader=new FileReader();
-    reader.onload=e=>{db.ref("games/"+gameID).update({question, image: e.target.result}); resetInputs(); showModal("Question and image uploaded.");};
+    const reader = new FileReader();
+    reader.onload = e=>{
+      db.ref("games/"+gameID).update({question,image:e.target.result});
+      resetQuestionInputs();
+      showModal("Question and image uploaded.");
+    };
     reader.readAsDataURL(file);
   } else {
-    db.ref("games/"+gameID).update({question, image:""});
-    resetInputs();
+    db.ref("games/"+gameID).update({question,image:""});
+    resetQuestionInputs();
     showModal("Question uploaded.");
   }
 }
-function resetInputs(){
+function resetQuestionInputs(){
   document.getElementById("admin-question-input").value="";
   document.getElementById("admin-image-file").value="";
   document.getElementById("admin-image-preview").style.display="none";
 }
-
 function resetBuzzers(){
   db.ref(`games/${gameID}/players`).once("value").then(snap=>{
     const players = snap.val() || {};
-    Object.keys(players).forEach(pid=>{db.ref(`games/${gameID}/players/${pid}`).update({buzzed: false});});
+    Object.keys(players).forEach(pid=>{
+      db.ref(`games/${gameID}/players/${pid}`).update({buzzed:false});
+    });
   });
   db.ref(`games/${gameID}`).update({buzzed:"", lock:false});
   updateUnlockButton();
@@ -425,19 +431,18 @@ function lockBuzzers(){
   updateUnlockButton();
 }
 function unlockBuzzers(){
-  db.ref(`games/${gameID}`).update({lock:false, buzzed:""});
+  db.ref(`games/${gameID}`).update({lock:false,buzzed:""});
   updateUnlockButton();
 }
 function updateUnlockButton(){
   db.ref(`games/${gameID}/lock`).once("value").then(snap=>{
-    const locked=snap.val();
-    document.getElementById("unlock-buzzer-btn").style.display=locked?"inline-block":"none";
+    document.getElementById("unlock-buzzer-btn").style.display = snap.val() ? "inline-block" : "none";
   });
 }
 function nextRound(){
   db.ref(`games/${gameID}`).once("value").then(snap=>{
-    const round = (snap.val().round||1)+1;
-    db.ref(`games/${gameID}`).update({round, buzzed:"", lock:false});
+    const r = (snap.val().round || 1) + 1;
+    db.ref(`games/${gameID}`).update({round:r,buzzed:"",lock:false});
     resetBuzzers();
   });
 }
@@ -445,15 +450,17 @@ function clearAllScores(){
   db.ref("games").remove();
   showModal("All scores cleared.");
 }
-function readAdminUserlist() {
+
+// Admin users management
+function readAdminUserlist(){
   db.ref("users").once("value").then(snap=>{
     let html=`<table><thead><tr><th>Avatar</th><th>Username</th><th>Email</th><th>Role</th></tr></thead><tbody>`;
     snap.forEach(u=>{
-      const d=u.val();
-      html+=`<tr>
-        <td class="avatar-column">${d.avatar?`<img src="${d.avatar}">`:""}</td>
+      const d = u.val();
+      html += `<tr>
+        <td class="avatar-column">${d.avatar ? `<img src="${d.avatar}">` : ""}</td>
         <td style="color:#ffe05b;">${u.key}</td>
-        <td>${d.email||""}</td>
+        <td>${d.email || ""}</td>
         <td><select class="role-dropdown" onchange="changeUserRole('${u.key}', this.value)">
           <option value="user" ${d.role==="user"?"selected":""}>User</option>
           <option value="admin" ${d.role==="admin"?"selected":""}>Admin</option>
@@ -461,7 +468,7 @@ function readAdminUserlist() {
       </tr>`;
     });
     html+="</tbody></table>";
-    document.getElementById("admin-userlist").innerHTML=html;
+    document.getElementById("admin-userlist").innerHTML = html;
   });
 }
 window.changeUserRole = function(username, role){
@@ -471,24 +478,20 @@ window.changeUserRole = function(username, role){
     if(username === myUser) showHome();
   });
 };
-function readAdmin() {
+
+// Admin panel display
+function readAdmin(){
   db.ref(`games/${gameID}`).on("value", snap=>{
     const g = snap.val() || {};
     document.getElementById("round-label").textContent = g.round || 1;
     document.getElementById("question-text").textContent = g.question || "";
-    let img = document.getElementById("question-img");
-    if(g.image){ img.src=g.image; img.style.display="block"; } else { img.style.display="none"; }
+    const img = document.getElementById("question-img");
+    if(g.image){ img.src=g.image; img.style.display="block"; } else { img.style.display = "none"; }
     const players = g.players || {};
-    let arr = Object.entries(players);
+    const arr = Object.entries(players);
     let html = `<table><thead><tr><th>Avatar</th><th>Name</th><th>Team</th><th>Score</th><th>Status</th></tr></thead><tbody>`;
-    arr.forEach(([id, pl])=>{
-      html+=`<tr>
-        <td class='avatar-column'>${pl.avatar?`<img src='${pl.avatar}'/>`:""}</td>
-        <td>${pl.name}</td>
-        <td>${pl.team || ""}</td>
-        <td>${pl.score || 0}</td>
-        <td>${id === g.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ""}</td>
-      </tr>`;
+    arr.forEach(([id, pl]) => {
+      html += `<tr><td class='avatar-column'>${pl.avatar ? `<img src='${pl.avatar}'/>` : ""}</td><td>${pl.name}</td><td>${pl.team || ""}</td><td>${pl.score || 0}</td><td>${id === g.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ""}</td></tr>`;
     });
     html += "</tbody></table>";
     document.getElementById("admin-scores").innerHTML = html;
@@ -496,11 +499,9 @@ function readAdmin() {
     updateUnlockButton();
   });
 }
-function listenAdmin(){
-  readAdmin();
-  readAdminUserlist();
-}
-function joinGame() {
+
+// Player joining
+function joinGame(){
   const code = document.getElementById("join-code").value.trim();
   const team = document.getElementById("join-team").value.trim();
   if(!code) return showModal("Enter 6-digit game code");
@@ -518,14 +519,16 @@ function joinGame() {
     });
   });
 }
+
+// Player listeners
 function listenPlayer(){
-  db.ref(`games/${gameID}`).on("value", snap =>{
+  db.ref(`games/${gameID}`).on("value", snap=>{
     const g = snap.val() || {};
-    document.getElementById("buzz-lock-msg").textContent = g.lock?"Buzzers are locked!":(g.buzzed?"Buzzer locked!":"");
+    document.getElementById("buzz-lock-msg").textContent = g.lock ? "Buzzers are locked!" : (g.buzzed ? "Buzzer locked!" : "");
     const players = g.players || {};
     let html = "";
     Object.entries(players).forEach(([id, pl])=>{
-      html += `<div>${pl.name}${pl.team ? ` (${pl.team})` : ""} ${id === g.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ''}</div>`;
+      html += `<div>${pl.name}${pl.team ? ` (${pl.team})` : ""} ${id === g.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ""}</div>`;
     });
     document.getElementById("player-scores").innerHTML = html;
     const playerBtn = document.getElementById("player-buzzer");
@@ -536,11 +539,11 @@ function listenPlayer(){
       audio.play();
       buzzLockSoundPlayed = true;
     }
-    if(!g.buzzed)buzzLockSoundPlayed = false;
+    if(!g.buzzed) buzzLockSoundPlayed = false;
   });
 }
 function listenQuestionPlayer(){
-  db.ref(`games/${gameID}`).on("value", snap =>{
+  db.ref(`games/${gameID}`).on("value", snap=>{
     const g = snap.val() || {};
     document.getElementById("player-question-text").textContent = g.question || "";
     const img = document.getElementById("player-question-img");
@@ -552,24 +555,26 @@ function listenQuestionPlayer(){
     }
   });
 }
-function buzz() {
-  db.ref(`games/${gameID}`).get().then(snap => {
+// Buzz action
+function buzz(){
+  db.ref(`games/${gameID}`).get().then(snap=>{
     const g = snap.val();
     if(!g || g.buzzed || g.lock) return showModal("Buzzer is locked!");
-    db.ref(`games/${gameID}`).update({buzzed: myPID});
-    db.ref(`games/${gameID}/players/${myPID}`).update({buzzed: true});
+    db.ref(`games/${gameID}`).update({buzzed:myPID});
+    db.ref(`games/${gameID}/players/${myPID}`).update({buzzed:true});
   });
 }
-document.addEventListener("keydown", e => {
+document.addEventListener("keydown", e=>{
   if(e.code === "Space"){
     e.preventDefault();
     const btn = document.getElementById("player-buzzer");
     if(btn && !btn.disabled) buzz();
   }
 });
+// Show scoreboard
 function showScoreboard(){
   showPage("page-scoreboard");
-  db.ref("games").once("value").then(snap => {
+  db.ref("games").once("value").then(snap=>{
     const games = snap.val() || {};
     let totalScores = {};
     for(const gid in games){
@@ -580,19 +585,18 @@ function showScoreboard(){
         totalScores[p.name] += p.score || 0;
       }
     }
-    const sorted = Object.entries(totalScores).sort((a,b) => b[1] - a[1]);
+    const sorted = Object.entries(totalScores).sort((a,b)=>b[1]-a[1]);
     let html = `<thead><tr><th>Rank</th><th>Name</th><th>Score</th></tr></thead><tbody>`;
     if(sorted.length === 0){
       html += `<tr><td colspan="3">No scores yet</td></tr>`;
     }
-    sorted.forEach(([name,score],i) => {
+    sorted.forEach(([name, score],i) => {
       html += `<tr><td>${i+1}</td><td>${name}</td><td>${score}</td></tr>`;
     });
-    html += `</tbody>`;
+    html += "</tbody>";
     document.getElementById("scoreboard-table").innerHTML = html;
   });
 }
 </script>
 </body>
 </html>
-
