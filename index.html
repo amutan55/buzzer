@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <title>Quiz Buzzer Pro</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
@@ -16,29 +16,29 @@
     --radius: 16px;
   }
   html, body {
-    margin:0; padding:0; height:100%;
-    font-family:'Montserrat', sans-serif;
-    background: var(--main-bg); color:#fff;
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Montserrat', sans-serif;
+    background: var(--main-bg); color: #fff;
   }
-  .page { display:none; max-width:1200px; margin:0 auto; padding:28px; }
-  .show { display:block; }
-  h1,h2 { font-weight:700; margin-bottom:20px; text-align:center; }
+  .page { display: none; max-width: 1200px; margin: 0 auto; padding: 28px; }
+  .show { display: block; }
+  h1,h2 { font-weight: 700; margin-bottom: 20px; text-align: center; }
   .input-box {
-    width:100%; max-width:420px; padding:14px 18px; font-size:1.2em;
-    border-radius: var(--radius); border:none; margin:12px auto;
-    background:#344365; color:#fff; text-align:center;
-    outline:none; font-family:'Montserrat',sans-serif;
+    width: 100%; max-width: 420px; padding: 14px 18px; font-size: 1.2em;
+    border-radius: var(--radius); border: none; margin: 12px auto;
+    background: #344365; color: #fff; text-align: center;
+    outline: none; font-family: 'Montserrat', sans-serif;
   }
   button {
-    background: var(--primary); color:#fff; font-weight:700; font-size:1.2em;
-    border:none; border-radius:30px; padding:14px 26px; cursor:pointer;
-    box-shadow:0 4px 12px #0006; margin:12px auto; display:block; font-family:'Montserrat',sans-serif;
+    background: var(--primary); color: #fff; font-weight: 700; font-size: 1.2em;
+    border: none; border-radius: 30px; padding: 14px 26px; cursor: pointer;
+    box-shadow: 0 4px 12px #0006; margin: 12px auto; display: block; font-family: 'Montserrat', sans-serif;
   }
-  button:hover:not(:disabled) { background:var(--accent); color:#232323; }
-  button:disabled { background:#555; color:#999; }
+  button:hover:not(:disabled) { background: var(--accent); color: #232323; }
+  button:disabled { background: #555; color: #999; }
   .center-box {
-    max-width:480px; margin:0 auto; padding:24px; background:#2b3250;
-    border-radius:24px; box-shadow:0 4px 20px #000a; text-align:center;
+    max-width: 480px; margin: 0 auto; padding: 24px; background: #2b3250;
+    border-radius: 24px; box-shadow: 0 4px 20px #000a; text-align: center;
   }
   .buzzer-btn {
     background: var(--accent); color: #141c34; font-size: 3em; font-weight: 900;
@@ -165,7 +165,7 @@
   </div>
 </div>
 
-<!-- HOST -->
+<!-- HOST PAGE -->
 <div id="page-host" class="page">
   <div class="center-box">
     <h2>Host Game</h2>
@@ -188,6 +188,7 @@
     <img id="admin-image-preview" class="avatar-preview"/>
     <button onclick="uploadQuestion()">Upload Question</button>
     <br>
+    <!-- Only admin controls below -->
     <button onclick="resetBuzzers()">Reset Buzzer</button>
     <button id="unlock-buzzer-btn" onclick="unlockBuzzers()" style="display:none;">Unlock Buzzer</button>
     <button onclick="lockBuzzers()">Lock Buzzers</button>
@@ -588,7 +589,6 @@ document.addEventListener("keydown", e => {
     if (btn && !btn.disabled) buzz();
   }
 });
-
 // Display the global scoreboard
 function showScoreboard() {
   showPage("page-scoreboard");
