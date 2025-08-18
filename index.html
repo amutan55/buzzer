@@ -5,70 +5,42 @@
 <title>Quiz Buzzer Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
 <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --main-bg:#262e46;
-    --primary:#3b8bee;
-    --accent:#ffe05b;
-    --danger:#e94f37;
-  }
-  body{margin:0;padding:0;background:var(--main-bg);color:#fff;font-family:'Montserrat',sans-serif}
+  :root { --main-bg: #262e46; --primary: #3b8bee; --accent: #ffe05b; --danger: #e94f37; }
+  body{margin:0;padding:0;background:var(--main-bg);color:#fff;font-family:'Montserrat',sans-serif;}
   .page{display:none;max-width:1020px;margin:auto;padding:24px}
   .show{display:block}
-  input,button,select{
-    width:100%;margin:8px 0;padding:14px;border:none;border-radius:16px;box-sizing:border-box;font-size:1em;
-  }
+  input,button,select{width:100%;margin:8px 0;padding:14px;border:none;border-radius:16px;box-sizing:border-box;font-size:1em;}
   input{background:#2e3658;color:#fff}
   input::placeholder{color:#bbb}
   button{background:var(--primary);color:#fff;font-weight:bold;cursor:pointer;transition:.2s}
   button:hover{background:var(--accent);color:#222}
   button:disabled{background:#666;color:#aaa}
-  .layout-flex{display:flex;gap:32px;}
-  .left-area{flex:2;min-width:300px;display:flex;flex-direction:column;align-items:center;}
-  .right-area{flex:1;min-width:320px;}
-  #question-big{font-size:2em;font-weight:900;margin:24px 0;text-align:left;width:100%;}
-  img.preview,img.zoom-img{
-    max-width:98%;border-radius:18px;margin:10px auto;background:#222;display:block;transition:transform .2s;
-    cursor:zoom-in;
-    box-shadow:0 6px 34px #000a;
-  }
-  img.zoomed{
-    transform:scale(2.2)!important;
-    cursor:zoom-out!important;
-    z-index:9;
-    box-shadow:0 0 50px #fff8;
-    position:relative;
-  }
-  .buzzer-btn{
-    width:290px;height:290px;background:conic-gradient(from 0deg,#ff3cac 0%, #784ba0 40%, #2b86c5 80%, #ffe05b 100%);
-    color:#fff;
-    box-shadow:0 0 60px #ffd95bcc,0 12px 40px #000a;
-    border-radius:50%;border:12px solid #fff;
-    display:block;outline:none;
-    font-size:3.2em;font-weight:900;
-    margin:24px auto 12px auto;
-    letter-spacing:3px;
-    text-shadow:0 6px 18px #232323, 0 1px 1px #ffe05b99;
-    transition:transform 0.08s;
-  }
-  .buzzer-btn:active{transform:scale(0.97);}
-  .buzzer-btn:disabled{background:#bbb;color:#444;box-shadow:none;}
   table{width:100%;border-collapse:collapse;margin-top:10px}
   th,td{padding:8px;border:1px solid #444;text-align:center}
   th{background:var(--primary)}
   .buzzed-tag{background:var(--accent);color:#222;padding:3px 6px;border-radius:8px;font-weight:bold}
-  #modal {
-    position:fixed;top:8%;left:50%;transform:translateX(-50%);
-    background:var(--accent);color:#232323;
-    font-weight:700;font-size:1.4em;
-    padding:14px 42px;border-radius:20px;box-shadow:0 4px 16px #2228;
-    display:none;z-index:9999;
+  img.preview,img.zoom-img{
+    max-width:98%;border-radius:18px;margin:10px auto;background:#222;
+    display:block;transition:transform .2s;cursor:zoom-in;box-shadow:0 6px 34px #000a;
   }
+  img.zoomed{transform:scale(2.2)!important;cursor:zoom-out!important;z-index:9;box-shadow:0 0 50px #fff8;position:relative;}
+  .layout-flex{display:flex;gap:32px;}
+  .left-area{flex:2;min-width:360px;display:flex;flex-direction:column;align-items:center;}
+  .right-area{flex:1;min-width:320px;}
+  #player-question-big{font-size:2em;font-weight:900;margin:24px 0;text-align:left;width:100%;}
+  .buzzer-btn{width:290px;height:290px;background:conic-gradient(from 0deg,#ff3cac 0%, #784ba0 40%, #2b86c5 80%, #ffe05b 100%);
+    color:#fff;box-shadow:0 0 60px #ffd95bcc,0 12px 40px #000a;border-radius:50%;border:12px solid #fff;
+    display:block;outline:none;font-size:3.2em;font-weight:900;margin:24px auto 12px auto;letter-spacing:3px;text-shadow:0 6px 18px #232323, 0 1px 1px #ffe05b99;transition:transform 0.08s;}
+  .buzzer-btn:active{transform:scale(0.97);}
+  .buzzer-btn:disabled{background:#bbb;color:#444;box-shadow:none;}
+  #modal{position:fixed;top:8%;left:50%;transform:translateX(-50%);
+    background:var(--accent);color:#232323;font-weight:700;font-size:1.4em;
+    padding:14px 42px;border-radius:20px;box-shadow:0 4px 16px #2228;
+    display:none;z-index:9999;}
 </style>
 </head>
 <body>
@@ -106,7 +78,7 @@
   <button onclick="logout()">Logout</button>
 </div>
 
-<!-- HOST -->
+<!-- HOST (keeps old design, all features) -->
 <div id="page-host" class="page">
   <h2>Host Game</h2>
   <input id="host-code" readonly>
@@ -115,23 +87,18 @@
   <input type="file" id="image-file" accept="image/*">
   <img id="image-preview" class="preview">
   <button onclick="uploadQuestion()">Upload Question</button>
-  <div class="layout-flex">
-    <div class="left-area">
-      <div id="question-big"></div>
-      <img id="host-question-img" class="zoom-img" style="display:none">
-    </div>
-    <div class="right-area">
-      <h3>Buzzer & Controls</h3>
-      <button class="buzzer-btn" disabled>BUZZ!</button>
-      <button onclick="resetBuzzers()">Reset</button>
-      <button onclick="lockBuzzers()">Lock</button>
-      <button onclick="unlockBuzzers()">Unlock</button>
-      <button onclick="nextRound()">Next Round</button>
-      <button onclick="endGame()">End Game</button>
-      <div id="host-scores"></div>
-      <button onclick="showPage('page-home')">Back</button>
-    </div>
-  </div>
+  <h3>Current Question</h3>
+  <div id="host-question-question"></div>
+  <img id="host-question-img" class="preview">
+  <h3>Buzzer Controls</h3>
+  <button onclick="resetBuzzers()">Reset</button>
+  <button onclick="lockBuzzers()">Lock</button>
+  <button onclick="unlockBuzzers()">Unlock</button>
+  <button onclick="nextRound()">Next Round</button>
+  <button onclick="endGame()">End Game</button>
+  <h3>Players</h3>
+  <div id="host-scores"></div>
+  <button onclick="showPage('page-home')">Back</button>
 </div>
 
 <!-- PROFILE -->
@@ -146,7 +113,7 @@
   <button onclick="showPage('page-home')">Back</button>
 </div>
 
-<!-- ADMIN -->
+<!-- ADMIN (same as before) -->
 <div id="page-admin" class="page">
   <h2>User Management</h2>
   <h3>Add User</h3>
@@ -173,7 +140,7 @@
   <button onclick="showPage('page-home')">Back</button>
 </div>
 
-<!-- PLAYER -->
+<!-- PLAYER (left/right layout, big question+image left, buzzer/scoreboard right) -->
 <div id="page-player" class="page">
   <div class="layout-flex">
     <div class="left-area">
@@ -222,7 +189,7 @@ let myUser="",myPID="",gameID="",myRole="player",myTeam="",buzzPlayed=false;
 function showModal(msg){let m=document.getElementById("modal");m.textContent=msg;m.style.display="block";setTimeout(()=>m.style.display="none",1400);}
 function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));document.getElementById(id).classList.add("show")}
 function $(id){return document.getElementById(id).value.trim()}
-/* Avatar preview handlers for register/profile */
+
 document.getElementById("register-avatar").addEventListener("change",e=>{
   let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("register-avatar-preview").src=ev.target.result;document.getElementById("register-avatar-preview").style.display="block"};r.readAsDataURL(f);}}
 );
@@ -230,7 +197,6 @@ document.getElementById("profile-avatar").addEventListener("change",e=>{
   let f=e.target.files;if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("profile-avatar-preview").src=ev.target.result;document.getElementById("profile-avatar-preview").style.display="block"};r.readAsDataURL(f);}}
 );
 
-/* Register/Login/Logout/Profile */
 function registerUser(){let u=$("register-username"),p=$("register-password"),e=$("register-email");let f=document.getElementById("register-avatar").files;if(!u||!p||!e)return showModal("Fill all fields");if(f){let r=new FileReader();r.onload=ev=>{db.ref("users/"+u).set({pw:p,email:e,avatar:ev.target.result,role:"player"});showModal("Registered!");showPage("page-login")};r.readAsDataURL(f);}else{db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:"player"});showModal("Registered!");showPage("page-login")}}
 function loginUser(){let u=$("login-username"),p=$("login-password");db.ref("users/"+u).get().then(s=>{if(!s.exists())return showModal("User not found");let v=s.val();if(v.pw!==p)return showModal("Wrong password");myUser=u;myRole=v.role||"player";document.getElementById("welcome-user").textContent=u;document.getElementById("host-btn").style.display=(myRole==="host"||myRole==="admin")?"block":"none";document.getElementById("admin-btn").style.display=myRole==="admin"?"block":"none";showPage("page-home")})}
 function logout(){myUser="";myRole="player";showPage("page-logout")}
@@ -238,7 +204,6 @@ function profilePage(){db.ref("users/"+myUser).get().then(s=>{let v=s.val()||{};
 function saveProfile(){let newName=$("profile-username"),newPw=$("profile-password"),newEmail=$("profile-email");let f=document.getElementById("profile-avatar").files[0];db.ref("users/"+myUser).get().then(s=>{let d=s.val()||{};let upd={};if(newPw)upd.pw=newPw;if(newEmail)upd.email=newEmail;if(f){let r=new FileReader();r.onload=ev=>{upd.avatar=ev.target.result;finishSave(newName,upd,d)};r.readAsDataURL(f);}else{finishSave(newName,upd,d)}});}
 function finishSave(newName,upd,oldData){if(newName!==myUser){db.ref("users/"+myUser).remove();db.ref("users/"+newName).set({...oldData,...upd});myUser=newName;}else{db.ref("users/"+myUser).update(upd);}showModal("Profile updated!");showPage("page-home")}
 
-/* Host functions */
 document.getElementById("image-file").addEventListener("change",e=>{
   let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("image-preview").src=ev.target.result;document.getElementById("image-preview").style.display="block"};r.readAsDataURL(f);}}
 );
@@ -250,10 +215,9 @@ function unlockBuzzers(){db.ref("games/"+gameID).update({lock:false})}
 function nextRound(){db.ref("games/"+gameID).get().then(s=>{let r=(s.val().round||1)+1;db.ref("games/"+gameID).update({round:r,buzzed:"",lock:false,question:"",image:""})})}
 function endGame(){db.ref("games/"+gameID).remove();showModal("Game ended");showPage("page-home")}
 function adjustScore(pid,delta){db.ref("games/"+gameID+"/players/"+pid+"/score").get().then(s=>{let sc=s.val()||0;db.ref("games/"+gameID+"/players/"+pid).update({score:sc+delta})})}
-function listenHost(){
-  db.ref("games/"+gameID).on("value",s=>{
+function listenHost(){db.ref("games/"+gameID).on("value",s=>{
     let g=s.val()||{};
-    document.getElementById("question-big").textContent=g.question||"";
+    document.getElementById("host-question-question").textContent=g.question||"";
     let img=document.getElementById("host-question-img");
     if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";
     let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th><th>Actions</th></tr>";
@@ -264,25 +228,16 @@ function listenHost(){
     document.getElementById("host-scores").innerHTML=html;
   })
 }
-/* ZOOM for Host image */
-document.getElementById("host-question-img").addEventListener("click",function(){
-  if(this.classList.contains("zoomed")){this.classList.remove("zoomed");}
-  else{this.classList.add("zoomed");}
-});
 
-/* Admin Panel */
 function adminPanel(){if(myRole!=="admin")return showModal("Admins only");listUsers();showPage("page-admin")}
 function addUser(){let u=$("new-username"),p=$("new-password"),e=$("new-email"),r=document.getElementById("new-role").value;if(!u||!p||!e)return showModal("Fill all fields");db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:r});showModal("User added");listUsers()}
 function listUsers(){db.ref("users").get().then(s=>{let all=s.val()||{};let html="<table><tr><th>User</th><th>Role</th></tr>";Object.entries(all).forEach(([n,d])=>{html+=`<tr><td>${n}</td><td><select onchange="db.ref('users/${n}').update({role:this.value})"><option ${d.role==='player'?'selected':''}>player</option><option ${d.role==='host'?'selected':''}>host</option><option ${d.role==='admin'?'selected':''}>admin</option></select></td></tr>`});html+="</table>";document.getElementById("user-list").innerHTML=html})}
 
-/* JOIN / PLAYER */
 function joinPage(){showPage("page-join")}
 function joinGame(){gameID=$("join-code");myTeam=$("join-team");if(!gameID)return showModal("Enter code");myPID=btoa(myUser+Math.random()).replace(/=/g,"");db.ref("games/"+gameID+"/players/"+myPID).set({name:myUser,team:myTeam,score:0});db.ref("games/"+gameID+"/players/"+myPID).onDisconnect().remove();showPage("page-player");listenPlayer()}
-/* BUZZER */
 function buzz(){db.ref("games/"+gameID).get().then(s=>{let g=s.val();if(!g||g.buzzed||g.lock)return;db.ref("games/"+gameID).update({buzzed:myPID})})}
 document.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();buzz()}})
 
-/* Player view */
 function listenPlayer(){db.ref("games/"+gameID).on("value",s=>{
     let g=s.val()||{};
     document.getElementById("player-question-big").textContent=g.question||"";
@@ -305,7 +260,7 @@ function listenPlayer(){db.ref("games/"+gameID).on("value",s=>{
     html+="</table>";
     document.getElementById("player-scores").innerHTML=html;
 })}
-/* ZOOM for Player image */
+/* Zoom for player image */
 document.getElementById("player-img").addEventListener("click",function(){
   if(this.classList.contains("zoomed")){this.classList.remove("zoomed");}
   else{this.classList.add("zoomed");}
