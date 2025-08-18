@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Quiz Buzzer Pro</title>
+<title>Quiz Buzzer </title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
+<link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet"/>
 <style>
   :root {
     --main-bg:#262e46;
@@ -20,8 +21,7 @@
   .page{display:none;max-width:700px;margin:auto;padding:24px}
   .show{display:block}
   input,button,select{
-    width:100%;margin:8px 0;padding:14px;border:none;border-radius:12px;
-    box-sizing:border-box;font-size:1em;
+    width:100%;margin:8px 0;padding:14px;border:none;border-radius:18px;box-sizing:border-box;font-size:1em;
   }
   input{background:#2e3658;color:#fff}
   input::placeholder{color:#bbb}
@@ -29,19 +29,39 @@
   button:hover{background:var(--accent);color:#222}
   button:disabled{background:#666;color:#aaa}
   .buzzer-btn{
-    font-size:3em;font-weight:900;width:240px;height:240px;
-    border-radius:50%;background:var(--accent);color:#222;
-    margin:30px auto;display:block;border:10px solid #fff;box-shadow:0 0 30px #ffd95b;
+    width:290px;height:290px;
+    background: conic-gradient(from 0deg,#ff3cac 0%, #784ba0 40%, #2b86c5 80%, #ffe05b 100%);
+    color:#fff;
+    box-shadow:0 0 60px #ffd95bcc,0 12px 40px #000a;
+    border-radius:50%;
+    border:12px solid #fff;
+    display:block;
+    outline:none;
+    font-size:3.2em;font-weight:900;
+    margin:24px auto;
+    position:relative;
+    letter-spacing:3px;
+    text-shadow:0 6px 18px #232323, 0 1px 1px #ffe05b99;
+    transition:transform 0.08s;
   }
-  .buzzer-btn:disabled{background:#aaa;color:#555;border-color:#666;box-shadow:none}
+  .buzzer-btn:active{transform:scale(0.97);}
+  .buzzer-btn:disabled{background:#bbb;color:#444;box-shadow:none;}
   table{width:100%;border-collapse:collapse;margin-top:10px}
   th,td{padding:8px;border:1px solid #444;text-align:center}
   th{background:var(--primary)}
   .buzzed-tag{background:var(--accent);color:#222;padding:3px 6px;border-radius:8px;font-weight:bold}
-  img.preview{max-width:100%;border-radius:12px;margin:10px auto;display:none}
+  img.preview{max-width:98%;border-radius:12px;margin:10px auto;display:none;background:#222;}
+  #modal {
+    position:fixed;top:8%;left:50%;transform:translateX(-50%);
+    background:var(--accent);color:#232323;
+    font-weight:700;font-size:1.4em;
+    padding:14px 42px;border-radius:20px;box-shadow:0 4px 16px #2228;
+    display:none;z-index:9999;
+  }
 </style>
 </head>
 <body>
+<div id="modal"></div>
 
 <!-- LOGIN -->
 <div id="page-login" class="page show">
@@ -86,7 +106,7 @@
   <button onclick="uploadQuestion()">Upload Question</button>
 
   <h3>Current Question</h3>
-  <div id="host-question"></div>
+  <div id="host-question-question"></div>
   <img id="host-question-img" class="preview">
 
   <h3>Buzzer Controls</h3>
@@ -95,10 +115,8 @@
   <button onclick="unlockBuzzers()">Unlock</button>
   <button onclick="nextRound()">Next Round</button>
   <button onclick="endGame()">End Game</button>
-
   <h3>Players</h3>
   <div id="host-scores"></div>
-
   <button onclick="showPage('page-home')">Back</button>
 </div>
 
@@ -167,7 +185,6 @@
 <audio id="buzz-audio" src="https://cdn.pixabay.com/download/audio/2022/10/16/audio_12d3b2760e.mp3"></audio>
 
 <script>
-/* ✅ Firebase config (yours) */
 const firebaseConfig={
   apiKey:"AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
   authDomain:"buzzer-a0d53.firebaseapp.com",
@@ -180,10 +197,9 @@ const firebaseConfig={
 };
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
-
 let myUser="",myPID="",gameID="",myRole="player",myTeam="",buzzPlayed=false;
 
-/* Helpers */
+function showModal(msg){let m=document.getElementById("modal");m.textContent=msg;m.style.display="block";setTimeout(()=>m.style.display="none",1400);}
 function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));document.getElementById(id).classList.add("show")}
 function $(id){return document.getElementById(id).value.trim()}
 
@@ -191,8 +207,8 @@ function $(id){return document.getElementById(id).value.trim()}
 document.getElementById("register-avatar").addEventListener("change",e=>{
   let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("register-avatar-preview").src=ev.target.result;document.getElementById("register-avatar-preview").style.display="block"};r.readAsDataURL(f);}}
 );
-function registerUser(){let u=$("register-username"),p=$("register-password"),e=$("register-email");let f=document.getElementById("register-avatar").files;if(!u||!p||!e)return alert("Fill all fields");if(f){let r=new FileReader();r.onload=ev=>{db.ref("users/"+u).set({pw:p,email:e,avatar:ev.target.result,role:"player"});alert("Registered!");showPage("page-login")};r.readAsDataURL(f);}else{db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:"player"});alert("Registered!");showPage("page-login")}}
-function loginUser(){let u=$("login-username"),p=$("login-password");db.ref("users/"+u).get().then(s=>{if(!s.exists())return alert("User not found");let v=s.val();if(v.pw!==p)return alert("Wrong password");myUser=u;myRole=v.role||"player";document.getElementById("welcome-user").textContent=u;document.getElementById("host-btn").style.display=(myRole==="host"||myRole==="admin")?"block":"none";document.getElementById("admin-btn").style.display=myRole==="admin"?"block":"none";showPage("page-home")})}
+function registerUser(){let u=$("register-username"),p=$("register-password"),e=$("register-email");let f=document.getElementById("register-avatar").files;if(!u||!p||!e)return showModal("Fill all fields");if(f){let r=new FileReader();r.onload=ev=>{db.ref("users/"+u).set({pw:p,email:e,avatar:ev.target.result,role:"player"});showModal("Registered!");showPage("page-login")};r.readAsDataURL(f);}else{db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:"player"});showModal("Registered!");showPage("page-login")}}
+function loginUser(){let u=$("login-username"),p=$("login-password");db.ref("users/"+u).get().then(s=>{if(!s.exists())return showModal("User not found");let v=s.val();if(v.pw!==p)return showModal("Wrong password");myUser=u;myRole=v.role||"player";document.getElementById("welcome-user").textContent=u;document.getElementById("host-btn").style.display=(myRole==="host"||myRole==="admin")?"block":"none";document.getElementById("admin-btn").style.display=myRole==="admin"?"block":"none";showPage("page-home")})}
 function logout(){myUser="";myRole="player";showPage("page-logout")}
 
 /* Profile */
@@ -200,38 +216,86 @@ document.getElementById("profile-avatar").addEventListener("change",e=>{
   let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("profile-avatar-preview").src=ev.target.result;document.getElementById("profile-avatar-preview").style.display="block"};r.readAsDataURL(f);}}
 );
 function profilePage(){db.ref("users/"+myUser).get().then(s=>{let v=s.val()||{};document.getElementById("profile-username").value=myUser;document.getElementById("profile-email").value=v.email||"";document.getElementById("profile-password").value="";if(v.avatar){document.getElementById("profile-avatar-preview").src=v.avatar;document.getElementById("profile-avatar-preview").style.display="block";}showPage("page-profile")})}
-function saveProfile(){let newName=$("profile-username"),newPw=$("profile-password"),newEmail=$("profile-email");let f=document.getElementById("profile-avatar").files;db.ref("users/"+myUser).get().then(s=>{let d=s.val()||{};let upd={};if(newPw)upd.pw=newPw;if(newEmail)upd.email=newEmail;if(f){let r=new FileReader();r.onload=ev=>{upd.avatar=ev.target.result;finishSave(newName,upd,d)};r.readAsDataURL(f);}else{finishSave(newName,upd,d)}});}
-function finishSave(newName,upd,oldData){if(newName!==myUser){db.ref("users/"+myUser).remove();db.ref("users/"+newName).set({...oldData,...upd});myUser=newName;}else{db.ref("users/"+myUser).update(upd);}alert("Profile updated!");showPage("page-home")}
+function saveProfile(){let newName=$("profile-username"),newPw=$("profile-password"),newEmail=$("profile-email");let f=document.getElementById("profile-avatar").files[0];db.ref("users/"+myUser).get().then(s=>{let d=s.val()||{};let upd={};if(newPw)upd.pw=newPw;if(newEmail)upd.email=newEmail;if(f){let r=new FileReader();r.onload=ev=>{upd.avatar=ev.target.result;finishSave(newName,upd,d)};r.readAsDataURL(f);}else{finishSave(newName,upd,d)}});}
+function finishSave(newName,upd,oldData){if(newName!==myUser){db.ref("users/"+myUser).remove();db.ref("users/"+newName).set({...oldData,...upd});myUser=newName;}else{db.ref("users/"+myUser).update(upd);}showModal("Profile updated!");showPage("page-home")}
 
 /* Host */
 document.getElementById("image-file").addEventListener("change",e=>{
-  let f=e.target.files;if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("image-preview").src=ev.target.result;document.getElementById("image-preview").style.display="block"};r.readAsDataURL(f);}}
+  let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("image-preview").src=ev.target.result;document.getElementById("image-preview").style.display="block"};r.readAsDataURL(f);}}
 );
-function hostPage(){if(myRole!=="host"&&myRole!=="admin")return alert("Only hosts/admins allowed");let code=Math.floor(100000+Math.random()*900000).toString();gameID=code;document.getElementById("host-code").value=code;db.ref("games/"+code).set({buzzed:"",lock:false,round:1,question:"",image:"",players:{}});showPage("page-host");listenHost()}
-function uploadQuestion(){let q=$("question-input");let f=document.getElementById("image-file").files;if(f){let r=new FileReader();r.onload=ev=>{db.ref("games/"+gameID).update({question:q,image:ev.target.result})};r.readAsDataURL(f);}else{db.ref("games/"+gameID).update({question:q,image:""})}}
+function hostPage(){if(myRole!=="host"&&myRole!=="admin")return showModal("Only hosts/admins allowed");let code=Math.floor(100000+Math.random()*900000).toString();gameID=code;document.getElementById("host-code").value=code;db.ref("games/"+code).set({buzzed:"",lock:false,round:1,question:"",image:"",players:{}});showPage("page-host");listenHost()}
+function uploadQuestion(){
+  let q=$("question-input");
+  let f=document.getElementById("image-file").files[0];
+  if(f){
+    let r=new FileReader();
+    r.onload=ev=>{
+      db.ref("games/"+gameID).update({question:q,image:ev.target.result});
+      showModal("UPLOADED!");
+    };
+    r.readAsDataURL(f);
+  } else {
+    db.ref("games/"+gameID).update({question:q,image:""});
+    showModal("UPLOADED!");
+  }
+}
 function resetBuzzers(){db.ref("games/"+gameID).update({buzzed:"",lock:false})}
 function lockBuzzers(){db.ref("games/"+gameID).update({lock:true})}
 function unlockBuzzers(){db.ref("games/"+gameID).update({lock:false})}
 function nextRound(){db.ref("games/"+gameID).get().then(s=>{let r=(s.val().round||1)+1;db.ref("games/"+gameID).update({round:r,buzzed:"",lock:false,question:"",image:""})})}
-function endGame(){db.ref("games/"+gameID).remove();alert("Game ended");showPage("page-home")}
+function endGame(){db.ref("games/"+gameID).remove();showModal("Game ended");showPage("page-home")}
 function adjustScore(pid,delta){db.ref("games/"+gameID+"/players/"+pid+"/score").get().then(s=>{let sc=s.val()||0;db.ref("games/"+gameID+"/players/"+pid).update({score:sc+delta})})}
-function listenHost(){db.ref("games/"+gameID).on("value",s=>{let g=s.val()||{};document.getElementById("host-question").textContent=g.question||"";let img=document.getElementById("host-question-img");if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th><th>Actions</th></tr>";Object.entries(g.players||{}).forEach(([id,p])=>{html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td><td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td><td><button onclick="adjustScore('${id}',1)">+1</button><button onclick="adjustScore('${id}',-1)">-1</button></td></tr>`});html+="</table>";document.getElementById("host-scores").innerHTML=html})}
+function listenHost(){
+  db.ref("games/"+gameID).on("value",s=>{
+    let g=s.val()||{};
+    document.getElementById("host-question-question").textContent=g.question||"";
+    let img=document.getElementById("host-question-img");
+    if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";
+    let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th><th>Actions</th></tr>";
+    Object.entries(g.players||{}).forEach(([id,p])=>{
+      html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td><td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td><td><button onclick="adjustScore('${id}',25)">+25</button><button onclick="adjustScore('${id}',-25)">-25</button></td></tr>`;
+    });
+    html+="</table>";
+    document.getElementById("host-scores").innerHTML=html;
+  });
+}
 
 /* Admin */
-function adminPanel(){if(myRole!=="admin")return alert("Admins only");listUsers();showPage("page-admin")}
-function addUser(){let u=$("new-username"),p=$("new-password"),e=$("new-email"),r=document.getElementById("new-role").value;if(!u||!p||!e)return alert("Fill all fields");db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:r});alert("User added");listUsers()}
+function adminPanel(){if(myRole!=="admin")return showModal("Admins only");listUsers();showPage("page-admin")}
+function addUser(){let u=$("new-username"),p=$("new-password"),e=$("new-email"),r=document.getElementById("new-role").value;if(!u||!p||!e)return showModal("Fill all fields");db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:r});showModal("User added");listUsers()}
 function listUsers(){db.ref("users").get().then(s=>{let all=s.val()||{};let html="<table><tr><th>User</th><th>Role</th></tr>";Object.entries(all).forEach(([n,d])=>{html+=`<tr><td>${n}</td><td><select onchange="db.ref('users/${n}').update({role:this.value})"><option ${d.role==='player'?'selected':''}>player</option><option ${d.role==='host'?'selected':''}>host</option><option ${d.role==='admin'?'selected':''}>admin</option></select></td></tr>`});html+="</table>";document.getElementById("user-list").innerHTML=html})}
 
 /* Join */
 function joinPage(){showPage("page-join")}
-function joinGame(){gameID=$("join-code");myTeam=$("join-team");if(!gameID)return alert("Enter code");myPID=btoa(myUser+Math.random()).replace(/=/g,"");db.ref("games/"+gameID+"/players/"+myPID).set({name:myUser,team:myTeam,score:0});db.ref("games/"+gameID+"/players/"+myPID).onDisconnect().remove();showPage("page-player");listenPlayer()}
+function joinGame(){gameID=$("join-code");myTeam=$("join-team");if(!gameID)return showModal("Enter code");myPID=btoa(myUser+Math.random()).replace(/=/g,"");db.ref("games/"+gameID+"/players/"+myPID).set({name:myUser,team:myTeam,score:0});db.ref("games/"+gameID+"/players/"+myPID).onDisconnect().remove();showPage("page-player");listenPlayer()}
 
 /* Player buzzer */
 function buzz(){db.ref("games/"+gameID).get().then(s=>{let g=s.val();if(!g||g.buzzed||g.lock)return;db.ref("games/"+gameID).update({buzzed:myPID})})}
 document.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();buzz()}})
 
 /* Player view */
-function listenPlayer(){db.ref("games/"+gameID).on("value",s=>{let g=s.val()||{};document.getElementById("player-question").textContent=g.question||"";let img=document.getElementById("player-image");if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";let btn=document.getElementById("player-buzzer");if(g.buzzed){btn.disabled=g.buzzed!==myPID;document.getElementById("player-msg").textContent=g.buzzed===myPID?"✅ You Buzzed":"⏳ Locked";if(!buzzPlayed){document.getElementById("buzz-audio").play();buzzPlayed=true}}else{btn.disabled=false;document.getElementById("player-msg").textContent="Press Space or Click";buzzPlayed=false}let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th></tr>";Object.entries(g.players||{}).forEach(([id,p])=>{html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td><td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td></tr>`});html+="</table>";document.getElementById("player-scores").innerHTML=html})}
+function listenPlayer(){db.ref("games/"+gameID).on("value",s=>{
+    let g=s.val()||{};
+    document.getElementById("player-question").textContent=g.question||"";
+    let img=document.getElementById("player-image");
+    if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";
+    let btn=document.getElementById("player-buzzer");
+    if(g.buzzed){
+      btn.disabled=g.buzzed!==myPID;
+      document.getElementById("player-msg").textContent=g.buzzed===myPID?"✅ You Buzzed":"⏳ Locked";
+      if(!buzzPlayed){document.getElementById("buzz-audio").play();buzzPlayed=true}
+    }else{
+      btn.disabled=false;
+      document.getElementById("player-msg").textContent="Press Space or Click";
+      buzzPlayed=false
+    }
+    let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th></tr>";
+    Object.entries(g.players||{}).forEach(([id,p])=>{
+      html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td><td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td></tr>`;
+    });
+    html+="</table>";
+    document.getElementById("player-scores").innerHTML=html;
+})}
 
 /* Scoreboard */
 function showScoreboard(){showPage("page-scoreboard");db.ref("games").get().then(s=>{let games=s.val()||{},totals={};for(let gid in games){let pl=games[gid].players||{};for(let pid in pl){let p=pl[pid];totals[p.name]=(totals[p.name]||0)+(p.score||0)}}let sorted=Object.entries(totals).sort((a,b)=>b[1]-a);let html="<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";sorted.forEach(([n,sc],i)=>{html+=`<tr><td>${i+1}</td><td>${n}</td><td>${sc}</td></tr>`});document.getElementById("scoreboard-table").innerHTML=html})}
