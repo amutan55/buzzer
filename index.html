@@ -1,273 +1,731 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Quiz Buzzer Pro</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8" />
+<title>Quiz Buzzer </title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-<link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet"/>
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
 <style>
-  :root { --main-bg: #262e46; --primary: #3b8bee; --accent: #ffe05b; --danger: #e94f37; }
-  body{margin:0;padding:0;background:var(--main-bg);color:#fff;font-family:'Montserrat',sans-serif;}
-  .page{display:none;max-width:1020px;margin:auto;padding:24px}
-  .show{display:block}
-  input,button,select{width:100%;margin:8px 0;padding:14px;border:none;border-radius:16px;box-sizing:border-box;font-size:1em;}
-  input{background:#2e3658;color:#fff}
-  input::placeholder{color:#bbb}
-  button{background:var(--primary);color:#fff;font-weight:bold;cursor:pointer;transition:.2s}
-  button:hover{background:var(--accent);color:#222}
-  button:disabled{background:#666;color:#aaa}
-  table{width:100%;border-collapse:collapse;margin-top:10px}
-  th,td{padding:8px;border:1px solid #444;text-align:center}
-  th{background:var(--primary)}
-  .buzzed-tag{background:var(--accent);color:#222;padding:3px 6px;border-radius:8px;font-weight:bold}
-  img.preview,img.zoom-img{
-    max-width:98%;border-radius:18px;margin:10px auto;background:#222;
-    display:block;transition:transform .2s;cursor:zoom-in;box-shadow:0 6px 34px #000a;
+  :root {
+    --main-bg: #262e46;
+    --primary: #3b8bee;
+    --accent: #ffe05b;
+    --danger: #e94f37;
   }
-  img.zoomed{transform:scale(2.2)!important;cursor:zoom-out!important;z-index:9;box-shadow:0 0 50px #fff8;position:relative;}
-  .layout-flex{display:flex;gap:32px;}
-  .left-area{flex:2;min-width:360px;display:flex;flex-direction:column;align-items:center;}
-  .right-area{flex:1;min-width:320px;}
-  #player-question-big{font-size:2em;font-weight:900;margin:24px 0;text-align:left;width:100%;}
-  .buzzer-btn{width:290px;height:290px;background:conic-gradient(from 0deg,#ff3cac 0%, #784ba0 40%, #2b86c5 80%, #ffe05b 100%);
-    color:#fff;box-shadow:0 0 60px #ffd95bcc,0 12px 40px #000a;border-radius:50%;border:12px solid #fff;
-    display:block;outline:none;font-size:3.2em;font-weight:900;margin:24px auto 12px auto;letter-spacing:3px;text-shadow:0 6px 18px #232323, 0 1px 1px #ffe05b99;transition:transform 0.08s;}
-  .buzzer-btn:active{transform:scale(0.97);}
-  .buzzer-btn:disabled{background:#bbb;color:#444;box-shadow:none;}
-  #modal{position:fixed;top:8%;left:50%;transform:translateX(-50%);
-    background:var(--accent);color:#232323;font-weight:700;font-size:1.4em;
-    padding:14px 42px;border-radius:20px;box-shadow:0 4px 16px #2228;
-    display:none;z-index:9999;}
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--main-bg);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .page {
+    display: none;
+    max-width: 1020px;
+    margin: auto;
+    padding: 24px;
+  }
+  .show {
+    display: block;
+  }
+  input,
+  button,
+  select {
+    width: 100%;
+    margin: 8px 0;
+    padding: 14px;
+    border: none;
+    border-radius: 16px;
+    box-sizing: border-box;
+    font-size: 1em;
+  }
+  input {
+    background: #2e3658;
+    color: #fff;
+  }
+  input::placeholder {
+    color: #bbb;
+  }
+  button {
+    background: var(--primary);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  button:hover {
+    background: var(--accent);
+    color: #222;
+  }
+  button:disabled {
+    background: #666;
+    color: #aaa;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th,
+  td {
+    padding: 8px;
+    border: 1px solid #444;
+    text-align: center;
+  }
+  th {
+    background: var(--primary);
+  }
+  .buzzed-tag {
+    background: var(--accent);
+    color: #222;
+    padding: 3px 6px;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+  img.preview,
+  img.zoom-img {
+    max-width: 100%;
+    border-radius: 22px;
+    margin: 14px auto;
+    background: #222;
+    display: block;
+    transition: transform 0.2s;
+    cursor: zoom-in;
+    box-shadow: 0 10px 36px #000a;
+  }
+  img.zoomed {
+    transform: scale(2.2) !important;
+    cursor: zoom-out !important;
+    z-index: 9;
+    box-shadow: 0 0 50px #fff8;
+    position: relative;
+  }
+  .player-flex {
+    display: flex;
+    transition: 0.3s;
+  }
+  .player-left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .player-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .question-big {
+    font-size: 2.8em;
+    font-weight: 900;
+    margin: 24px 0 0 0;
+    text-align: left;
+    width: 100%;
+  }
+  .player-img {
+    max-width: 650px;
+    max-height: 500px;
+  }
+  .buzzer-btn {
+    width: 340px;
+    height: 340px;
+    background: var(--accent);
+    color: #232323;
+    box-shadow: 0 0 80px #ffd95bcc, 0 22px 60px #0009;
+    border-radius: 50%;
+    border: 16px solid #fff;
+    display: block;
+    outline: none;
+    font-size: 4em;
+    font-weight: 900;
+    margin: 32px auto 24px auto;
+    letter-spacing: 3px;
+    text-shadow: 0 6px 18px #232323, 0 1px 1px #999;
+    transition: transform 0.08s;
+  }
+  .buzzer-btn:active {
+    transform: scale(0.97);
+  }
+  .buzzer-btn:disabled {
+    background: #bbb;
+    color: #444;
+    box-shadow: none;
+  }
+  #modal {
+    position: fixed;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #232323;
+    font-weight: 700;
+    font-size: 1.4em;
+    padding: 16px 50px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px #2228;
+    display: none;
+    z-index: 9999;
+  }
 </style>
 </head>
 <body>
-<div id="modal"></div>
+  <div id="modal"></div>
 
-<!-- LOGIN -->
-<div id="page-login" class="page show">
-  <h1>Login</h1>
-  <input id="login-username" placeholder="Username">
-  <input id="login-password" type="password" placeholder="Password">
-  <button onclick="loginUser()">Login</button>
-  <button onclick="showPage('page-register')">Register</button>
-</div>
+  <!-- LOGIN -->
+  <div id="page-login" class="page show">
+    <h1>Login</h1>
+    <input id="login-username" placeholder="Username" />
+    <input id="login-password" type="password" placeholder="Password" />
+    <button onclick="loginUser()">Login</button>
+    <button onclick="showPage('page-register')">Register</button>
+  </div>
 
-<!-- REGISTER -->
-<div id="page-register" class="page">
-  <h1>Register</h1>
-  <input id="register-username" placeholder="Username">
-  <input id="register-password" type="password" placeholder="Password">
-  <input id="register-email" placeholder="Email">
-  <input type="file" id="register-avatar" accept="image/*">
-  <img id="register-avatar-preview" class="preview">
-  <button onclick="registerUser()">Register</button>
-  <button onclick="showPage('page-login')">Back</button>
-</div>
+  <!-- REGISTER -->
+  <div id="page-register" class="page">
+    <h1>Register</h1>
+    <input id="register-username" placeholder="Username" />
+    <input id="register-password" type="password" placeholder="Password" />
+    <input id="register-email" placeholder="Email" />
+    <input type="file" id="register-avatar" accept="image/*" />
+    <img id="register-avatar-preview" class="preview" />
+    <button onclick="registerUser()">Register</button>
+    <button onclick="showPage('page-login')">Back</button>
+  </div>
 
-<!-- HOME -->
-<div id="page-home" class="page">
-  <h2>Welcome, <span id="welcome-user"></span></h2>
-  <button id="host-btn" onclick="hostPage()" style="display:none;">Host Game</button>
-  <button onclick="joinPage()">Join Game</button>
-  <button onclick="showScoreboard()">Scoreboard</button>
-  <button id="admin-btn" onclick="adminPanel()" style="display:none;">Admin Panel</button>
-  <button onclick="profilePage()">Profile</button>
-  <button onclick="logout()">Logout</button>
-</div>
+  <!-- HOME -->
+  <div id="page-home" class="page">
+    <h2>Welcome, <span id="welcome-user"></span></h2>
+    <button id="host-btn" onclick="hostPage()" style="display:none;">Host Game</button>
+    <button onclick="joinPage()">Join Game</button>
+    <button onclick="showScoreboard()">Scoreboard</button>
+    <button id="admin-btn" onclick="adminPanel()" style="display:none;">Admin Panel</button>
+    <button onclick="profilePage()">Profile</button>
+    <button onclick="logout()">Logout</button>
+  </div>
 
-<!-- HOST (keeps old design, all features) -->
-<div id="page-host" class="page">
-  <h2>Host Game</h2>
-  <input id="host-code" readonly>
-  <h3>Upload Question</h3>
-  <input id="question-input" placeholder="Enter question...">
-  <input type="file" id="image-file" accept="image/*">
-  <img id="image-preview" class="preview">
-  <button onclick="uploadQuestion()">Upload Question</button>
-  <h3>Current Question</h3>
-  <div id="host-question-question"></div>
-  <img id="host-question-img" class="preview">
-  <h3>Buzzer Controls</h3>
-  <button onclick="resetBuzzers()">Reset</button>
-  <button onclick="lockBuzzers()">Lock</button>
-  <button onclick="unlockBuzzers()">Unlock</button>
-  <button onclick="nextRound()">Next Round</button>
-  <button onclick="endGame()">End Game</button>
-  <h3>Players</h3>
-  <div id="host-scores"></div>
-  <button onclick="showPage('page-home')">Back</button>
-</div>
+  <!-- HOST -->
+  <div id="page-host" class="page">
+    <h2>Host Game</h2>
+    <input id="host-code" readonly />
+    <h3>Upload Question</h3>
+    <input id="question-input" placeholder="Enter question..." />
+    <input type="file" id="image-file" accept="image/*" />
+    <img id="image-preview" class="preview" />
+    <button onclick="uploadQuestion()">Upload Question</button>
 
-<!-- PROFILE -->
-<div id="page-profile" class="page">
-  <h2>Your Profile</h2>
-  <input id="profile-username" placeholder="Username">
-  <input id="profile-password" type="password" placeholder="New Password">
-  <input id="profile-email" placeholder="Email">
-  <input type="file" id="profile-avatar" accept="image/*">
-  <img id="profile-avatar-preview" class="preview">
-  <button onclick="saveProfile()">Save Changes</button>
-  <button onclick="showPage('page-home')">Back</button>
-</div>
+    <h3>Current Question</h3>
+    <div id="host-question-question"></div>
+    <img id="host-question-img" class="preview" />
 
-<!-- ADMIN (same as before) -->
-<div id="page-admin" class="page">
-  <h2>User Management</h2>
-  <h3>Add User</h3>
-  <input id="new-username" placeholder="Username">
-  <input id="new-password" type="password" placeholder="Password">
-  <input id="new-email" placeholder="Email">
-  <select id="new-role">
-    <option value="player">Player</option>
-    <option value="host">Host</option>
-    <option value="admin">Admin</option>
-  </select>
-  <button onclick="addUser()">Add User</button>
-  <h3>All Users</h3>
-  <div id="user-list"></div>
-  <button onclick="showPage('page-home')">Back</button>
-</div>
+    <h3>Buzzer Controls</h3>
+    <button onclick="resetBuzzers()">Reset</button>
+    <button onclick="lockBuzzers()">Lock</button>
+    <button onclick="unlockBuzzers()">Unlock</button>
+    <button onclick="nextRound()">Next Round</button>
+    <button onclick="endGame()">End Game</button>
 
-<!-- JOIN -->
-<div id="page-join" class="page">
-  <h2>Join Game</h2>
-  <input id="join-code" placeholder="Game Code">
-  <input id="join-team" placeholder="Team (optional)">
-  <button onclick="joinGame()">Join</button>
-  <button onclick="showPage('page-home')">Back</button>
-</div>
+    <h3>Players</h3>
+    <div id="host-scores"></div>
 
-<!-- PLAYER (left/right layout, big question+image left, buzzer/scoreboard right) -->
-<div id="page-player" class="page">
-  <div class="layout-flex">
-    <div class="left-area">
-      <div id="player-question-big"></div>
-      <img id="player-img" class="zoom-img" style="display:none">
-    </div>
-    <div class="right-area">
-      <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
-      <h2 id="player-msg"></h2>
-      <div id="player-scores"></div>
-      <button onclick="showPage('page-home')">Back</button>
+    <button onclick="showPage('page-home')">Back</button>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="page-profile" class="page">
+    <h2>Your Profile</h2>
+    <input id="profile-username" placeholder="Username" />
+    <input id="profile-password" type="password" placeholder="New Password" />
+    <input id="profile-email" placeholder="Email" />
+    <input type="file" id="profile-avatar" accept="image/*" />
+    <img id="profile-avatar-preview" class="preview" />
+    <button onclick="saveProfile()">Save Changes</button>
+    <button onclick="showPage('page-home')">Back</button>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="page-admin" class="page">
+    <h2>User Management</h2>
+    <h3>Add User</h3>
+    <input id="new-username" placeholder="Username" />
+    <input id="new-password" type="password" placeholder="Password" />
+    <input id="new-email" placeholder="Email" />
+    <select id="new-role">
+      <option value="player">Player</option>
+      <option value="host">Host</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button onclick="addUser()">Add User</button>
+
+    <h3>All Users</h3>
+    <div id="user-list"></div>
+
+    <button onclick="showPage('page-home')">Back</button>
+  </div>
+
+  <!-- JOIN -->
+  <div id="page-join" class="page">
+    <h2>Join Game</h2>
+    <input id="join-code" placeholder="Game Code" />
+    <input id="join-team" placeholder="Team (optional)" />
+    <button onclick="joinGame()">Join</button>
+    <button onclick="showPage('page-home')">Back</button>
+  </div>
+
+  <!-- PLAYER -->
+  <div id="page-player" class="page">
+    <div id="player-flex" style="display: flex; gap: 32px;">
+      <div id="player-left" style="flex:2; display:flex; flex-direction:column; align-items:center; justify-content:center; display:none;">
+        <div id="player-question-big" style="font-size: 3em; font-weight: 900; text-align:left; width: 100%;"></div>
+        <img id="player-img" class="zoom-img" style="display:none; cursor: zoom-in; max-width: 700px; max-height: 500px; border-radius: 22px; background:#222; box-shadow:0 10px 36px #000a; transition: transform .2s;" />
+      </div>
+      <div id="player-right" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; width: 100%;">
+        <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
+        <h2 id="player-msg"></h2>
+        <div id="player-scores"></div>
+        <button onclick="showPage('page-home')">Back</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- SCOREBOARD -->
-<div id="page-scoreboard" class="page">
-  <h2>Overall Scoreboard</h2>
-  <table id="scoreboard-table"></table>
-  <button onclick="showPage('page-home')">Back</button>
-</div>
+  <!-- SCOREBOARD -->
+  <div id="page-scoreboard" class="page">
+    <h2>Overall Scoreboard</h2>
+    <table id="scoreboard-table"></table>
+    <button onclick="showPage('page-home')">Back</button>
+  </div>
 
-<!-- LOGOUT PAGE -->
-<div id="page-logout" class="page">
-  <h2>You have logged out</h2>
-  <button onclick="showPage('page-login')">Login Again</button>
-</div>
+  <!-- LOGOUT PAGE -->
+  <div id="page-logout" class="page">
+    <h2>You have logged out</h2>
+    <button onclick="showPage('page-login')">Login Again</button>
+  </div>
 
-<audio id="buzz-audio" src="https://cdn.pixabay.com/download/audio/2022/10/16/audio_12d3b2760e.mp3"></audio>
+  <audio id="buzz-audio" src="https://cdn.pixabay.com/download/audio/2022/10/16/audio_12d3b2760e.mp3"></audio>
 
-<script>
-const firebaseConfig={
-  apiKey:"AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
-  authDomain:"buzzer-a0d53.firebaseapp.com",
-  databaseURL:"https://buzzer-a0d53-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:"buzzer-a0d53",
-  storageBucket:"buzzer-a0d53.appspot.com",
-  messagingSenderId:"29031182202",
-  appId:"1:29031182202:web:447d951b38be59b29270c3",
-  measurementId:"G-NP0DMX7TKJ"
-};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
-let myUser="",myPID="",gameID="",myRole="player",myTeam="",buzzPlayed=false;
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
+      authDomain: "buzzer-a0d53.firebaseapp.com",
+      databaseURL:
+        "https://buzzer-a0d53-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "buzzer-a0d53",
+      storageBucket: "buzzer-a0d53.appspot.com",
+      messagingSenderId: "29031182202",
+      appId: "1:29031182202:web:447d951b38be59b29270c3",
+      measurementId: "G-NP0DMX7TKJ",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    let myUser = "",
+      myPID = "",
+      gameID = "",
+      myRole = "player",
+      myTeam = "",
+      buzzPlayed = false;
 
-function showModal(msg){let m=document.getElementById("modal");m.textContent=msg;m.style.display="block";setTimeout(()=>m.style.display="none",1400);}
-function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));document.getElementById(id).classList.add("show")}
-function $(id){return document.getElementById(id).value.trim()}
-
-document.getElementById("register-avatar").addEventListener("change",e=>{
-  let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("register-avatar-preview").src=ev.target.result;document.getElementById("register-avatar-preview").style.display="block"};r.readAsDataURL(f);}}
-);
-document.getElementById("profile-avatar").addEventListener("change",e=>{
-  let f=e.target.files;if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("profile-avatar-preview").src=ev.target.result;document.getElementById("profile-avatar-preview").style.display="block"};r.readAsDataURL(f);}}
-);
-
-function registerUser(){let u=$("register-username"),p=$("register-password"),e=$("register-email");let f=document.getElementById("register-avatar").files;if(!u||!p||!e)return showModal("Fill all fields");if(f){let r=new FileReader();r.onload=ev=>{db.ref("users/"+u).set({pw:p,email:e,avatar:ev.target.result,role:"player"});showModal("Registered!");showPage("page-login")};r.readAsDataURL(f);}else{db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:"player"});showModal("Registered!");showPage("page-login")}}
-function loginUser(){let u=$("login-username"),p=$("login-password");db.ref("users/"+u).get().then(s=>{if(!s.exists())return showModal("User not found");let v=s.val();if(v.pw!==p)return showModal("Wrong password");myUser=u;myRole=v.role||"player";document.getElementById("welcome-user").textContent=u;document.getElementById("host-btn").style.display=(myRole==="host"||myRole==="admin")?"block":"none";document.getElementById("admin-btn").style.display=myRole==="admin"?"block":"none";showPage("page-home")})}
-function logout(){myUser="";myRole="player";showPage("page-logout")}
-function profilePage(){db.ref("users/"+myUser).get().then(s=>{let v=s.val()||{};document.getElementById("profile-username").value=myUser;document.getElementById("profile-email").value=v.email||"";document.getElementById("profile-password").value="";if(v.avatar){document.getElementById("profile-avatar-preview").src=v.avatar;document.getElementById("profile-avatar-preview").style.display="block";}showPage("page-profile")})}
-function saveProfile(){let newName=$("profile-username"),newPw=$("profile-password"),newEmail=$("profile-email");let f=document.getElementById("profile-avatar").files[0];db.ref("users/"+myUser).get().then(s=>{let d=s.val()||{};let upd={};if(newPw)upd.pw=newPw;if(newEmail)upd.email=newEmail;if(f){let r=new FileReader();r.onload=ev=>{upd.avatar=ev.target.result;finishSave(newName,upd,d)};r.readAsDataURL(f);}else{finishSave(newName,upd,d)}});}
-function finishSave(newName,upd,oldData){if(newName!==myUser){db.ref("users/"+myUser).remove();db.ref("users/"+newName).set({...oldData,...upd});myUser=newName;}else{db.ref("users/"+myUser).update(upd);}showModal("Profile updated!");showPage("page-home")}
-
-document.getElementById("image-file").addEventListener("change",e=>{
-  let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("image-preview").src=ev.target.result;document.getElementById("image-preview").style.display="block"};r.readAsDataURL(f);}}
-);
-function hostPage(){if(myRole!=="host"&&myRole!=="admin")return showModal("Only hosts/admins allowed");let code=Math.floor(100000+Math.random()*900000).toString();gameID=code;document.getElementById("host-code").value=code;db.ref("games/"+code).set({buzzed:"",lock:false,round:1,question:"",image:"",players:{}});showPage("page-host");listenHost()}
-function uploadQuestion(){let q=$("question-input");let f=document.getElementById("image-file").files[0];if(f){let r=new FileReader();r.onload=ev=>{db.ref("games/"+gameID).update({question:q,image:ev.target.result});showModal("UPLOADED!");};r.readAsDataURL(f);}else{db.ref("games/"+gameID).update({question:q,image:""});showModal("UPLOADED!");}}
-function resetBuzzers(){db.ref("games/"+gameID).update({buzzed:"",lock:false})}
-function lockBuzzers(){db.ref("games/"+gameID).update({lock:true})}
-function unlockBuzzers(){db.ref("games/"+gameID).update({lock:false})}
-function nextRound(){db.ref("games/"+gameID).get().then(s=>{let r=(s.val().round||1)+1;db.ref("games/"+gameID).update({round:r,buzzed:"",lock:false,question:"",image:""})})}
-function endGame(){db.ref("games/"+gameID).remove();showModal("Game ended");showPage("page-home")}
-function adjustScore(pid,delta){db.ref("games/"+gameID+"/players/"+pid+"/score").get().then(s=>{let sc=s.val()||0;db.ref("games/"+gameID+"/players/"+pid).update({score:sc+delta})})}
-function listenHost(){db.ref("games/"+gameID).on("value",s=>{
-    let g=s.val()||{};
-    document.getElementById("host-question-question").textContent=g.question||"";
-    let img=document.getElementById("host-question-img");
-    if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";
-    let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th><th>Actions</th></tr>";
-    Object.entries(g.players||{}).forEach(([id,p])=>{
-      html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td><td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td><td><button onclick="adjustScore('${id}',25)">+25</button><button onclick="adjustScore('${id}',-25)">-25</button></td></tr>`;
-    });
-    html+="</table>";
-    document.getElementById("host-scores").innerHTML=html;
-  })
-}
-
-function adminPanel(){if(myRole!=="admin")return showModal("Admins only");listUsers();showPage("page-admin")}
-function addUser(){let u=$("new-username"),p=$("new-password"),e=$("new-email"),r=document.getElementById("new-role").value;if(!u||!p||!e)return showModal("Fill all fields");db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:r});showModal("User added");listUsers()}
-function listUsers(){db.ref("users").get().then(s=>{let all=s.val()||{};let html="<table><tr><th>User</th><th>Role</th></tr>";Object.entries(all).forEach(([n,d])=>{html+=`<tr><td>${n}</td><td><select onchange="db.ref('users/${n}').update({role:this.value})"><option ${d.role==='player'?'selected':''}>player</option><option ${d.role==='host'?'selected':''}>host</option><option ${d.role==='admin'?'selected':''}>admin</option></select></td></tr>`});html+="</table>";document.getElementById("user-list").innerHTML=html})}
-
-function joinPage(){showPage("page-join")}
-function joinGame(){gameID=$("join-code");myTeam=$("join-team");if(!gameID)return showModal("Enter code");myPID=btoa(myUser+Math.random()).replace(/=/g,"");db.ref("games/"+gameID+"/players/"+myPID).set({name:myUser,team:myTeam,score:0});db.ref("games/"+gameID+"/players/"+myPID).onDisconnect().remove();showPage("page-player");listenPlayer()}
-function buzz(){db.ref("games/"+gameID).get().then(s=>{let g=s.val();if(!g||g.buzzed||g.lock)return;db.ref("games/"+gameID).update({buzzed:myPID})})}
-document.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();buzz()}})
-
-function listenPlayer(){db.ref("games/"+gameID).on("value",s=>{
-    let g=s.val()||{};
-    document.getElementById("player-question-big").textContent=g.question||"";
-    let img=document.getElementById("player-img");
-    if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";
-    let btn=document.getElementById("player-buzzer");
-    if(g.buzzed){
-      btn.disabled=g.buzzed!==myPID;
-      document.getElementById("player-msg").textContent=g.buzzed===myPID?"✅ You Buzzed":"⏳ Locked";
-      if(!buzzPlayed){document.getElementById("buzz-audio").play();buzzPlayed=true}
-    }else{
-      btn.disabled=false;
-      document.getElementById("player-msg").textContent="Press Space or Click";
-      buzzPlayed=false
+    function showModal(msg) {
+      let m = document.getElementById("modal");
+      m.textContent = msg;
+      m.style.display = "block";
+      setTimeout(() => (m.style.display = "none"), 1400);
     }
-    let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th></tr>";
-    Object.entries(g.players||{}).forEach(([id,p])=>{
-      html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td><td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td></tr>`;
-    });
-    html+="</table>";
-    document.getElementById("player-scores").innerHTML=html;
-})}
-/* Zoom for player image */
-document.getElementById("player-img").addEventListener("click",function(){
-  if(this.classList.contains("zoomed")){this.classList.remove("zoomed");}
-  else{this.classList.add("zoomed");}
-});
+    function showPage(id) {
+      document
+        .querySelectorAll(".page")
+        .forEach((p) => p.classList.remove("show"));
+      document.getElementById(id).classList.add("show");
+    }
+    function $(id) {
+      return document.getElementById(id).value.trim();
+    }
 
-/* Scoreboard */
-function showScoreboard(){showPage("page-scoreboard");db.ref("games").get().then(s=>{let games=s.val()||{},totals={};for(let gid in games){let pl=games[gid].players||{};for(let pid in pl){let p=pl[pid];totals[p.name]=(totals[p.name]||0)+(p.score||0)}}let sorted=Object.entries(totals).sort((a,b)=>b[1]-a);let html="<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";sorted.forEach(([n,sc],i)=>{html+=`<tr><td>${i+1}</td><td>${n}</td><td>${sc}</td></tr>`});document.getElementById("scoreboard-table").innerHTML=html})}
-</script>
+    document
+      .getElementById("register-avatar")
+      .addEventListener("change", (e) => {
+        let f = e.target.files[0];
+        if (f) {
+          let r = new FileReader();
+          r.onload = (ev) => {
+            const preview = document.getElementById("register-avatar-preview");
+            preview.src = ev.target.result;
+            preview.style.display = "block";
+          };
+          r.readAsDataURL(f);
+        }
+      });
+    document
+      .getElementById("profile-avatar")
+      .addEventListener("change", (e) => {
+        let f = e.target.files[0];
+        if (f) {
+          let r = new FileReader();
+          r.onload = (ev) => {
+            const preview = document.getElementById("profile-avatar-preview");
+            preview.src = ev.target.result;
+            preview.style.display = "block";
+          };
+          r.readAsDataURL(f);
+        }
+      });
+
+    function registerUser() {
+      let u = $("register-username"),
+        p = $("register-password"),
+        e = $("register-email");
+      let f = document.getElementById("register-avatar").files[0];
+      if (!u || !p || !e) return showModal("Fill all fields");
+      if (f) {
+        let r = new FileReader();
+        r.onload = (ev) => {
+          db.ref("users/" + u).set({
+            pw: p,
+            email: e,
+            avatar: ev.target.result,
+            role: "player",
+          });
+          showModal("Registered!");
+          showPage("page-login");
+        };
+        r.readAsDataURL(f);
+      } else {
+        db.ref("users/" + u).set({ pw: p, email: e, avatar: "", role: "player" });
+        showModal("Registered!");
+        showPage("page-login");
+      }
+    }
+    function loginUser() {
+      let u = $("login-username"),
+        p = $("login-password");
+      db.ref("users/" + u)
+        .get()
+        .then((s) => {
+          if (!s.exists()) return showModal("User not found");
+          let v = s.val();
+          if (v.pw !== p) return showModal("Wrong password");
+          myUser = u;
+          myRole = v.role || "player";
+          document.getElementById("welcome-user").textContent = u;
+          document.getElementById("host-btn").style.display =
+            myRole === "host" || myRole === "admin" ? "block" : "none";
+          document.getElementById("admin-btn").style.display =
+            myRole === "admin" ? "block" : "none";
+          showPage("page-home");
+        });
+    }
+    function logout() {
+      myUser = "";
+      myRole = "player";
+      showPage("page-logout");
+    }
+
+    function profilePage() {
+      db.ref("users/" + myUser)
+        .get()
+        .then((s) => {
+          let v = s.val() || {};
+          document.getElementById("profile-username").value = myUser;
+          document.getElementById("profile-email").value = v.email || "";
+          document.getElementById("profile-password").value = "";
+          const img = document.getElementById("profile-avatar-preview");
+          if (v.avatar) {
+            img.src = v.avatar;
+            img.style.display = "block";
+          }
+          showPage("page-profile");
+        });
+    }
+    function saveProfile() {
+      let newName = $("profile-username"),
+        newPw = $("profile-password"),
+        newEmail = $("profile-email");
+      let f = document.getElementById("profile-avatar").files[0];
+      db.ref("users/" + myUser)
+        .get()
+        .then((s) => {
+          let d = s.val() || {};
+          let upd = {};
+          if (newPw) upd.pw = newPw;
+          if (newEmail) upd.email = newEmail;
+          if (f) {
+            let r = new FileReader();
+            r.onload = (ev) => {
+              upd.avatar = ev.target.result;
+              finishSave(newName, upd, d);
+            };
+            r.readAsDataURL(f);
+          } else {
+            finishSave(newName, upd, d);
+          }
+        });
+    }
+    function finishSave(newName, upd, oldData) {
+      if (newName !== myUser) {
+        db.ref("users/" + myUser).remove();
+        db.ref("users/" + newName).set({ ...oldData, ...upd });
+        myUser = newName;
+      } else {
+        db.ref("users/" + myUser).update(upd);
+      }
+      showModal("Profile updated!");
+      showPage("page-home");
+    }
+
+    document.getElementById("image-file").addEventListener("change", (e) => {
+      let f = e.target.files[0];
+      if (f) {
+        let r = new FileReader();
+        r.onload = (ev) => {
+          document.getElementById("image-preview").src = ev.target.result;
+          document.getElementById("image-preview").style.display = "block";
+        };
+        r.readAsDataURL(f);
+      }
+    });
+    function hostPage() {
+      if (myRole !== "host" && myRole !== "admin")
+        return showModal("Only hosts/admins allowed");
+      let code = Math.floor(100000 + Math.random() * 900000).toString();
+      gameID = code;
+      document.getElementById("host-code").value = code;
+      db.ref("games/" + code).set({
+        buzzed: "",
+        lock: false,
+        round: 1,
+        question: "",
+        image: "",
+        players: {},
+      });
+      showPage("page-host");
+      listenHost();
+    }
+    function uploadQuestion() {
+      let q = $("question-input");
+      let f = document.getElementById("image-file").files[0];
+      if (f) {
+        let r = new FileReader();
+        r.onload = (ev) => {
+          db.ref("games/" + gameID).update({ question: q, image: ev.target.result });
+          showModal("UPLOADED!");
+        };
+        r.readAsDataURL(f);
+      } else {
+        db.ref("games/" + gameID).update({ question: q, image: "" });
+        showModal("UPLOADED!");
+      }
+    }
+    function resetBuzzers() {
+      db.ref("games/" + gameID).update({ buzzed: "", lock: false });
+    }
+    function lockBuzzers() {
+      db.ref("games/" + gameID).update({ lock: true });
+    }
+    function unlockBuzzers() {
+      db.ref("games/" + gameID).update({ lock: false });
+    }
+    function nextRound() {
+      db.ref("games/" + gameID)
+        .get()
+        .then((s) => {
+          let r = (s.val().round || 1) + 1;
+          db.ref("games/" + gameID).update({
+            round: r,
+            buzzed: "",
+            lock: false,
+            question: "",
+            image: "",
+          });
+        });
+    }
+    function endGame() {
+      db.ref("games/" + gameID).remove();
+      showModal("Game ended");
+      showPage("page-home");
+    }
+    function adjustScore(pid, delta) {
+      db.ref("games/" + gameID + "/players/" + pid + "/score")
+        .get()
+        .then((s) => {
+          let sc = s.val() || 0;
+          db.ref("games/" + gameID + "/players/" + pid).update({ score: sc + delta });
+        });
+    }
+    function listenHost() {
+      db.ref("games/" + gameID).on("value", (s) => {
+        let g = s.val() || {};
+        document.getElementById("host-question-question").textContent = g.question || "";
+        let img = document.getElementById("host-question-img");
+        if (g.image) {
+          img.src = g.image;
+          img.style.display = "block";
+        } else img.style.display = "none";
+        let html =
+          "<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th><th>Actions</th></tr>";
+        Object.entries(g.players || {}).forEach(([id, p]) => {
+          html += `<tr><td>${p.name}</td><td>${p.team || ""}</td><td>${p.score || 0}</td><td>${
+            id === g.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ""
+          }</td><td><button onclick="adjustScore('${id}',25)">+25</button><button onclick="adjustScore('${id}',-25)">-25</button></td></tr>`;
+        });
+        html += "</table>";
+        document.getElementById("host-scores").innerHTML = html;
+      });
+    }
+
+    function adminPanel() {
+      if (myRole !== "admin") return showModal("Admins only");
+      listUsers();
+      showPage("page-admin");
+    }
+    function addUser() {
+      let u = $("new-username"),
+        p = $("new-password"),
+        e = $("new-email"),
+        r = document.getElementById("new-role").value;
+      if (!u || !p || !e) return showModal("Fill all fields");
+      db.ref("users/" + u).set({ pw: p, email: e, avatar: "", role: r });
+      showModal("User added");
+      listUsers();
+    }
+    function listUsers() {
+      db.ref("users")
+        .get()
+        .then((s) => {
+          let all = s.val() || {};
+          let html = "<table><tr><th>User</th><th>Role</th></tr>";
+          Object.entries(all).forEach(([n, d]) => {
+            html += `<tr><td>${n}</td><td><select onchange="db.ref('users/${n}').update({role:this.value})"><option ${
+              d.role === "player" ? "selected" : ""
+            }>player</option><option ${
+              d.role === "host" ? "selected" : ""
+            }>host</option><option ${d.role === "admin" ? "selected" : ""}>admin</option></select></td></tr>`;
+          });
+          html += "</table>";
+          document.getElementById("user-list").innerHTML = html;
+        });
+    }
+
+    function joinPage() {
+      showPage("page-join");
+    }
+    function joinGame() {
+      gameID = $("join-code");
+      myTeam = $("join-team");
+      if (!gameID) return showModal("Enter code");
+      myPID = btoa(myUser + Math.random()).replace(/=/g, "");
+      db.ref("games/" + gameID + "/players/" + myPID).set({
+        name: myUser,
+        team: myTeam,
+        score: 0,
+      });
+      db.ref("games/" + gameID + "/players/" + myPID).onDisconnect().remove();
+      showPage("page-player");
+      listenPlayer();
+    }
+    function buzz() {
+      db.ref("games/" + gameID)
+        .get()
+        .then((s) => {
+          let g = s.val();
+          if (!g || g.buzzed || g.lock) return;
+          db.ref("games/" + gameID).update({ buzzed: myPID });
+        });
+    }
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        buzz();
+      }
+    });
+    function listenPlayer() {
+      db.ref("games/" + gameID).on("value", (s) => {
+        let g = s.val() || {};
+        const questionTxt = g.question || "";
+        const imagePath = g.image || "";
+
+        // Show/hide left panel (question + image) on player page
+        const left = document.getElementById("player-left");
+        const right = document.getElementById("player-right");
+
+        if (questionTxt || imagePath) {
+          left.style.display = "flex";
+          right.style.width = "40%";
+          right.style.minWidth = "320px";
+        } else {
+          left.style.display = "none";
+          right.style.width = "100%";
+        }
+
+        document.getElementById("player-question-big").textContent = questionTxt;
+
+        const img = document.getElementById("player-img");
+        if (imagePath) {
+          img.src = imagePath;
+          img.style.display = "block";
+        } else {
+          img.style.display = "none";
+          if (img.classList.contains("zoomed")) img.classList.remove("zoomed");
+        }
+
+        let btn = document.getElementById("player-buzzer");
+        if (g.buzzed) {
+          btn.disabled = g.buzzed !== myPID;
+          document.getElementById("player-msg").textContent =
+            g.buzzed === myPID ? "✅ You Buzzed" : "⏳ Locked";
+          if (!buzzPlayed) {
+            document.getElementById("buzz-audio").play();
+            buzzPlayed = true;
+          }
+        } else {
+          btn.disabled = false;
+          document.getElementById("player-msg").textContent = "Press Space or Click";
+          buzzPlayed = false;
+        }
+
+        let html =
+          "<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th></tr>";
+        Object.entries(g.players || {}).forEach(([id, p]) => {
+          html += `<tr><td>${p.name}</td><td>${p.team || ""}</td><td>${p.score ||
+            0}</td><td>${id === g.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ""}</td></tr>`;
+        });
+        html += "</table>";
+        document.getElementById("player-scores").innerHTML = html;
+      });
+    }
+    // Zoom for player image
+    document.getElementById("player-img").addEventListener("click", function () {
+      if (this.classList.contains("zoomed")) this.classList.remove("zoomed");
+      else this.classList.add("zoomed");
+    });
+
+    function showScoreboard() {
+      showPage("page-scoreboard");
+      db.ref("games")
+        .get()
+        .then((s) => {
+          let games = s.val() || {},
+            totals = {};
+          for (let gid in games) {
+            let pl = games[gid].players || {};
+            for (let pid in pl) {
+              let p = pl[pid];
+              totals[p.name] = (totals[p.name] || 0) + (p.score || 0);
+            }
+          }
+          let sorted = Object.entries(totals).sort((a, b) => b[1] - a);
+          let html = "<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";
+          sorted.forEach(([n, sc], i) => {
+            html += `<tr><td>${i + 1}</td><td>${n}</td><td>${sc}</td></tr>`;
+          });
+          document.getElementById("scoreboard-table").innerHTML = html;
+        });
+    }
+  </script>
 </body>
 </html>
