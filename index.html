@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Quiz Buzzer </title>
+<title>Quiz Buzzer Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Firebase -->
@@ -18,28 +18,40 @@
     --danger:#e94f37;
   }
   body{margin:0;padding:0;background:var(--main-bg);color:#fff;font-family:'Montserrat',sans-serif}
-  .page{display:none;max-width:700px;margin:auto;padding:24px}
+  .page{display:none;max-width:1020px;margin:auto;padding:24px}
   .show{display:block}
   input,button,select{
-    width:100%;margin:8px 0;padding:14px;border:none;border-radius:18px;box-sizing:border-box;font-size:1em;
+    width:100%;margin:8px 0;padding:14px;border:none;border-radius:16px;box-sizing:border-box;font-size:1em;
   }
   input{background:#2e3658;color:#fff}
   input::placeholder{color:#bbb}
   button{background:var(--primary);color:#fff;font-weight:bold;cursor:pointer;transition:.2s}
   button:hover{background:var(--accent);color:#222}
   button:disabled{background:#666;color:#aaa}
+  .layout-flex{display:flex;gap:32px;}
+  .left-area{flex:2;min-width:300px;display:flex;flex-direction:column;align-items:center;}
+  .right-area{flex:1;min-width:320px;}
+  #question-big{font-size:2em;font-weight:900;margin:24px 0;text-align:left;width:100%;}
+  img.preview,img.zoom-img{
+    max-width:98%;border-radius:18px;margin:10px auto;background:#222;display:block;transition:transform .2s;
+    cursor:zoom-in;
+    box-shadow:0 6px 34px #000a;
+  }
+  img.zoomed{
+    transform:scale(2.2)!important;
+    cursor:zoom-out!important;
+    z-index:9;
+    box-shadow:0 0 50px #fff8;
+    position:relative;
+  }
   .buzzer-btn{
-    width:290px;height:290px;
-    background: conic-gradient(from 0deg,#ff3cac 0%, #784ba0 40%, #2b86c5 80%, #ffe05b 100%);
+    width:290px;height:290px;background:conic-gradient(from 0deg,#ff3cac 0%, #784ba0 40%, #2b86c5 80%, #ffe05b 100%);
     color:#fff;
     box-shadow:0 0 60px #ffd95bcc,0 12px 40px #000a;
-    border-radius:50%;
-    border:12px solid #fff;
-    display:block;
-    outline:none;
+    border-radius:50%;border:12px solid #fff;
+    display:block;outline:none;
     font-size:3.2em;font-weight:900;
-    margin:24px auto;
-    position:relative;
+    margin:24px auto 12px auto;
     letter-spacing:3px;
     text-shadow:0 6px 18px #232323, 0 1px 1px #ffe05b99;
     transition:transform 0.08s;
@@ -50,7 +62,6 @@
   th,td{padding:8px;border:1px solid #444;text-align:center}
   th{background:var(--primary)}
   .buzzed-tag{background:var(--accent);color:#222;padding:3px 6px;border-radius:8px;font-weight:bold}
-  img.preview{max-width:98%;border-radius:12px;margin:10px auto;display:none;background:#222;}
   #modal {
     position:fixed;top:8%;left:50%;transform:translateX(-50%);
     background:var(--accent);color:#232323;
@@ -104,20 +115,23 @@
   <input type="file" id="image-file" accept="image/*">
   <img id="image-preview" class="preview">
   <button onclick="uploadQuestion()">Upload Question</button>
-
-  <h3>Current Question</h3>
-  <div id="host-question-question"></div>
-  <img id="host-question-img" class="preview">
-
-  <h3>Buzzer Controls</h3>
-  <button onclick="resetBuzzers()">Reset</button>
-  <button onclick="lockBuzzers()">Lock</button>
-  <button onclick="unlockBuzzers()">Unlock</button>
-  <button onclick="nextRound()">Next Round</button>
-  <button onclick="endGame()">End Game</button>
-  <h3>Players</h3>
-  <div id="host-scores"></div>
-  <button onclick="showPage('page-home')">Back</button>
+  <div class="layout-flex">
+    <div class="left-area">
+      <div id="question-big"></div>
+      <img id="host-question-img" class="zoom-img" style="display:none">
+    </div>
+    <div class="right-area">
+      <h3>Buzzer & Controls</h3>
+      <button class="buzzer-btn" disabled>BUZZ!</button>
+      <button onclick="resetBuzzers()">Reset</button>
+      <button onclick="lockBuzzers()">Lock</button>
+      <button onclick="unlockBuzzers()">Unlock</button>
+      <button onclick="nextRound()">Next Round</button>
+      <button onclick="endGame()">End Game</button>
+      <div id="host-scores"></div>
+      <button onclick="showPage('page-home')">Back</button>
+    </div>
+  </div>
 </div>
 
 <!-- PROFILE -->
@@ -161,12 +175,18 @@
 
 <!-- PLAYER -->
 <div id="page-player" class="page">
-  <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
-  <h2 id="player-msg"></h2>
-  <div id="player-question"></div>
-  <img id="player-image" class="preview">
-  <div id="player-scores"></div>
-  <button onclick="showPage('page-home')">Back</button>
+  <div class="layout-flex">
+    <div class="left-area">
+      <div id="player-question-big"></div>
+      <img id="player-img" class="zoom-img" style="display:none">
+    </div>
+    <div class="right-area">
+      <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
+      <h2 id="player-msg"></h2>
+      <div id="player-scores"></div>
+      <button onclick="showPage('page-home')">Back</button>
+    </div>
+  </div>
 </div>
 
 <!-- SCOREBOARD -->
@@ -202,43 +222,28 @@ let myUser="",myPID="",gameID="",myRole="player",myTeam="",buzzPlayed=false;
 function showModal(msg){let m=document.getElementById("modal");m.textContent=msg;m.style.display="block";setTimeout(()=>m.style.display="none",1400);}
 function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));document.getElementById(id).classList.add("show")}
 function $(id){return document.getElementById(id).value.trim()}
-
-/* Register/Login */
+/* Avatar preview handlers for register/profile */
 document.getElementById("register-avatar").addEventListener("change",e=>{
   let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("register-avatar-preview").src=ev.target.result;document.getElementById("register-avatar-preview").style.display="block"};r.readAsDataURL(f);}}
 );
+document.getElementById("profile-avatar").addEventListener("change",e=>{
+  let f=e.target.files;if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("profile-avatar-preview").src=ev.target.result;document.getElementById("profile-avatar-preview").style.display="block"};r.readAsDataURL(f);}}
+);
+
+/* Register/Login/Logout/Profile */
 function registerUser(){let u=$("register-username"),p=$("register-password"),e=$("register-email");let f=document.getElementById("register-avatar").files;if(!u||!p||!e)return showModal("Fill all fields");if(f){let r=new FileReader();r.onload=ev=>{db.ref("users/"+u).set({pw:p,email:e,avatar:ev.target.result,role:"player"});showModal("Registered!");showPage("page-login")};r.readAsDataURL(f);}else{db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:"player"});showModal("Registered!");showPage("page-login")}}
 function loginUser(){let u=$("login-username"),p=$("login-password");db.ref("users/"+u).get().then(s=>{if(!s.exists())return showModal("User not found");let v=s.val();if(v.pw!==p)return showModal("Wrong password");myUser=u;myRole=v.role||"player";document.getElementById("welcome-user").textContent=u;document.getElementById("host-btn").style.display=(myRole==="host"||myRole==="admin")?"block":"none";document.getElementById("admin-btn").style.display=myRole==="admin"?"block":"none";showPage("page-home")})}
 function logout(){myUser="";myRole="player";showPage("page-logout")}
-
-/* Profile */
-document.getElementById("profile-avatar").addEventListener("change",e=>{
-  let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("profile-avatar-preview").src=ev.target.result;document.getElementById("profile-avatar-preview").style.display="block"};r.readAsDataURL(f);}}
-);
 function profilePage(){db.ref("users/"+myUser).get().then(s=>{let v=s.val()||{};document.getElementById("profile-username").value=myUser;document.getElementById("profile-email").value=v.email||"";document.getElementById("profile-password").value="";if(v.avatar){document.getElementById("profile-avatar-preview").src=v.avatar;document.getElementById("profile-avatar-preview").style.display="block";}showPage("page-profile")})}
 function saveProfile(){let newName=$("profile-username"),newPw=$("profile-password"),newEmail=$("profile-email");let f=document.getElementById("profile-avatar").files[0];db.ref("users/"+myUser).get().then(s=>{let d=s.val()||{};let upd={};if(newPw)upd.pw=newPw;if(newEmail)upd.email=newEmail;if(f){let r=new FileReader();r.onload=ev=>{upd.avatar=ev.target.result;finishSave(newName,upd,d)};r.readAsDataURL(f);}else{finishSave(newName,upd,d)}});}
 function finishSave(newName,upd,oldData){if(newName!==myUser){db.ref("users/"+myUser).remove();db.ref("users/"+newName).set({...oldData,...upd});myUser=newName;}else{db.ref("users/"+myUser).update(upd);}showModal("Profile updated!");showPage("page-home")}
 
-/* Host */
+/* Host functions */
 document.getElementById("image-file").addEventListener("change",e=>{
   let f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{document.getElementById("image-preview").src=ev.target.result;document.getElementById("image-preview").style.display="block"};r.readAsDataURL(f);}}
 );
 function hostPage(){if(myRole!=="host"&&myRole!=="admin")return showModal("Only hosts/admins allowed");let code=Math.floor(100000+Math.random()*900000).toString();gameID=code;document.getElementById("host-code").value=code;db.ref("games/"+code).set({buzzed:"",lock:false,round:1,question:"",image:"",players:{}});showPage("page-host");listenHost()}
-function uploadQuestion(){
-  let q=$("question-input");
-  let f=document.getElementById("image-file").files[0];
-  if(f){
-    let r=new FileReader();
-    r.onload=ev=>{
-      db.ref("games/"+gameID).update({question:q,image:ev.target.result});
-      showModal("UPLOADED!");
-    };
-    r.readAsDataURL(f);
-  } else {
-    db.ref("games/"+gameID).update({question:q,image:""});
-    showModal("UPLOADED!");
-  }
-}
+function uploadQuestion(){let q=$("question-input");let f=document.getElementById("image-file").files[0];if(f){let r=new FileReader();r.onload=ev=>{db.ref("games/"+gameID).update({question:q,image:ev.target.result});showModal("UPLOADED!");};r.readAsDataURL(f);}else{db.ref("games/"+gameID).update({question:q,image:""});showModal("UPLOADED!");}}
 function resetBuzzers(){db.ref("games/"+gameID).update({buzzed:"",lock:false})}
 function lockBuzzers(){db.ref("games/"+gameID).update({lock:true})}
 function unlockBuzzers(){db.ref("games/"+gameID).update({lock:false})}
@@ -248,7 +253,7 @@ function adjustScore(pid,delta){db.ref("games/"+gameID+"/players/"+pid+"/score")
 function listenHost(){
   db.ref("games/"+gameID).on("value",s=>{
     let g=s.val()||{};
-    document.getElementById("host-question-question").textContent=g.question||"";
+    document.getElementById("question-big").textContent=g.question||"";
     let img=document.getElementById("host-question-img");
     if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";
     let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th><th>Actions</th></tr>";
@@ -257,27 +262,31 @@ function listenHost(){
     });
     html+="</table>";
     document.getElementById("host-scores").innerHTML=html;
-  });
+  })
 }
+/* ZOOM for Host image */
+document.getElementById("host-question-img").addEventListener("click",function(){
+  if(this.classList.contains("zoomed")){this.classList.remove("zoomed");}
+  else{this.classList.add("zoomed");}
+});
 
-/* Admin */
+/* Admin Panel */
 function adminPanel(){if(myRole!=="admin")return showModal("Admins only");listUsers();showPage("page-admin")}
 function addUser(){let u=$("new-username"),p=$("new-password"),e=$("new-email"),r=document.getElementById("new-role").value;if(!u||!p||!e)return showModal("Fill all fields");db.ref("users/"+u).set({pw:p,email:e,avatar:"",role:r});showModal("User added");listUsers()}
 function listUsers(){db.ref("users").get().then(s=>{let all=s.val()||{};let html="<table><tr><th>User</th><th>Role</th></tr>";Object.entries(all).forEach(([n,d])=>{html+=`<tr><td>${n}</td><td><select onchange="db.ref('users/${n}').update({role:this.value})"><option ${d.role==='player'?'selected':''}>player</option><option ${d.role==='host'?'selected':''}>host</option><option ${d.role==='admin'?'selected':''}>admin</option></select></td></tr>`});html+="</table>";document.getElementById("user-list").innerHTML=html})}
 
-/* Join */
+/* JOIN / PLAYER */
 function joinPage(){showPage("page-join")}
 function joinGame(){gameID=$("join-code");myTeam=$("join-team");if(!gameID)return showModal("Enter code");myPID=btoa(myUser+Math.random()).replace(/=/g,"");db.ref("games/"+gameID+"/players/"+myPID).set({name:myUser,team:myTeam,score:0});db.ref("games/"+gameID+"/players/"+myPID).onDisconnect().remove();showPage("page-player");listenPlayer()}
-
-/* Player buzzer */
+/* BUZZER */
 function buzz(){db.ref("games/"+gameID).get().then(s=>{let g=s.val();if(!g||g.buzzed||g.lock)return;db.ref("games/"+gameID).update({buzzed:myPID})})}
 document.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();buzz()}})
 
 /* Player view */
 function listenPlayer(){db.ref("games/"+gameID).on("value",s=>{
     let g=s.val()||{};
-    document.getElementById("player-question").textContent=g.question||"";
-    let img=document.getElementById("player-image");
+    document.getElementById("player-question-big").textContent=g.question||"";
+    let img=document.getElementById("player-img");
     if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";
     let btn=document.getElementById("player-buzzer");
     if(g.buzzed){
@@ -296,6 +305,11 @@ function listenPlayer(){db.ref("games/"+gameID).on("value",s=>{
     html+="</table>";
     document.getElementById("player-scores").innerHTML=html;
 })}
+/* ZOOM for Player image */
+document.getElementById("player-img").addEventListener("click",function(){
+  if(this.classList.contains("zoomed")){this.classList.remove("zoomed");}
+  else{this.classList.add("zoomed");}
+});
 
 /* Scoreboard */
 function showScoreboard(){showPage("page-scoreboard");db.ref("games").get().then(s=>{let games=s.val()||{},totals={};for(let gid in games){let pl=games[gid].players||{};for(let pid in pl){let p=pl[pid];totals[p.name]=(totals[p.name]||0)+(p.score||0)}}let sorted=Object.entries(totals).sort((a,b)=>b[1]-a);let html="<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";sorted.forEach(([n,sc],i)=>{html+=`<tr><td>${i+1}</td><td>${n}</td><td>${sc}</td></tr>`});document.getElementById("scoreboard-table").innerHTML=html})}
