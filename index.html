@@ -1,205 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Quiz Buzzer Pro</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-<link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    --main-bg: #262e46;
-    --primary: #3b8bee;
-    --accent: #ffe05b;
-    --danger: #e94f37;
-    --radius: 16px;
+    --main-bg:#1d2238; --primary:#3b8bee; --accent:#ffe05b; --danger:#e94f37;
+    --radius:16px;
   }
-  html, body {
-    margin: 0; padding: 0; height: 100%;
-    font-family: 'Montserrat', sans-serif;
-    background: var(--main-bg); color: #fff;
+  body,html{margin:0;padding:0;height:100%;background:var(--main-bg);color:#fff;font-family:'Montserrat',sans-serif}
+  .page{display:none;max-width:1200px;margin:auto;padding:24px}
+  .show{display:block}
+  h1,h2,h3{text-align:center;margin:14px 0}
+
+  input,button{
+    width:100%;max-width:420px;margin:8px auto;display:block;
+    padding:14px 18px;font-size:1em;border:none;border-radius:var(--radius);
+    box-sizing:border-box;text-align:center
   }
-  .page { display: none; max-width: 1200px; margin: 0 auto; padding: 28px; }
-  .show { display: block; }
-  h1,h2 { font-weight: 700; margin-bottom: 20px; text-align: center; }
-  .input-box {
-    width: 100%; max-width: 420px; padding: 14px 18px; font-size: 1.2em;
-    border-radius: var(--radius); border: none; margin: 12px auto;
-    background: #344365; color: #fff; text-align: center;
-    outline: none; font-family: 'Montserrat', sans-serif;
+  input{background:#2e3658;color:#fff;outline:none}
+  input::placeholder{color:#bbb}
+  button{background:var(--primary);color:#fff;font-weight:bold;cursor:pointer;
+    transition:0.2s;box-shadow:0 4px 10px #0005}
+  button:hover{background:var(--accent);color:#222}
+  button:disabled{background:#666;color:#aaa}
+
+  .center-box{max-width:500px;margin:auto;padding:20px;background:#222947;
+    border-radius:20px;box-shadow:0 6px 20px #0009;text-align:center}
+
+  .buzzer-btn{
+    background:var(--accent);color:#222;font-size:3em;font-weight:bold;
+    padding:60px;border-radius:50%;margin:20px auto;border:8px solid #fff;
+    box-shadow:0 0 20px #ffd95bcc;cursor:pointer;user-select:none
   }
-  button {
-    background: var(--primary); color: #fff; font-weight: 700; font-size: 1.2em;
-    border: none; border-radius: 30px; padding: 14px 26px; cursor: pointer;
-    box-shadow: 0 4px 12px #0006; margin: 12px auto; display: block; font-family: 'Montserrat', sans-serif;
-  }
-  button:hover:not(:disabled) { background: var(--accent); color: #232323; }
-  button:disabled { background: #555; color: #999; }
-  .center-box {
-    max-width: 480px; margin: 0 auto; padding: 24px; background: #2b3250;
-    border-radius: 24px; box-shadow: 0 4px 20px #000a; text-align: center;
-  }
-  .buzzer-btn {
-    background: var(--accent); color: #141c34; font-size: 3em; font-weight: 900;
-    padding: 60px 100px; border-radius: 160px; border: 12px solid #fff;
-    box-shadow: 0 12px 40px #ffea6fcc; cursor: pointer; user-select: none;
-    margin: 24px auto;
-  }
-  .buzzer-btn:disabled { background: #aaa; color: #555; border-color: #666; box-shadow: none; }
-  .player-layout { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; align-items: center; }
-  .player-left { flex: 1; min-width: 320px; max-width: 550px; text-align: center; }
-  .player-right { flex: 1; min-width: 240px; max-width: 420px; text-align: center; }
-  #player-question-text, #question-text {
-    font-size: 2.2em; font-weight: 800; margin: 20px 0; text-align: center; font-family: 'Montserrat', sans-serif;
-  }
-  #player-question-img, #question-img {
-    max-width: 100%; max-height: 320px; border-radius: 20px;
-    margin: 10px auto; display: none; cursor: zoom-in;
-    box-shadow: 0 0 10px #000a;
-  }
-  #player-question-img.zoomed, #question-img.zoomed {
-    transform: scale(2); cursor: zoom-out; z-index: 999;
-  }
-  .scoreboard, #admin-scores, #scoreboard-table {
-    background: #222947; border-radius: 20px; margin-top: 20px;
-    box-shadow: 0 2px 14px #0008; overflow-x: auto;
-    width: 100%;
-  }
-  table { width: 100%; border-collapse: collapse; }
-  thead tr { background: var(--primary); }
-  th, td { padding: 12px; text-align: center; border: 1px solid #1a2138; }
-  .avatar-column img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-  tbody tr:nth-child(odd) { background: #2a2f4b; }
-  tbody tr:hover { background: #3b8bee90; }
-  #modal {
-    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-    background: #ffe05bcc; padding: 12px 32px; border-radius: 12px;
-    color: #232323; font-weight: 700; display: none; z-index: 9999;
-  }
-  .buzzed-tag {
-    background: var(--accent); padding: 4px 10px; border-radius: 10px;
-    color: #232323; font-weight: 700;
-    font-family: 'Montserrat', sans-serif;
-  }
-  .avatar-preview {
-    width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
-    box-shadow: 0 0 12px #12183fbb; margin-bottom: 14px; display: none;
-  }
+  .buzzer-btn:disabled{background:#aaa;color:#555;border-color:#555;box-shadow:none}
+
+  .scoreboard{margin-top:20px;background:#2a2f4b;border-radius:20px;overflow-x:auto}
+  table{width:100%;border-collapse:collapse}
+  thead tr{background:var(--primary)}
+  th,td{padding:10px;border:1px solid #1a2138;text-align:center}
+  tbody tr:nth-child(odd){background:#333a63}
+  .buzzed-tag{background:var(--accent);color:#222;border-radius:8px;padding:2px 6px}
 </style>
 </head>
 <body>
-
 <div id="modal"></div>
 
-<!-- LOGIN PAGE -->
+<!-- LOGIN -->
 <div id="page-login" class="page show">
   <div class="center-box">
     <h1>Login</h1>
-    <input id="login-username" class="input-box" autocomplete="off" placeholder="Username"/>
-    <input type="password" id="login-password" class="input-box" placeholder="Password"/>
+    <input id="login-username" placeholder="Username">
+    <input id="login-password" type="password" placeholder="Password">
     <button onclick="loginUser()">Login</button>
-    <button onclick="showRegister()">Register</button>
+    <button onclick="showPage('page-register')">Register</button>
   </div>
 </div>
 
-<!-- REGISTER PAGE -->
+<!-- REGISTER -->
 <div id="page-register" class="page">
   <div class="center-box">
     <h1>Register</h1>
-    <input id="register-username" class="input-box" autocomplete="off" placeholder="Username"/>
-    <input type="password" id="register-password" class="input-box" placeholder="Password"/>
-    <input id="register-email" class="input-box" placeholder="Email"/>
-    <input type="file" id="register-avatar" accept="image/*"/>
-    <img id="register-avatar-preview" class="avatar-preview"/>
+    <input id="register-username" placeholder="Username">
+    <input id="register-password" type="password" placeholder="Password">
+    <input id="register-email" placeholder="Email">
     <button onclick="registerUser()">Register</button>
-    <button onclick="showLogin()">Back</button>
+    <button onclick="showPage('page-login')">Back</button>
   </div>
 </div>
 
-<!-- HOME PAGE -->
+<!-- HOME -->
 <div id="page-home" class="page">
   <div class="center-box">
     <h2>Welcome, <span id="welcome-user"></span></h2>
     <button onclick="hostPage()">Host Game</button>
     <button onclick="joinPage()">Join Game</button>
-    <button onclick="showProfile()">Profile</button>
-    <button id="adminPanelBtn" onclick="adminPanel()" style="display:none;">Admin Panel</button>
     <button onclick="showScoreboard()">Scoreboard</button>
-    <button onclick="logoutUser()">Logout</button>
+    <button onclick="logout()">Logout</button>
   </div>
 </div>
 
-<!-- HOST PAGE -->
+<!-- HOST -->
 <div id="page-host" class="page">
   <div class="center-box">
     <h2>Host Game</h2>
-    <label>Game Code:</label>
-    <input id="host-code" class="input-box" readonly />
+    <input id="host-code" readonly>
     <button onclick="startGame()">Start Game</button>
-    <hr />
-    <h3>Admin Controls</h3>
-    <div style="margin-bottom: 10px;">
-      <input id="admin-question-input" class="input-box" placeholder="Enter question" style="width: 100%; max-width: 360px;" />
-      <input type="file" id="admin-image-file" accept="image/*" />
-      <img id="admin-image-preview" class="avatar-preview" />
-      <button onclick="uploadQuestion()">Upload Question</button>
-    </div>
-    <button onclick="resetBuzzers()">Reset Buzzer</button>
-    <button id="unlock-buzzer-btn" onclick="unlockBuzzers()" style="display:none;">Unlock Buzzers</button>
-    <button onclick="lockBuzzers()">Lock Buzzers</button>
-    <button onclick="nextRound()">Next Round</button>
-    <button onclick="clearAllScores()">Clear Scores</button>
-    <div id="buzzed-who" style="margin: 12px 0; font-weight: bold;"></div>
-    <div id="admin-scores" style="margin-top: 20px;"></div>
-    <hr />
-    <div>
-      <h3>Adjust Player Scores</h3>
-      <table id="host-player-scores" style="max-width: 480px; margin: 0 auto;"></table>
-    </div>
   </div>
 </div>
 
 <!-- ADMIN PANEL -->
-<div id="page-admin-panel" class="page">
+<div id="page-admin" class="page">
   <div class="center-box">
     <h2>Admin Panel</h2>
     <div><b>Game Code:</b> <span id="roomcode"></span></div>
     <div><b>Round:</b> <span id="round-label"></span></div>
-    <div id="question-text"></div>
-    <img id="question-img" />
-    <div id="admin-userlist" style="margin-top: 10px;"></div>
+    <div id="admin-scores"></div>
+    <button onclick="resetBuzzers()">Reset Buzzer</button>
+    <button onclick="lockBuzzers()">Lock Buzzers</button>
+    <button onclick="nextRound()">Next Round</button>
+    <button onclick="clearScores()">Clear Scores</button>
   </div>
 </div>
 
-<!-- JOIN PAGE -->
+<!-- JOIN -->
 <div id="page-join" class="page">
   <div class="center-box">
     <h2>Join Game</h2>
-    <input id="join-code" class="input-box" maxlength="6" placeholder="Game Code" />
-    <input id="join-team" class="input-box" maxlength="24" placeholder="Team (optional)" />
+    <input id="join-code" placeholder="Game Code">
     <button onclick="joinGame()">Join</button>
   </div>
 </div>
 
-<!-- PLAYER PAGE -->
+<!-- PLAYER -->
 <div id="page-player" class="page">
   <div class="center-box">
-    <div class="player-layout">
-      <div class="player-left">
-        <div id="player-question-text"></div>
-        <img id="player-question-img" />
-      </div>
-      <div class="player-right">
-        <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
-        <div id="buzz-lock-msg" style="margin-top: 10px; font-weight: bold;"></div>
-        <div class="scoreboard" id="player-scores" style="margin-top: 20px;"></div>
-      </div>
-    </div>
+    <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
+    <h2 id="player-msg"></h2>
+    <div class="scoreboard" id="player-scores"></div>
   </div>
 </div>
 
-<!-- SCOREBOARD PAGE -->
+<!-- SCOREBOARD -->
 <div id="page-scoreboard" class="page">
   <div class="center-box">
     <h2>Overall Scoreboard</h2>
@@ -207,383 +136,122 @@
   </div>
 </div>
 
-<audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3" preload="auto"></audio>
+<audio id="buzz-audio" src="https://cdn.pixabay.com/download/audio/2022/10/16/audio_12d3b2760e.mp3?filename=ding-124467.mp3"></audio>
 
 <script>
+/* FIREBASE */
 const firebaseConfig={
-  apiKey: "AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
-  authDomain: "buzzer-a0d53.firebaseapp.com",
-  databaseURL: "https://buzzer-a0d53-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "buzzer-a0d53",
-  storageBucket: "buzzer-a0d53.appspot.com",
-  messagingSenderId: "29031182202",
-  appId: "1:29031182202:web:447d951b38be59b29270c3",
-  measurementId: "G-NP0DMX7TKJ"
+  apiKey:"AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
+  authDomain:"buzzer-a0d53.firebaseapp.com",
+  databaseURL:"https://buzzer-a0d53-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"buzzer-a0d53",
+  storageBucket:"buzzer-a0d53.appspot.com",
+  messagingSenderId:"29031182202",
+  appId:"1:29031182202:web:447d951b38be59b29270c3"
 };
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const db=firebase.database();
 
-let gameID = "", myUser = "", myPID = "", myTeam = "", buzzLockSoundPlayed = false;
-let pageHistory = [];
+let myUser="",myPID="",gameID="",buzzPlayed=false;
 
-function showModal(msg){
-  const m=document.getElementById("modal");
-  m.textContent=msg;
-  m.style.display="block";
-  setTimeout(()=>m.style.display="none",1800);
+/* HELPERS */
+function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));document.getElementById(id).classList.add("show");}
+function modal(msg){let m=document.getElementById("modal");m.textContent=msg;m.style=`position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#ffe05b;padding:10px 20px;border-radius:12px;color:#222;font-weight:bold;`;m.style.display="block";setTimeout(()=>m.style.display="none",1500);}
+function $(id){return document.getElementById(id).value.trim();}
+
+/* AUTH */
+function registerUser(){
+  let u=$("register-username"),p=$("register-password"),e=$("register-email");
+  if(!u||!p||!e)return modal("Fill all fields");
+  db.ref("users/"+u).set({pw:p,email:e});
+  modal("Registered!");showPage("page-login");
 }
-function showPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
-  document.getElementById(id).classList.add("show");
-}
-function navigateToPage(id){
-  if(pageHistory.length===0||pageHistory[pageHistory.length-1]!==id){
-    pageHistory.push(id);
-  }
-  showPage(id);
-}
-function backButtonHandler(){
-  if(pageHistory.length>1){
-    pageHistory.pop();
-    showPage(pageHistory[pageHistory.length-1]);
-  }
-}
-// Navigation helpers
-function showRegister(){navigateToPage("page-register");}
-function showLogin(){navigateToPage("page-login");}
-function showHome(){
-  document.getElementById("welcome-user").textContent=myUser;
-  db.ref("users/"+myUser).get().then(snap=>{
-    document.getElementById("adminPanelBtn").style.display= (snap.val()?.role==="admin") ? "block" : "none";
+function loginUser(){
+  let u=$("login-username"),p=$("login-password");
+  db.ref("users/"+u).get().then(s=>{
+    if(!s.exists())return modal("User not found");
+    if(s.val().pw!==p)return modal("Wrong password");
+    myUser=u;showHome();
   });
-  navigateToPage("page-home");
 }
-function logoutUser(){
-  myUser="";
-  myPID="";
-  myTeam="";
-  gameID="";
-  pageHistory=[];
-  showLogin();
-  showModal("Logged out");
-}
-function showProfile(){navigateToPage("page-profile");}
+function logout(){myUser="";showPage("page-login");}
+function showHome(){document.getElementById("welcome-user").textContent=myUser;showPage("page-home");}
 
+/* HOST */
 function hostPage(){
-  const code = String(Math.floor(Math.random() * 900000 + 100000));
-  gameID = code;
-  document.getElementById("host-code").value = code;
-  db.ref("games/" + code).set({
-    created: Date.now(),
-    status: "waiting",
-    round: 1,
-    question: "",
-    image: "",
-    players: {},
-    buzzed: "",
-    lock: false
-  });
-  // Hide admin controls until start game pressed
-  document.getElementById("host-admin-controls")?.style?.display && (document.getElementById("host-admin-controls").style.display = "none");
-  navigateToPage("page-host");
+  let code=Math.floor(100000+Math.random()*900000).toString();
+  gameID=code;document.getElementById("host-code").value=code;
+  db.ref("games/"+code).set({buzzed:"",lock:false,round:1,players:{}});
+  showPage("page-host");
 }
+function startGame(){showPage("page-admin");document.getElementById("roomcode").textContent=gameID;readAdmin();}
 
-/* Start game stays on host page, show admin controls */
-function startGame(){
-  db.ref("games/" + gameID).update({status:"live", round:1}).then(() => {
-    showModal("Game started! Admin controls unlocked.");
-    if(document.getElementById("host-admin-controls")){
-       document.getElementById("host-admin-controls").style.display = "block";
-    }
-    listenAdmin();
-    updateHostPlayerScores();
-    updateUnlockButton();
-  });
-}
-
-function joinPage(){navigateToPage("page-join");}
-function adminPanel(){
-  db.ref("users/"+myUser).get().then(snap=>{
-    if(snap.val()?.role !== "admin"){
-      showModal("Only admins can access!");
-      return;
-    }
-    readAdmin();
-    readAdminUserlist();
-    navigateToPage("page-admin-panel");
-  });
-}
-function showScoreboard(){navigateToPage("page-scoreboard");}
-
-// Avatar preview helper
-function readAvatar(input, previewId){
-  if(input.files[0]){
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = document.getElementById(previewId);
-      img.src = e.target.result;
-      img.style.display = "block";
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-["register-avatar","profile-avatar","admin-image-file"].forEach(id => {
-  document.getElementById(id).addEventListener("change", e => readAvatar(e.target, id === "admin-image-file" ? "admin-image-preview" : id+"-preview"));
-});
-
-// Registration, login, profile functions (as provided earlier) ...
-
-function uploadQuestion(){
-  const question = document.getElementById("admin-question-input").value.trim();
-  const file = document.getElementById("admin-image-file").files[0];
-  if(!question) return showModal("Please enter a question.");
-  if(file){
-    const reader = new FileReader();
-    reader.onload = e=>{
-      db.ref("games/"+gameID).update({question,image:e.target.result});
-      resetQuestionInputs();
-      showModal("Question and image uploaded.");
-    };
-    reader.readAsDataURL(file);
-  } else {
-    db.ref("games/"+gameID).update({question,image:""});
-    resetQuestionInputs();
-    showModal("Question uploaded.");
-  }
-}
-
-function resetQuestionInputs(){
-  document.getElementById("admin-question-input").value="";
-  document.getElementById("admin-image-file").value="";
-  document.getElementById("admin-image-preview").style.display="none";
-}
-
-function resetBuzzers(){
-  db.ref(`games/${gameID}/players`).once("value").then(snap=>{
-    const players = snap.val() || {};
-    Object.keys(players).forEach(pid=>{
-      db.ref(`games/${gameID}/players/${pid}`).update({buzzed:false});
-    });
-  });
-  db.ref(`games/${gameID}`).update({buzzed:"", lock:false});
-  updateUnlockButton();
-}
-
-function lockBuzzers(){
-  db.ref(`games/${gameID}`).update({lock:true});
-  updateUnlockButton();
-}
-
-function unlockBuzzers(){
-  db.ref(`games/${gameID}`).update({lock:false,buzzed:""});
-  updateUnlockButton();
-}
-
-function updateUnlockButton(){
-  db.ref(`games/${gameID}/lock`).once("value").then(snap=>{
-    document.getElementById("unlock-buzzer-btn").style.display = snap.val() ? "inline-block" : "none";
-  });
-}
-
-function nextRound(){
-  db.ref(`games/${gameID}`).once("value").then(snap=>{
-    const r = (snap.val().round || 1) + 1;
-    db.ref(`games/${gameID}`).update({round: r, buzzed:"", lock:false});
-    resetBuzzers();
-  });
-}
-
-function clearAllScores(){
-  db.ref("games").remove();
-  showModal("All scores cleared.");
-}
-
-// User management
-function readAdminUserlist(){
-  db.ref("users").once("value").then(snap=>{
-    let html=`<table><thead><tr><th>Avatar</th><th>Username</th><th>Email</th><th>Role</th></tr></thead><tbody>`;
-    snap.forEach(u=>{
-      const d = u.val();
-      html += `<tr>
-        <td class="avatar-column">${d.avatar?`<img src="${d.avatar}">`:""}</td>
-        <td style="color:#ffe05b;">${u.key}</td>
-        <td>${d.email || ""}</td>
-        <td><select class="role-dropdown" onchange="changeUserRole('${u.key}', this.value)">
-          <option value="user" ${d.role === "user" ? "selected":""}>User</option>
-          <option value="admin" ${d.role === "admin" ? "selected":""}>Admin</option>
-        </select></td>
-      </tr>`;
-    });
-    html += "</tbody></table>";
-    document.getElementById("admin-userlist").innerHTML = html;
-  });
-}
-
-window.changeUserRole = function(username, role){
-  db.ref("users/"+username).update({role}).then(()=>{
-    showModal("Role updated for "+username);
-    readAdminUserlist();
-    if(username === myUser) showHome();
-  });
-};
-
+/* ADMIN */
+function resetBuzzers(){db.ref("games/"+gameID).update({buzzed:"",lock:false});}
+function lockBuzzers(){db.ref("games/"+gameID).update({lock:true});}
+function nextRound(){db.ref("games/"+gameID).get().then(s=>{let r=(s.val().round||1)+1;db.ref("games/"+gameID).update({round:r,buzzed:"",lock:false});});}
+function clearScores(){db.ref("games/"+gameID+"/players").remove();}
 function readAdmin(){
-  db.ref(`games/${gameID}`).on("value", snap=>{
-    const g = snap.val() || {};
-    document.getElementById("round-label").textContent = g.round || 1;
-    document.getElementById("question-text").textContent = g.question || "";
-    const img = document.getElementById("question-img");
-    if(g.image){
-      img.src = g.image;
-      img.style.display = "block";
-    } else {
-      img.style.display = "none";
-    }
-    const players = g.players || {};
-    let arr = Object.entries(players);
-    let html = `<table><thead><tr><th>Avatar</th><th>Name</th><th>Team</th><th>Score</th><th>Status</th></tr></thead><tbody>`;
-    arr.forEach(([id, pl])=>{
-      html += `<tr>
-        <td class='avatar-column'>${pl.avatar ? `<img src='${pl.avatar}'/>` : ""}</td>
-        <td>${pl.name}</td>
-        <td>${pl.team || ""}</td>
-        <td>${pl.score || 0}</td>
-        <td>${id === g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td>
-      </tr>`;
+  db.ref("games/"+gameID).on("value",s=>{
+    let g=s.val()||{};document.getElementById("round-label").textContent=g.round||1;
+    let arr=Object.entries(g.players||{});
+    let html="<table><thead><tr><th>Name</th><th>Score</th><th>Status</th></tr></thead><tbody>";
+    arr.forEach(([id,p])=>{
+      html+=`<tr><td>${p.name}</td><td>${p.score||0}</td><td>${id===g.buzzed?"<span class='buzzed-tag'>Buzzed</span>":""}</td></tr>`;
     });
-    html += "</tbody></table>";
-    document.getElementById("admin-scores").innerHTML = html;
-    document.getElementById("buzzed-who").textContent = g.buzzed && g.players && g.players[g.buzzed] ? `🔔 ${g.players[g.buzzed].name}` : "";
-    updateUnlockButton();
-    updateHostPlayerScores();
+    html+="</tbody></table>";
+    document.getElementById("admin-scores").innerHTML=html;
   });
 }
 
-function listenAdmin(){
-  readAdmin();
-  readAdminUserlist();
-}
-
-// Host player scores with buttons to adjust
-function updateHostPlayerScores(){
-  db.ref(`games/${gameID}/players`).once('value').then(snap=>{
-    const players = snap.val() || {};
-    let html = '<thead><tr><th>Name</th><th>Team</th><th>Score</th><th>Adjust</th></tr></thead><tbody>';
-    Object.entries(players).forEach(([pid, player])=>{
-      html += `<tr>
-        <td>${player.name}</td><td>${player.team || ''}</td><td id="score-${pid}">${player.score || 0}</td>
-        <td>
-          <button onclick="changePlayerScore('${pid}',1)">+1</button>
-          <button onclick="changePlayerScore('${pid}',-1)">-1</button>
-        </td>
-      </tr>`;
-    });
-    html += '</tbody>';
-    document.getElementById('host-player-scores').innerHTML = html;
-  });
-}
-
-function changePlayerScore(pid, delta){
-  db.ref(`games/${gameID}/players/${pid}/score`).transaction(score => (score || 0) + delta);
-}
-
-// Player join and playable functions (joinGame, listenPlayer, listenQuestionPlayer, buzz) remain unchanged (copy from previous full code)
-
+/* JOIN */
+function joinPage(){showPage("page-join");}
 function joinGame(){
-  const code = document.getElementById("join-code").value.trim();
-  const team = document.getElementById("join-team").value.trim();
-  if(!code) return showModal("Enter 6-digit game code");
-  if(!myUser) return showModal("Please login first");
-  gameID = code;
-  myTeam = team;
-  myPID = btoa(myUser+Math.random()).replace(/=/g,"");
-  db.ref(`users/${myUser}`).get().then(userSnap=>{
-    const avatar = (userSnap.val() && userSnap.val().avatar) || "";
-    db.ref(`games/${code}/players/${myPID}`).set({name:myUser,team,score:0,buzzed:false,joined:Date.now(),avatar}).then(()=>{
-      db.ref(`games/${code}/players/${myPID}`).onDisconnect().remove();
-      showPage("page-player");
-      listenPlayer();
-      listenQuestionPlayer();
-    });
-  });
+  gameID=$("join-code");if(!gameID)return modal("Enter game code");
+  myPID=btoa(myUser+Math.random()).replace(/=/g,"");
+  db.ref("games/"+gameID+"/players/"+myPID).set({name:myUser,score:0});
+  db.ref("games/"+gameID+"/players/"+myPID).onDisconnect().remove();
+  showPage("page-player");listenPlayer();
 }
 
-function listenPlayer(){
-  db.ref(`games/${gameID}`).on("value", snap=>{
-    const g = snap.val() || {};
-    document.getElementById("buzz-lock-msg").textContent = g.lock ? "Buzzers are locked!" : (g.buzzed ? "Buzzer locked!" : "");
-    const players = g.players || {};
-    let html = "";
-    Object.entries(players).forEach(([id, pl])=>{
-      html += `<div>${pl.name}${pl.team ? ` (${pl.team})` : ""} ${id === g.buzzed ? '<span class="buzzed-tag">Buzzed</span>' : ""}</div>`;
-    });
-    document.getElementById("player-scores").innerHTML = html;
-    const playerBtn = document.getElementById("player-buzzer");
-    playerBtn.disabled = g.lock || (g.buzzed && g.buzzed !== myPID);
-    if(g.buzzed && !buzzLockSoundPlayed){
-      const audio = document.getElementById("buzz-audio");
-      audio.currentTime = 0;
-      audio.play();
-      buzzLockSoundPlayed = true;
-    }
-    if(!g.buzzed) buzzLockSoundPlayed = false;
-  });
-}
-
-function listenQuestionPlayer(){
-  db.ref(`games/${gameID}`).on("value", snap=>{
-    const g = snap.val() || {};
-    document.getElementById("player-question-text").textContent = g.question || "";
-    const img = document.getElementById("player-question-img");
-    if(g.image){
-      img.src=g.image;
-      img.style.display = "block";
-    } else {
-      img.style.display = "none";
-    }
-  });
-}
-
+/* BUZZER */
 function buzz(){
-  db.ref(`games/${gameID}`).get().then(snap=>{
-    const g = snap.val();
-    if(!g || g.buzzed || g.lock) return showModal("Buzzer is locked!");
-    db.ref(`games/${gameID}`).update({buzzed: myPID});
-    db.ref(`games/${gameID}/players/${myPID}`).update({buzzed:true});
+  db.ref("games/"+gameID).get().then(s=>{
+    let g=s.val();if(!g||g.buzzed||g.lock)return;
+    db.ref("games/"+gameID).update({buzzed:myPID});
+  });
+}
+document.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();buzz();}});
+
+/* LISTENER */
+function listenPlayer(){
+  db.ref("games/"+gameID).on("value",s=>{
+    let g=s.val()||{};let btn=document.getElementById("player-buzzer");
+    if(g.buzzed){btn.disabled=g.buzzed!==myPID;document.getElementById("player-msg").textContent=g.buzzed===myPID?"✅ You Buzzed!":"⏳ Locked";if(!buzzPlayed){document.getElementById("buzz-audio").play();buzzPlayed=true;}}
+    else {btn.disabled=false;document.getElementById("player-msg").textContent="Press Space or Click";buzzPlayed=false;}
+    
+    let html="<table><thead><tr><th>Name</th><th>Score</th><th>Status</th></tr></thead><tbody>";
+    Object.entries(g.players||{}).forEach(([id,p])=>{
+      html+=`<tr><td>${p.name}</td><td>${p.score||0}</td><td>${id===g.buzzed?"<span class='buzzed-tag'>Buzzed</span>":""}</td></tr>`;
+    });
+    html+="</tbody></table>";
+    document.getElementById("player-scores").innerHTML=html;
   });
 }
 
-document.addEventListener("keydown", e=>{
-  if(e.code==="Space"){
-    e.preventDefault();
-    const btn = document.getElementById("player-buzzer");
-    if(btn && !btn.disabled) buzz();
-  }
-});
-
+/* SCOREBOARD */
 function showScoreboard(){
   showPage("page-scoreboard");
-  db.ref("games").once("value").then(snap=>{
-    const games = snap.val() || {};
-    let totalScores = {};
-    for(const gid in games){
-      const players = games[gid].players || {};
-      for(const pid in players){
-        const p = players[pid];
-        if(!totalScores[p.name]) totalScores[p.name] = 0;
-        totalScores[p.name] += p.score || 0;
-      }
+  db.ref("games").once("value").then(s=>{
+    let games=s.val()||{},totals={};
+    for(let gid in games){
+      let pl=games[gid].players||{};
+      for(let pid in pl){let p=pl[pid];if(!totals[p.name])totals[p.name]=0;totals[p.name]+=p.score||0;}
     }
-    const sorted = Object.entries(totalScores).sort((a,b)=>b[1]-a[1]);
-    let html = `<thead><tr><th>Rank</th><th>Name</th><th>Score</th></tr></thead><tbody>`;
-    if(sorted.length === 0){
-      html += `<tr><td colspan="3">No scores yet</td></tr>`;
-    }
-    sorted.forEach(([name, score],i) => {
-      html += `<tr><td>${i+1}</td><td>${name}</td><td>${score}</td></tr>`;
-    });
-    html += "</tbody>";
-    document.getElementById("scoreboard-table").innerHTML = html;
+    let sorted=Object.entries(totals).sort((a,b)=>b[1]-a);
+    let html="<thead><tr><th>Rank</th><th>Name</th><th>Score</th></tr></thead><tbody>";
+    sorted.forEach(([n,sc],i)=>{html+=`<tr><td>${i+1}</td><td>${n}</td><td>${sc}</td></tr>`});
+    html+="</tbody>";document.getElementById("scoreboard-table").innerHTML=html;
   });
 }
 </script>
