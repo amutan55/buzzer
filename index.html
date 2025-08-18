@@ -2,35 +2,34 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Quiz Buzzer </title>
+<title>Quiz Buzzer Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
-<!-- Styles -->
 <style>
   :root {
-    --main-bg:#1d2238;
+    --main-bg:#262e46;
     --primary:#3b8bee;
     --accent:#ffe05b;
     --danger:#e94f37;
   }
-  body{margin:0;padding:0;background:var(--main-bg);color:#fff;font-family:sans-serif}
+  body{margin:0;padding:0;background:var(--main-bg);color:#fff;font-family:'Montserrat',sans-serif}
   .page{display:none;max-width:700px;margin:auto;padding:24px}
   .show{display:block}
   input,button,select{
     width:100%;margin:8px 0;padding:14px;border:none;border-radius:12px;
-    box-sizing:border-box; font-size:1em;
+    box-sizing:border-box;font-size:1em;
   }
   input{background:#2e3658;color:#fff}
   input::placeholder{color:#bbb}
   button{background:var(--primary);color:#fff;font-weight:bold;cursor:pointer;transition:.2s}
   button:hover{background:var(--accent);color:#222}
   button:disabled{background:#666;color:#aaa}
-  .buzzer-btn{font-size:2em;font-weight:bold;padding:40px;border-radius:50%;background:var(--accent);color:#222;margin:20px auto;display:block}
-  .buzzer-btn:disabled{background:#aaa;color:#555}
+  .buzzer-btn{font-size:2em;font-weight:900;padding:40px;border-radius:50%;background:var(--accent);color:#222;margin:20px auto;display:block;border:8px solid #fff;box-shadow:0 0 20px #ffd95b}
+  .buzzer-btn:disabled{background:#aaa;color:#555;border-color:#666;box-shadow:none}
   table{width:100%;border-collapse:collapse;margin-top:10px}
   th,td{padding:8px;border:1px solid #444;text-align:center}
   th{background:var(--primary)}
@@ -139,15 +138,16 @@
 <audio id="buzz-audio" src="https://cdn.pixabay.com/download/audio/2022/10/16/audio_12d3b2760e.mp3"></audio>
 
 <script>
-/* Firebase Config — Replace with your Firebase project settings */
+/* ✅ Using your Firebase config */
 const firebaseConfig={
-  apiKey:"YOUR_API_KEY",
-  authDomain:"YOUR_PROJECT.firebaseapp.com",
-  databaseURL:"YOUR_DB_URL",
-  projectId:"YOUR_PROJECT_ID",
-  storageBucket:"YOUR_PROJECT.appspot.com",
-  messagingSenderId:"YOUR_ID",
-  appId:"YOUR_APP_ID"
+  apiKey:"AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
+  authDomain:"buzzer-a0d53.firebaseapp.com",
+  databaseURL:"https://buzzer-a0d53-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"buzzer-a0d53",
+  storageBucket:"buzzer-a0d53.appspot.com",
+  messagingSenderId:"29031182202",
+  appId:"1:29031182202:web:447d951b38be59b29270c3",
+  measurementId:"G-NP0DMX7TKJ"
 };
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
@@ -159,186 +159,39 @@ function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.
 function $(id){return document.getElementById(id).value.trim()}
 
 /* AUTH */
-function registerUser(){
-  let u=$("register-username"),p=$("register-password"),e=$("register-email");
-  if(!u||!p||!e)return alert("Fill all fields");
-  db.ref("users/"+u).set({pw:p,email:e,role:"player"});
-  alert("Registered!");showPage("page-login");
-}
-function loginUser(){
-  let u=$("login-username"),p=$("login-password");
-  db.ref("users/"+u).get().then(s=>{
-    if(!s.exists())return alert("User not found");
-    let v=s.val();
-    if(v.pw!==p)return alert("Wrong password");
-    myUser=u;myRole=v.role||"player";
-    document.getElementById("welcome-user").textContent=u;
-    document.getElementById("host-btn").style.display=myRole==="host"?"block":"none";
-    document.getElementById("admin-btn").style.display=myRole==="admin"?"block":"none";
-    showPage("page-home")
-  });
-}
+function registerUser(){let u=$("register-username"),p=$("register-password"),e=$("register-email");if(!u||!p||!e)return alert("Fill all fields");db.ref("users/"+u).set({pw:p,email:e,role:"player"});alert("Registered!");showPage("page-login")}
+function loginUser(){let u=$("login-username"),p=$("login-password");db.ref("users/"+u).get().then(s=>{if(!s.exists())return alert("User not found");let v=s.val();if(v.pw!==p)return alert("Wrong password");myUser=u;myRole=v.role||"player";document.getElementById("welcome-user").textContent=u;document.getElementById("host-btn").style.display=myRole==="host"?"block":"none";document.getElementById("admin-btn").style.display=myRole==="admin"?"block":"none";showPage("page-home")})}
 function logout(){myUser="";myRole="player";showPage("page-login")}
 
 /* HOST */
 document.getElementById("image-file").addEventListener("change",e=>{
-  const f=e.target.files[0];
-  if(f){
-    let r=new FileReader();
-    r.onload=ev=>{
-      let img=document.getElementById("image-preview");
-      img.src=ev.target.result;img.style.display="block";
-    };
-    r.readAsDataURL(f);
-  }
-});
-function hostPage(){
-  if(myRole!=="host")return alert("Only hosts allowed");
-  let code=Math.floor(100000+Math.random()*900000).toString();
-  gameID=code;document.getElementById("host-code").value=code;
-  db.ref("games/"+code).set({buzzed:"",lock:false,round:1,question:"",image:"",players:{}});
-  showPage("page-host");readHost();
-}
-function uploadQuestion(){
-  let q=$("question-input");
-  let f=document.getElementById("image-file").files;
-  if(f){
-    let r=new FileReader();
-    r.onload=ev=>{db.ref("games/"+gameID).update({question:q,image:ev.target.result})};
-    r.readAsDataURL(f);
-  } else {
-    db.ref("games/"+gameID).update({question:q,image:""});
-  }
-}
+  const f=e.target.files[0];if(f){let r=new FileReader();r.onload=ev=>{let img=document.getElementById("image-preview");img.src=ev.target.result;img.style.display="block"};r.readAsDataURL(f);}});
+function hostPage(){if(myRole!=="host")return alert("Only hosts allowed");let code=Math.floor(100000+Math.random()*900000).toString();gameID=code;document.getElementById("host-code").value=code;db.ref("games/"+code).set({buzzed:"",lock:false,round:1,question:"",image:"",players:{}});showPage("page-host");readHost()}
+function uploadQuestion(){let q=$("question-input");let f=document.getElementById("image-file").files[0];if(f){let r=new FileReader();r.onload=ev=>{db.ref("games/"+gameID).update({question:q,image:ev.target.result})};r.readAsDataURL(f);}else{db.ref("games/"+gameID).update({question:q,image:""})}}
 function resetBuzzers(){db.ref("games/"+gameID).update({buzzed:"",lock:false})}
 function lockBuzzers(){db.ref("games/"+gameID).update({lock:true})}
-function nextRound(){
-  db.ref("games/"+gameID).get().then(s=>{
-    let r=(s.val().round||1)+1;
-    db.ref("games/"+gameID).update({round:r,buzzed:"",lock:false,question:"",image:""})
-  });
-}
-function adjustScore(pid, delta){
-  db.ref("games/"+gameID+"/players/"+pid+"/score").get().then(s=>{
-    let sc=s.val()||0;
-    db.ref("games/"+gameID+"/players/"+pid).update({score:sc+delta})
-  });
-}
-function readHost(){
-  db.ref("games/"+gameID).on("value",s=>{
-    let g=s.val()||{};
-    let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th><th>Actions</th></tr>";
-    Object.entries(g.players||{}).forEach(([id,p])=>{
-      html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td>
-      <td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td>
-      <td><button onclick="adjustScore('${id}',1)">+1</button>
-      <button onclick="adjustScore('${id}',-1)">-1</button></td></tr>`;
-    });
-    html+="</table>";
-    document.getElementById("host-scores").innerHTML=html
-  });
-}
+function nextRound(){db.ref("games/"+gameID).get().then(s=>{let r=(s.val().round||1)+1;db.ref("games/"+gameID).update({round:r,buzzed:"",lock:false,question:"",image:""})})}
+function adjustScore(pid, delta){db.ref("games/"+gameID+"/players/"+pid+"/score").get().then(s=>{let sc=s.val()||0;db.ref("games/"+gameID+"/players/"+pid).update({score:sc+delta})})}
+function readHost(){db.ref("games/"+gameID).on("value",s=>{let g=s.val()||{};let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th><th>Actions</th></tr>";Object.entries(g.players||{}).forEach(([id,p])=>{html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td><td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td><td><button onclick="adjustScore('${id}',1)">+1</button><button onclick="adjustScore('${id}',-1)">-1</button></td></tr>`});html+="</table>";document.getElementById("host-scores").innerHTML=html})}
 
 /* ADMIN */
-function adminPanel(){
-  if(myRole!=="admin")return alert("Admins only");
-  listUsers();showPage("page-admin");
-}
-function addUser(){
-  let u=$("new-username"),p=$("new-password"),e=$("new-email"),r=document.getElementById("new-role").value;
-  if(!u||!p||!e)return alert("Fill all fields");
-  db.ref("users/"+u).set({pw:p,email:e,role:r});
-  alert("User added");listUsers();
-}
-function listUsers(){
-  db.ref("users").get().then(s=>{
-    let all=s.val()||{};
-    let html="<table><tr><th>User</th><th>Role</th></tr>";
-    Object.entries(all).forEach(([n,d])=>{
-      html+=`<tr><td>${n}</td>
-      <td><select onchange="db.ref('users/${n}').update({role:this.value})">
-        <option ${d.role==='player'?'selected':''}>player</option>
-        <option ${d.role==='host'?'selected':''}>host</option>
-        <option ${d.role==='admin'?'selected':''}>admin</option>
-      </select></td></tr>`;
-    });
-    html+="</table>";
-    document.getElementById("user-list").innerHTML=html
-  });
-}
+function adminPanel(){if(myRole!=="admin")return alert("Admins only");listUsers();showPage("page-admin")}
+function addUser(){let u=$("new-username"),p=$("new-password"),e=$("new-email"),r=document.getElementById("new-role").value;if(!u||!p||!e)return alert("Fill all fields");db.ref("users/"+u).set({pw:p,email:e,role:r});alert("User added");listUsers()}
+function listUsers(){db.ref("users").get().then(s=>{let all=s.val()||{};let html="<table><tr><th>User</th><th>Role</th></tr>";Object.entries(all).forEach(([n,d])=>{html+=`<tr><td>${n}</td><td><select onchange="db.ref('users/${n}').update({role:this.value})"><option ${d.role==='player'?'selected':''}>player</option><option ${d.role==='host'?'selected':''}>host</option><option ${d.role==='admin'?'selected':''}>admin</option></select></td></tr>`});html+="</table>";document.getElementById("user-list").innerHTML=html})}
 
 /* JOIN */
 function joinPage(){showPage("page-join")}
-function joinGame(){
-  gameID=$("join-code");myTeam=$("join-team");
-  if(!gameID)return alert("Enter code");
-  myPID=btoa(myUser+Math.random()).replace(/=/g,"");
-  db.ref("games/"+gameID+"/players/"+myPID).set({name:myUser,team:myTeam,score:0});
-  db.ref("games/"+gameID+"/players/"+myPID).onDisconnect().remove();
-  showPage("page-player");listenPlayer()
-}
+function joinGame(){gameID=$("join-code");myTeam=$("join-team");if(!gameID)return alert("Enter code");myPID=btoa(myUser+Math.random()).replace(/=/g,"");db.ref("games/"+gameID+"/players/"+myPID).set({name:myUser,team:myTeam,score:0});db.ref("games/"+gameID+"/players/"+myPID).onDisconnect().remove();showPage("page-player");listenPlayer()}
 
 /* BUZZER */
-function buzz(){
-  db.ref("games/"+gameID).get().then(s=>{
-    let g=s.val();
-    if(!g||g.buzzed||g.lock)return;
-    db.ref("games/"+gameID).update({buzzed:myPID})
-  })
-}
-document.addEventListener("keydown",e=>{
-  if(e.code==="Space"){e.preventDefault();buzz()}
-});
+function buzz(){db.ref("games/"+gameID).get().then(s=>{let g=s.val();if(!g||g.buzzed||g.lock)return;db.ref("games/"+gameID).update({buzzed:myPID})})}
+document.addEventListener("keydown",e=>{if(e.code==="Space"){e.preventDefault();buzz()}})
 
-/* PLAYER VIEW */
-function listenPlayer(){
-  db.ref("games/"+gameID).on("value",s=>{
-    let g=s.val()||{};
-    document.getElementById("player-question").textContent=g.question||"";
-    let img=document.getElementById("player-image");
-    img.style.display=g.image?"block":"none";
-    if(g.image) img.src=g.image;
+/* PLAYER */
+function listenPlayer(){db.ref("games/"+gameID).on("value",s=>{let g=s.val()||{};document.getElementById("player-question").textContent=g.question||"";let img=document.getElementById("player-image");if(g.image){img.src=g.image;img.style.display="block"}else img.style.display="none";let btn=document.getElementById("player-buzzer");if(g.buzzed){btn.disabled=g.buzzed!==myPID;document.getElementById("player-msg").textContent=g.buzzed===myPID?"✅ You Buzzed":"⏳ Locked";if(!buzzPlayed){document.getElementById("buzz-audio").play();buzzPlayed=true}}else{btn.disabled=false;document.getElementById("player-msg").textContent="Press Space or Click";buzzPlayed=false}let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th></tr>";Object.entries(g.players||{}).forEach(([id,p])=>{html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td><td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td></tr>`});html+="</table>";document.getElementById("player-scores").innerHTML=html})}
 
-    let btn=document.getElementById("player-buzzer");
-    if(g.buzzed){
-      btn.disabled=g.buzzed!==myPID;
-      document.getElementById("player-msg").textContent=g.buzzed===myPID?"✅ You Buzzed":"⏳ Locked";
-      if(!buzzPlayed){document.getElementById("buzz-audio").play();buzzPlayed=true}
-    }else{
-      btn.disabled=false;
-      document.getElementById("player-msg").textContent="Press Space or Click";
-      buzzPlayed=false
-    }
-
-    let html="<table><tr><th>Name</th><th>Team</th><th>Score</th><th>Status</th></tr>";
-    Object.entries(g.players||{}).forEach(([id,p])=>{
-      html+=`<tr><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td>
-      <td>${id===g.buzzed?'<span class="buzzed-tag">Buzzed</span>':""}</td></tr>`;
-    });
-    html+="</table>";
-    document.getElementById("player-scores").innerHTML=html
-  });
-}
-
-/* GLOBAL SCOREBOARD */
-function showScoreboard(){
-  showPage("page-scoreboard");
-  db.ref("games").get().then(s=>{
-    let games=s.val()||{},totals={};
-    for(let gid in games){
-      let pl=games[gid].players||{};
-      for(let pid in pl){
-        let p=pl[pid];
-        totals[p.name]=(totals[p.name]||0)+(p.score||0)
-      }
-    }
-    let sorted=Object.entries(totals).sort((a,b)=>b[1]-a);
-    let html="<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";
-    sorted.forEach(([n,sc],i)=>{html+=`<tr><td>${i+1}</td><td>${n}</td><td>${sc}</td></tr>`});
-    document.getElementById("scoreboard-table").innerHTML=html
-  });
-}
+/* SCOREBOARD */
+function showScoreboard(){showPage("page-scoreboard");db.ref("games").get().then(s=>{let games=s.val()||{},totals={};for(let gid in games){let pl=games[gid].players||{};for(let pid in pl){let p=pl[pid];totals[p.name]=(totals[p.name]||0)+(p.score||0)}}let sorted=Object.entries(totals).sort((a,b)=>b[1]-a);let html="<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";sorted.forEach(([n,sc],i)=>{html+=`<tr><td>${i+1}</td><td>${n}</td><td>${sc}</td></tr>`});document.getElementById("scoreboard-table").innerHTML=html})}
 </script>
 </body>
 </html>
-
