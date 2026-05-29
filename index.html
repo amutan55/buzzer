@@ -1,458 +1,1440 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Quiz Buzzer Pro</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-<link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MAHIL QUIZ ARENA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
 <style>
-  :root {
-    --main-bg: #262e46;
-    --primary: #3b8bee;
-    --accent: #ffe05b;
-    --danger: #e94f37;
-    --radius: 16px;
-  }
-  html, body {
-    margin:0; padding:0; height:100%;
-    font-family: 'Montserrat', sans-serif;
-    background: var(--main-bg); color:#fff;
-  }
-  .page { display:none; max-width: 1200px; margin:0 auto; padding:28px; }
-  .show { display:block; }
-  h1,h2,h3 { font-weight:700; margin-bottom:20px; text-align:center; }
-  input[type=text], input[type=password], input[type=email], input[type=file] {
-    width:100%; max-width:420px; padding:14px 18px; font-size:1.2em;
-    border-radius: var(--radius); border:none;
-    margin:12px auto; box-sizing:border-box;
-    background:#344365; color:#fff; text-align:center;
-  }
-  input::placeholder { color:#bac3e6; }
-  button {
-    background: var(--primary); color:#fff;
-    font-weight:700; font-size:1.2em;
-    border:none; border-radius:30px; padding:14px 26px;
-    cursor:pointer; box-shadow:0 4px 12px #0006;
-    margin:12px auto; display:block; transition:0.2s ease;
-  }
-  button:hover:not(:disabled) { background:var(--accent); color:#232323; }
-  button:disabled { background:#555; color:#999; box-shadow:none; }
-  .center-box {
-    max-width:480px; margin:0 auto; padding:24px;
-    background:#2b3250; border-radius:24px; box-shadow:0 4px 20px #000a;
-    text-align:center;
-  }
-  .buzzer-btn {
-    background:var(--accent); color:#141c34;
-    font-size:3em; font-weight:900;
-    padding:60px 100px; border-radius:160px;
-    border:12px solid #fff;
-    box-shadow: 0 12px 40px #ffea6fcc;
-    cursor:pointer; user-select:none; margin:24px auto;
-  }
-  .buzzer-btn:disabled { background:#aaa; color:#555; border-color:#666; box-shadow:none; }
-  .player-layout { display:flex; flex-wrap:wrap; gap:24px; }
-  .player-left { flex:1; min-width:280px; }
-  .player-right { flex:1; min-width:280px; text-align:center; }
-  #player-question-text, #question-text {
-    font-size:2.2em; font-weight:800; margin:20px 0; text-align:center;
-  }
-  #player-question-img, #question-img {
-    max-width:100%; max-height:320px; border-radius:20px;
-    margin:10px auto; display:none; cursor:zoom-in;
-    box-shadow:0 0 10px #000a;
-  }
-  #player-question-img.zoomed, #question-img.zoomed {
-    transform:scale(2); cursor:zoom-out; z-index:999;
-  }
-  .scoreboard, #admin-scores, #scoreboard-table {
-    background:#222947; border-radius:20px; margin-top:20px;
-    box-shadow:0 2px 14px #0008; overflow-x:auto;
-    width:100%;
-  }
-  table { width:100%; border-collapse:collapse; }
-  thead tr { background: var(--primary); }
-  th,td { padding:12px; text-align:center; border:1px solid #1a2138; }
-  .avatar-column img{ width:40px; height:40px; border-radius:50%; object-fit:cover; }
-  tbody tr:nth-child(odd){ background:#2a2f4b; }
-  tbody tr:hover{ background:#3b8bee90; }
-  #modal {
-    position:fixed; top:20px; left:50%; transform:translateX(-50%);
-    background:#ffe05bcc; padding:12px 32px; border-radius:12px;
-    color:#232323; font-weight:700; display:none; z-index:9999;
-  }
-  .buzzed-tag {
-    background:var(--accent); padding:4px 10px; border-radius:10px;
-    color:#232323; font-weight:700;
-  }
-  .avatar-preview {
-    width:72px; height:72px; border-radius:50%; object-fit:cover;
-    box-shadow:0 0 12px #12183fbb; margin-bottom:14px; display:none;
-  }
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Orbitron',sans-serif;
+background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
+color:white;
+min-height:100vh;
+overflow-x:hidden;
+}
+
+.container{
+width:95%;
+max-width:1400px;
+margin:auto;
+padding:20px;
+}
+
+.hidden{
+display:none!important;
+}
+
+.title{
+text-align:center;
+font-size:3.2rem;
+font-weight:900;
+margin:20px 0;
+color:#00e5ff;
+text-shadow:0 0 25px #00e5ff;
+}
+
+.glass{
+background:rgba(255,255,255,0.07);
+backdrop-filter:blur(14px);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:25px;
+padding:25px;
+margin-top:20px;
+box-shadow:0 0 30px rgba(0,0,0,0.3);
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.profile{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.profile img{
+width:65px;
+height:65px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid #00e5ff;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.dashboard-buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+margin-top:25px;
+}
+
+.big-btn{
+height:140px;
+font-size:1.5rem;
+font-weight:900;
+}
+
+input,
+button,
+textarea,
+select{
+width:100%;
+padding:15px;
+margin-top:10px;
+border:none;
+border-radius:16px;
+font-size:1rem;
+font-family:'Orbitron',sans-serif;
+}
+
+input,
+textarea,
+select{
+background:#111827;
+color:white;
+}
+
+button{
+background:linear-gradient(135deg,#00e5ff,#ff00d4);
+color:white;
+font-weight:700;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.03);
+}
+
+.logout-btn{
+width:auto;
+padding:12px 20px;
+background:red;
+}
+
+.back-btn{
+width:auto;
+padding:12px 20px;
+background:#2563eb;
+}
+
+.avatar-preview{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid #00e5ff;
+display:block;
+margin:auto;
+}
+
+.question{
+font-size:2rem;
+text-align:center;
+color:#00e5ff;
+margin-top:20px;
+}
+
+.buzzer{
+width:260px;
+height:260px;
+border-radius:50%;
+margin:30px auto;
+display:block;
+border:none;
+font-size:3rem;
+font-weight:900;
+background:radial-gradient(circle,#ffe600,#ff9800);
+color:black;
+box-shadow:0 0 50px #ffe600;
+}
+
+.locked{
+background:#555!important;
+box-shadow:none!important;
+}
+
+.room-code{
+text-align:center;
+font-size:2rem;
+color:#00e5ff;
+margin-top:15px;
+}
+
+.player{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+background:rgba(255,255,255,0.06);
+border-radius:18px;
+margin-top:10px;
+}
+
+.player-left{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.player-left img{
+width:55px;
+height:55px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.timer{
+font-size:2rem;
+text-align:center;
+color:#ffe600;
+margin-top:15px;
+}
+
+.winner{
+font-size:1.5rem;
+text-align:center;
+color:#00ff99;
+margin-top:15px;
+}
+
+.delete-btn{
+background:red;
+width:auto;
+padding:10px 15px;
+}
+
+.role-btn{
+background:#22c55e;
+width:auto;
+padding:10px 15px;
+}
+
+@media(max-width:900px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.dashboard-buttons{
+grid-template-columns:1fr;
+}
+
+.title{
+font-size:2.2rem;
+}
+
+.buzzer{
+width:210px;
+height:210px;
+font-size:2rem;
+}
+
+}
+
 </style>
+
 </head>
+
 <body>
-<div id="modal"></div>
+
+<div class="container">
+
+<h1 class="title">MAHIL QUIZ ARENA</h1>
 
 <!-- LOGIN -->
-<div id="page-login" class="page show">
-  <div class="center-box">
-    <h1>Login</h1>
-    <input id="login-username" autocomplete="off" placeholder="Username"/>
-    <input type="password" id="login-password" placeholder="Password"/>
-    <button onclick="loginUser()">Login</button>
-    <button onclick="showRegister()">Register</button>
-  </div>
+
+<div id="loginPage" class="glass">
+
+<h2>LOGIN</h2>
+
+<input type="text"
+id="loginUsername"
+placeholder="Username">
+
+<input type="password"
+id="loginPassword"
+placeholder="Password">
+
+<button onclick="login()">
+LOGIN
+</button>
+
+<button onclick="showSignup()">
+SIGN UP
+</button>
+
 </div>
-<!-- REGISTER -->
-<div id="page-register" class="page">
-  <div class="center-box">
-    <h1>Register</h1>
-    <input id="register-username" autocomplete="off" placeholder="Username"/>
-    <input type="password" id="register-password" placeholder="Password"/>
-    <input id="register-email" placeholder="Email"/>
-    <input type="file" id="register-avatar" accept="image/*"/>
-    <img id="register-avatar-preview" class="avatar-preview"/>
-    <button onclick="registerUser()">Register</button>
-    <button onclick="showLogin()">Back</button>
-  </div>
+
+<!-- SIGNUP -->
+
+<div id="signupPage"
+class="glass hidden">
+
+<div class="topbar">
+
+<button class="back-btn"
+onclick="showLogin()">
+⬅ BACK
+</button>
+
 </div>
-<!-- HOME -->
-<div id="page-home" class="page">
-  <div class="center-box">
-    <h2>Welcome, <span id="welcome-user"></span></h2>
-    <button onclick="hostPage()">Host Game</button>
-    <button onclick="joinPage()">Join Game</button>
-    <button onclick="showProfile()">Profile</button>
-    <button id="adminPanelBtn" onclick="adminPanel()" style="display:none;">Admin Panel</button>
-    <button onclick="showScoreboard()">Scoreboard</button>
-  </div>
+
+<h2>CREATE ACCOUNT</h2>
+
+<input type="text"
+id="signupUsername"
+placeholder="Username">
+
+<input type="email"
+id="signupEmail"
+placeholder="Email">
+
+<input type="password"
+id="signupPassword"
+placeholder="Password">
+
+<img id="avatarPreview"
+class="avatar-preview"
+src="https://i.pravatar.cc/150?img=12">
+
+<input type="file"
+id="avatarInput"
+accept="image/*">
+
+<button onclick="signup()">
+CREATE ACCOUNT
+</button>
+
 </div>
-<!-- PROFILE -->
-<div id="page-profile" class="page">
-  <div class="center-box">
-    <h2>Your Profile</h2>
-    <img id="profile-avatar-preview" class="avatar-preview"/>
-    <input id="profile-nickname" readonly/>
-    <input id="profile-password" type="password" placeholder="New Password"/>
-    <input id="profile-email" placeholder="Email"/>
-    <input type="file" id="profile-avatar" accept="image/*"/>
-    <button onclick="updateProfile()">Save Changes</button>
-  </div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard"
+class="hidden glass">
+
+<div class="topbar">
+
+<div class="profile">
+
+<img id="profileAvatar">
+
+<div>
+
+<h2 id="profileName"></h2>
+
+<p id="profileEmail"></p>
+
 </div>
+
+</div>
+
+<button class="logout-btn"
+onclick="logout()">
+LOGOUT
+</button>
+
+</div>
+
+<h2 style="text-align:center">
+WELCOME TO MAHIL QUIZ ARENA
+</h2>
+
+<div class="dashboard-buttons">
+
+<button class="big-btn"
+onclick="hostGame()">
+HOST GAME
+</button>
+
+<button class="big-btn"
+onclick="openJoinPage()">
+PLAY GAME
+</button>
+
+<button class="big-btn"
+onclick="openSettings()">
+SETTINGS
+</button>
+
+<button class="big-btn"
+onclick="openAdminPanel()"
+id="adminBtn">
+ROLE MANAGEMENT
+</button>
+
+</div>
+
+</div>
+
+<!-- JOIN PAGE -->
+
+<div id="joinPage"
+class="hidden glass">
+
+<div class="topbar">
+
+<button class="back-btn"
+onclick="goDashboard()">
+⬅ BACK
+</button>
+
+<h2>JOIN GAME</h2>
+
+</div>
+
+<input type="text"
+id="joinCode"
+placeholder="Enter Room Code">
+
+<button onclick="joinGame()">
+JOIN ROOM
+</button>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div id="settingsPage"
+class="hidden glass">
+
+<div class="topbar">
+
+<button class="back-btn"
+onclick="goDashboard()">
+⬅ BACK
+</button>
+
+<h2>SETTINGS</h2>
+
+</div>
+
+<input type="text"
+id="changeName"
+placeholder="Change Username">
+
+<input type="file"
+id="changeAvatar"
+accept="image/*">
+
+<select id="soundSelect">
+
+<option value="1">Classic Buzz</option>
+<option value="2">Electric Buzz</option>
+<option value="3">Game Show</option>
+<option value="4">Laser Buzz</option>
+<option value="5">Cyber Buzz</option>
+
+</select>
+
+<button onclick="saveSettings()">
+SAVE SETTINGS
+</button>
+
+</div>
+
+<!-- ADMIN -->
+
+<div id="adminPage"
+class="hidden glass">
+
+<div class="topbar">
+
+<button class="back-btn"
+onclick="goDashboard()">
+⬅ BACK
+</button>
+
+<h2>ROLE MANAGEMENT</h2>
+
+</div>
+
+<div id="allUsers"></div>
+
+<h2 style="margin-top:30px">
+ADD NEW USER
+</h2>
+
+<input type="text"
+id="adminNewUser"
+placeholder="Username">
+
+<input type="email"
+id="adminNewMail"
+placeholder="Email">
+
+<input type="password"
+id="adminNewPass"
+placeholder="Password">
+
+<button onclick="adminAddUser()">
+ADD USER
+</button>
+
+</div>
+
 <!-- HOST -->
-<div id="page-host" class="page">
-  <div class="center-box">
-    <h2>Host Game</h2>
-    <label>Game Code:</label>
-    <input id="host-code" readonly/>
-    <button onclick="startGame()">Start Game</button>
-  </div>
+
+<div id="hostPage"
+class="hidden glass">
+
+<div class="topbar">
+
+<button class="back-btn"
+onclick="goDashboard()">
+⬅ BACK
+</button>
+
+<h2>HOST PANEL</h2>
+
+<button class="logout-btn"
+onclick="logout()">
+LOGOUT
+</button>
+
 </div>
-<!-- ADMIN PANEL -->
-<div id="page-admin-panel" class="page">
-  <div class="center-box">
-    <h2>Admin Panel</h2>
-    <div><b>Game Code:</b> <span id="roomcode"></span></div>
-    <div><b>Round:</b> <span id="round-label"></span></div>
-    <div id="question-text"></div>
-    <img id="question-img"/>
-    <input id="admin-question-input" placeholder="Enter question"/>
-    <input type="file" id="admin-image-file" accept="image/*"/>
-    <img id="admin-image-preview" class="avatar-preview"/>
-    <button onclick="uploadQuestion()">Upload Question</button>
-    <br>
-    <button onclick="resetBuzzers()">Reset Buzzer</button>
-    <button onclick="lockBuzzers()">Lock Buzzers</button>
-    <button onclick="nextRound()">Next Round</button>
-    <button onclick="clearAllScores()">Clear Scores</button>
-    <div id="buzzed-who"></div>
-    <div id="admin-scores"></div>
-  </div>
+
+<div class="room-code"
+id="roomCode"></div>
+
+<textarea id="questionInput"
+placeholder="Enter Question"></textarea>
+
+<button onclick="sendQuestion()">
+SEND QUESTION
+</button>
+
+<button onclick="resetBuzzers()">
+RESET BUZZERS
+</button>
+
+<button onclick="startTimer()">
+START TIMER
+</button>
+
+<button onclick="addPoints()">
++10 POINTS
+</button>
+
+<div class="timer"
+id="timer">
+10
 </div>
-<!-- JOIN -->
-<div id="page-join" class="page">
-  <div class="center-box">
-    <h2>Join Game</h2>
-    <input id="join-code" maxlength="6" placeholder="Game Code"/>
-    <input id="join-team" maxlength="24" placeholder="Team (optional)"/>
-    <button onclick="joinGame()">Join</button>
-  </div>
+
+<div class="winner"
+id="winner"></div>
+
+<h2 style="margin-top:20px">
+LIVE SCOREBOARD
+</h2>
+
+<div id="hostScoreboard"></div>
+
 </div>
+
 <!-- PLAYER -->
-<div id="page-player" class="page">
-  <div class="center-box">
-    <div class="player-layout">
-      <div class="player-left">
-        <div id="player-question-text"></div>
-        <img id="player-question-img"/>
-      </div>
-      <div class="player-right">
-        <button id="player-buzzer" class="buzzer-btn" onclick="buzz()">BUZZ!</button>
-        <div id="buzz-lock-msg"></div>
-        <div class="scoreboard" id="player-scores"></div>
-      </div>
-    </div>
-  </div>
+
+<div id="playerPage"
+class="hidden">
+
+<div class="grid">
+
+<div class="glass">
+
+<div class="topbar">
+
+<button class="back-btn"
+onclick="goDashboard()">
+⬅ BACK
+</button>
+
+<button class="logout-btn"
+onclick="logout()">
+LOGOUT
+</button>
+
 </div>
-<!-- SCOREBOARD -->
-<div id="page-scoreboard" class="page">
-  <div class="center-box">
-    <h2>Overall Scoreboard</h2>
-    <table id="scoreboard-table"></table>
-  </div>
+
+<div class="question"
+id="question">
+Waiting for question...
 </div>
-<audio id="buzz-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12d3b2760e.mp3"></audio>
+
+<button class="buzzer"
+id="buzzBtn"
+onclick="buzz()">
+BUZZ
+</button>
+
+<div class="winner"
+id="reaction"></div>
+
+<div class="winner"
+id="playerWinner"></div>
+
+<div class="timer"
+id="playerTimer">
+10
+</div>
+
+</div>
+
+<div class="glass">
+
+<h2>LIVE SCOREBOARD</h2>
+
+<div id="playerScoreboard"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 <script>
-const firebaseConfig={
-  apiKey: "AIzaSyBHvyZyATvhJ1pMx-kV-_ZXFwXPb54VspI",
-  authDomain: "buzzer-a0d53.firebaseapp.com",
-  databaseURL: "https://buzzer-a0d53-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "buzzer-a0d53",
-  storageBucket: "buzzer-a0d53.appspot.com",
-  messagingSenderId: "29031182202",
-  appId: "1:29031182202:web:447d951b38be59b29270c3",
-  measurementId: "G-NP0DMX7TKJ"
+
+let currentUser=null;
+let gameRoom='';
+let currentRoom='';
+let timerInterval=null;
+
+const gameRooms={};
+
+const buzzSounds={
+1:'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',
+2:'https://assets.mixkit.co/active_storage/sfx/1018/1018-preview.mp3',
+3:'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3',
+4:'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3',
+5:'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
 
-let gameID="",myUser="",myPID="",myTeam="",buzzLockSoundPlayed=false;
+document.getElementById('avatarInput')
+.addEventListener('change',e=>{
 
-function showModal(msg){
-  const m=document.getElementById("modal");
-  m.textContent=msg;m.style.display="block";
-  setTimeout(()=>m.style.display="none",1600);
-}
-function showPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
-  document.getElementById(id).classList.add("show");
-}
+const file=e.target.files[0];
 
-/* AVATAR PREVIEW */
-function readAvatar(input,previewId){
-  if(input.files[0]){
-    let reader=new FileReader();
-    reader.onload=(e)=>{let img=document.getElementById(previewId);img.src=e.target.result;img.style.display="block";};
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-document.getElementById("register-avatar").addEventListener("change",function(){readAvatar(this,"register-avatar-preview");});
-document.getElementById("profile-avatar").addEventListener("change",function(){readAvatar(this,"profile-avatar-preview");});
-document.getElementById("admin-image-file").addEventListener("change",function(){readAvatar(this,"admin-image-preview");});
+if(file){
 
-/* AUTH */
-function registerUser(){
-  let u=document.getElementById("register-username").value, p=document.getElementById("register-password").value, e=document.getElementById("register-email").value, f=document.getElementById("register-avatar").files[0];
-  if(!u||!p||!e) return showModal("Fill all fields");
-  if(f){
-    let r=new FileReader();
-    r.onload=ev=>{db.ref("users/"+u).set({pw:p,email:e,avatar:ev.target.result});showModal("Registered!");showLogin();}
-    r.readAsDataURL(f);
-  }
-  else{
-    db.ref("users/"+u).set({pw:p,email:e,avatar:""});
-    showModal("Registered!");showLogin();
-  }
-}
-function loginUser(){
-  let u=document.getElementById("login-username").value, p=document.getElementById("login-password").value;
-  db.ref("users/"+u).get().then(s=>{
-    if(!s.exists()) return showModal("User not found");
-    let v=s.val(); if(v.pw!==p) return showModal("Wrong pass");
-    myUser=u; showHome();
-  });
-}
-function showRegister(){showPage("page-register");}
-function showLogin(){showPage("page-login");}
-function showHome(){
-  document.getElementById("welcome-user").textContent=myUser;
-  document.getElementById("adminPanelBtn").style.display=myUser==="admin"?"block":"none";
-  showPage("page-home");
+const reader=new FileReader();
+
+reader.onload=function(event){
+
+document.getElementById('avatarPreview')
+.src=event.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
 }
 
-/* PROFILE */
-function showProfile(){
-  db.ref("users/"+myUser).get().then(s=>{
-    let v=s.val();
-    document.getElementById("profile-nickname").value=myUser;
-    document.getElementById("profile-email").value=v.email;
-    document.getElementById("profile-password").value="";
-    if(v.avatar){
-      let prev=document.getElementById("profile-avatar-preview");
-      prev.src=v.avatar; prev.style.display="block";
-    }
-    showPage("page-profile");
-  });
-}
-function updateProfile(){
-  let e=document.getElementById("profile-email").value,
-      p=document.getElementById("profile-password").value,
-      f=document.getElementById("profile-avatar").files[0];
-  let upd={};
-  if(e)upd.email=e;
-  if(p)upd.pw=p;
-  if(f){
-    let r=new FileReader();
-    r.onload=ev=>{
-      upd.avatar=ev.target.result;
-      db.ref("users/"+myUser).update(upd);
-      showModal("Profile saved");showHome();
-    }; r.readAsDataURL(f);
-  }else{
-    db.ref("users/"+myUser).update(upd);
-    showModal("Profile saved");showHome();
-  }
-}
-
-/* HOST */
-function hostPage(){
-  showPage("page-host");
-  let code=String(Math.floor(100000+Math.random()*900000));
-  document.getElementById("host-code").value=code;
-  gameID=code;
-  db.ref("games/"+code).set({players:{},buzzed:"",lock:false,round:1,question:"",image:""});
-}
-function startGame(){
-  showPage("page-admin-panel");
-  document.getElementById("roomcode").textContent=gameID;
-  readAdmin();
-}
-
-/* ADMIN */
-function uploadQuestion(){
-  let q=document.getElementById("admin-question-input").value;
-  let file=document.getElementById("admin-image-file").files[0];
-  if(file){
-    let r=new FileReader();
-    r.onload=ev=>{db.ref("games/"+gameID).update({question:q,image:ev.target.result});};
-    r.readAsDataURL(file);
-  }
-  else{
-    db.ref("games/"+gameID).update({question:q,image:""});
-  }
-}
-function resetBuzzers(){
-  db.ref("games/"+gameID).update({buzzed:"",lock:false});
-}
-function lockBuzzers(){
-  db.ref("games/"+gameID).update({lock:true});
-}
-function nextRound(){
-  db.ref("games/"+gameID).get().then(s=>{
-    let r=(s.val().round||1)+1;
-    db.ref("games/"+gameID).update({round:r,buzzed:"",lock:false});
-  });
-}
-function clearAllScores(){
-  db.ref("games").remove();
-}
-
-/* ADMIN PANEL LISTENER */
-function readAdmin(){
-  db.ref("games/"+gameID).on("value",s=>{
-    let g=s.val()||{};
-    document.getElementById("round-label").textContent=g.round||1;
-    document.getElementById("question-text").textContent=g.question||"";
-    let im=document.getElementById("question-img");
-    if(g.image){im.src=g.image;im.style.display="block";}
-    else im.style.display="none";
-    // Populate player scores with avatars
-    let arr=Object.entries(g.players||{});
-    let html="<table><thead><tr><th>Avatar</th><th>Name</th><th>Team</th><th>Score</th><th>Status</th></tr></thead><tbody>";
-    arr.forEach(([id,p])=>{
-      html+=`<tr><td class='avatar-column'>${p.avatar?`<img src='${p.avatar}'/>`:""}</td><td>${p.name}</td><td>${p.team||""}</td><td>${p.score||0}</td><td>${id===g.buzzed?"<span class='buzzed-tag'>Buzzed</span>":""}</td></tr>`;
-    });
-    html+="</tbody></table>";
-    document.getElementById("admin-scores").innerHTML=html;
-    document.getElementById("buzzed-who").innerHTML=g.players&&g.players[g.buzzed]?`🔔 ${g.players[g.buzzed].name}`:"";
-  });
-}
-function adminPanel(){
-  if(myUser!=="admin")return;
-  readAdmin(); showPage("page-admin-panel");
-}
-
-/* JOIN/PLAYER */
-function joinPage(){showPage("page-join");}
-function joinGame(){
-  const code=document.getElementById("join-code").value.trim(), team=document.getElementById("join-team").value.trim();
-  if(!code)return showModal("Enter game code");
-  if(!myUser)return showModal("Login first");
-  gameID=code; myTeam=team;
-  myPID=btoa(myUser+Math.random()).replace(/=/g,"");
-  db.ref("users/"+myUser).get().then(us=>{
-    let avatar=(us.val()||{}).avatar||"";
-    db.ref("games/"+code+"/players/"+myPID).set({name:myUser,team:team,score:0,avatar});
-    db.ref("games/"+code+"/players/"+myPID).onDisconnect().remove();
-    showPage("page-player");
-    listenPlayer(); listenQuestionPlayer();
-  });
-}
-
-/* BUZZER FUNCTION */
-function buzz(){
-  db.ref("games/"+gameID).get().then(s=>{
-    let g=s.val();
-    if(!g||g.buzzed||g.lock)return;
-    db.ref("games/"+gameID).update({buzzed:myPID});
-  });
-}
-document.addEventListener("keydown",e=>{
-  if(e.code==="Space"){
-    e.preventDefault();
-    let btn=document.getElementById("player-buzzer");
-    if(btn&&!btn.disabled) buzz();
-  }
 });
 
-/* PLAYER LISTENERS */
-function listenPlayer(){
-  db.ref("games/"+gameID).on("value",s=>{
-    let g=s.val()||{};
-    document.getElementById("buzz-lock-msg").textContent=g.lock?"Buzzers are locked":(g.buzzed?"Buzzer locked":"");
-    let html="";
-    Object.entries(g.players||{}).forEach(([id,p])=>{
-      html+=`<div>${p.name} ${id===g.buzzed?"<span class='buzzed-tag'>Buzzed</span>":""}</div>`;
-    });
-    document.getElementById("player-scores").innerHTML=html;
-    document.getElementById("player-buzzer").disabled=g.lock||(g.buzzed&&g.buzzed!==myPID);
-    if(g.buzzed&&!buzzLockSoundPlayed){document.getElementById("buzz-audio").play();buzzLockSoundPlayed=true;}
-    if(!g.buzzed)buzzLockSoundPlayed=false;
-  });
-}
-function listenQuestionPlayer(){
-  db.ref("games/"+gameID).on("value",s=>{
-    let g=s.val()||{};
-    document.getElementById("player-question-text").textContent=g.question||"";
-    const img=document.getElementById("player-question-img");
-    if(g.image){img.src=g.image;img.style.display="block";}
-    else{img.style.display="none";}
-  });
+window.onload=function(){
+
+const saved=
+localStorage.getItem('mahilCurrentUser');
+
+if(saved){
+
+currentUser=
+JSON.parse(saved);
+
+showDashboard();
+
 }
 
-/* SCOREBOARD */
-function showScoreboard(){
-  showPage("page-scoreboard");
-  db.ref("games").once("value").then(s=>{
-    let games=s.val()||{},totals={};
-    for(let gid in games){
-      let pl=games[gid].players||{};
-      for(let pid in pl){
-        let p=pl[pid];
-        if(!totals[p.name])totals[p.name]=0;
-        totals[p.name]+=p.score||0;
-      }
-    }
-    let sorted=Object.entries(totals).sort((a,b)=>b[1]-a[1]);
-    let html="<thead><tr><th>Rank</th><th>Name</th><th>Score</th></tr></thead><tbody>";
-    sorted.forEach(([n,sc],i)=>{html+=`<tr><td>${i+1}</td><td>${n}</td><td>${sc}</td></tr>`;});
-    html+="</tbody>"; document.getElementById("scoreboard-table").innerHTML=html;
-  });
+};
+
+function hideAll(){
+
+document.getElementById('loginPage').classList.add('hidden');
+document.getElementById('signupPage').classList.add('hidden');
+document.getElementById('dashboard').classList.add('hidden');
+document.getElementById('joinPage').classList.add('hidden');
+document.getElementById('settingsPage').classList.add('hidden');
+document.getElementById('adminPage').classList.add('hidden');
+document.getElementById('hostPage').classList.add('hidden');
+document.getElementById('playerPage').classList.add('hidden');
+
 }
+
+function showSignup(){
+
+hideAll();
+
+document.getElementById('signupPage')
+.classList.remove('hidden');
+
+}
+
+function showLogin(){
+
+hideAll();
+
+document.getElementById('loginPage')
+.classList.remove('hidden');
+
+}
+
+function signup(){
+
+const username=
+document.getElementById('signupUsername').value.trim();
+
+const email=
+document.getElementById('signupEmail').value.trim();
+
+const password=
+document.getElementById('signupPassword').value.trim();
+
+const avatar=
+document.getElementById('avatarPreview').src;
+
+if(!username || !email || !password){
+
+alert('Fill all fields');
+
+return;
+
+}
+
+let users=
+JSON.parse(localStorage.getItem('mahilUsers'))
+|| [];
+
+if(users.find(u=>u.username===username)){
+
+alert('Username Exists');
+
+return;
+
+}
+
+const user={
+
+username,
+email,
+password,
+avatar,
+score:0,
+sound:'1',
+role:
+username.toLowerCase()==='admin'
+? 'admin'
+: 'player'
+
+};
+
+users.push(user);
+
+localStorage.setItem(
+'mahilUsers',
+JSON.stringify(users)
+);
+
+alert('Account Created');
+
+showLogin();
+
+}
+
+function login(){
+
+const username=
+document.getElementById('loginUsername').value.trim();
+
+const password=
+document.getElementById('loginPassword').value.trim();
+
+const users=
+JSON.parse(localStorage.getItem('mahilUsers'))
+|| [];
+
+const user=
+users.find(
+u=>
+u.username===username &&
+u.password===password
+);
+
+if(!user){
+
+alert('Invalid Login');
+
+return;
+
+}
+
+currentUser=user;
+
+localStorage.setItem(
+'mahilCurrentUser',
+JSON.stringify(currentUser)
+);
+
+showDashboard();
+
+}
+
+function showDashboard(){
+
+hideAll();
+
+document.getElementById('dashboard')
+.classList.remove('hidden');
+
+document.getElementById('profileAvatar')
+.src=currentUser.avatar;
+
+document.getElementById('profileName')
+.innerText=currentUser.username;
+
+document.getElementById('profileEmail')
+.innerText=currentUser.email;
+
+if(currentUser.role==='admin'){
+
+document.getElementById('adminBtn')
+.style.display='block';
+
+}else{
+
+document.getElementById('adminBtn')
+.style.display='none';
+
+}
+
+}
+
+function goDashboard(){
+
+showDashboard();
+
+}
+
+function logout(){
+
+localStorage.removeItem(
+'mahilCurrentUser'
+);
+
+location.reload();
+
+}
+
+function openSettings(){
+
+hideAll();
+
+document.getElementById('settingsPage')
+.classList.remove('hidden');
+
+document.getElementById('changeName')
+.value=currentUser.username;
+
+document.getElementById('soundSelect')
+.value=currentUser.sound;
+
+}
+
+function saveSettings(){
+
+const newName=
+document.getElementById('changeName').value.trim();
+
+const sound=
+document.getElementById('soundSelect').value;
+
+const avatarFile=
+document.getElementById('changeAvatar').files[0];
+
+if(newName){
+
+currentUser.username=newName;
+
+}
+
+currentUser.sound=sound;
+
+if(avatarFile){
+
+const reader=new FileReader();
+
+reader.onload=function(event){
+
+currentUser.avatar=
+event.target.result;
+
+finishSave();
+
+};
+
+reader.readAsDataURL(avatarFile);
+
+}else{
+
+finishSave();
+
+}
+
+}
+
+function finishSave(){
+
+let users=
+JSON.parse(localStorage.getItem('mahilUsers'))
+|| [];
+
+users=
+users.map(u=>
+u.email===currentUser.email
+? currentUser
+: u
+);
+
+localStorage.setItem(
+'mahilUsers',
+JSON.stringify(users)
+);
+
+localStorage.setItem(
+'mahilCurrentUser',
+JSON.stringify(currentUser)
+);
+
+alert('Settings Saved');
+
+location.reload();
+
+}
+
+function openAdminPanel(){
+
+if(currentUser.role!=='admin'){
+
+alert('Admin Only');
+
+return;
+
+}
+
+hideAll();
+
+document.getElementById('adminPage')
+.classList.remove('hidden');
+
+loadUsers();
+
+}
+
+function loadUsers(){
+
+const users=
+JSON.parse(localStorage.getItem('mahilUsers'))
+|| [];
+
+let html='';
+
+users.forEach((user,index)=>{
+
+html+=`
+
+<div class="player">
+
+<div class="player-left">
+
+<img src="${user.avatar}">
+
+<div>
+
+<b>${user.username}</b><br>
+
+<small>${user.email}</small><br>
+
+Role: ${user.role}
+
+</div>
+
+</div>
+
+<div>
+
+<button class="role-btn"
+onclick="toggleRole(${index})">
+CHANGE ROLE
+</button>
+
+<button class="delete-btn"
+onclick="deleteUser(${index})">
+REMOVE
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById('allUsers')
+.innerHTML=html;
+
+}
+
+function toggleRole(index){
+
+let users=
+JSON.parse(localStorage.getItem('mahilUsers'))
+|| [];
+
+users[index].role=
+users[index].role==='admin'
+? 'player'
+: 'admin';
+
+localStorage.setItem(
+'mahilUsers',
+JSON.stringify(users)
+);
+
+loadUsers();
+
+}
+
+function deleteUser(index){
+
+let users=
+JSON.parse(localStorage.getItem('mahilUsers'))
+|| [];
+
+users.splice(index,1);
+
+localStorage.setItem(
+'mahilUsers',
+JSON.stringify(users)
+);
+
+loadUsers();
+
+}
+
+function adminAddUser(){
+
+const username=
+document.getElementById('adminNewUser').value.trim();
+
+const email=
+document.getElementById('adminNewMail').value.trim();
+
+const password=
+document.getElementById('adminNewPass').value.trim();
+
+if(!username || !email || !password){
+
+alert('Fill all fields');
+
+return;
+
+}
+
+let users=
+JSON.parse(localStorage.getItem('mahilUsers'))
+|| [];
+
+users.push({
+
+username,
+email,
+password,
+avatar:'https://i.pravatar.cc/150?img=20',
+score:0,
+sound:'1',
+role:'player'
+
+});
+
+localStorage.setItem(
+'mahilUsers',
+JSON.stringify(users)
+);
+
+alert('User Added');
+
+loadUsers();
+
+}
+
+function openJoinPage(){
+
+hideAll();
+
+document.getElementById('joinPage')
+.classList.remove('hidden');
+
+}
+
+function hostGame(){
+
+hideAll();
+
+document.getElementById('hostPage')
+.classList.remove('hidden');
+
+gameRoom=
+Math.floor(
+100000+Math.random()*900000
+).toString();
+
+currentRoom=gameRoom;
+
+gameRooms[gameRoom]={
+
+host:currentUser.username,
+question:'',
+buzzed:false,
+winner:'',
+players:[]
+
+};
+
+document.getElementById('roomCode')
+.innerHTML=
+'ROOM CODE: '+gameRoom;
+
+addPlayerToRoom();
+
+updateBoards();
+
+}
+
+function joinGame(){
+
+const code=
+document.getElementById('joinCode')
+.value.trim();
+
+if(!gameRooms[code]){
+
+alert('Room Not Found');
+
+return;
+
+}
+
+currentRoom=code;
+
+hideAll();
+
+document.getElementById('playerPage')
+.classList.remove('hidden');
+
+addPlayerToRoom();
+
+updateBoards();
+
+alert('Joined Room '+code);
+
+}
+
+function addPlayerToRoom(){
+
+const room=
+gameRooms[currentRoom];
+
+if(!room.players.find(
+p=>p.email===currentUser.email
+)){
+
+room.players.push({
+...currentUser
+});
+
+}
+
+}
+
+function sendQuestion(){
+
+const q=
+document.getElementById('questionInput')
+.value.trim();
+
+if(!q) return;
+
+const room=
+gameRooms[currentRoom];
+
+room.question=q;
+
+room.buzzed=false;
+
+room.winner='';
+
+document.getElementById('question')
+.innerText=q;
+
+document.getElementById('buzzBtn')
+.disabled=false;
+
+document.getElementById('buzzBtn')
+.classList.remove('locked');
+
+document.getElementById('winner')
+.innerHTML='';
+
+document.getElementById('reaction')
+.innerHTML='';
+
+document.getElementById('playerWinner')
+.innerHTML='';
+
+}
+
+function buzz(){
+
+const room=
+gameRooms[currentRoom];
+
+if(room.buzzed) return;
+
+room.buzzed=true;
+
+room.winner=currentUser.username;
+
+const reaction=
+(Math.random()*1.5+0.2)
+.toFixed(3);
+
+document.getElementById('reaction')
+.innerHTML=
+'Reaction Time: '+reaction+'s';
+
+document.getElementById('playerWinner')
+.innerHTML=
+'⚡ '+currentUser.username+
+' BUZZED FIRST';
+
+document.getElementById('winner')
+.innerHTML=
+'⚡ '+currentUser.username+
+' BUZZED FIRST';
+
+document.getElementById('buzzBtn')
+.disabled=true;
+
+document.getElementById('buzzBtn')
+.classList.add('locked');
+
+const sound=
+new Audio(
+buzzSounds[currentUser.sound]
+);
+
+sound.play();
+
+confetti({
+particleCount:220,
+spread:140
+});
+
+gsap.fromTo(
+'.buzzer',
+{scale:1},
+{
+scale:1.15,
+duration:0.2,
+repeat:1,
+yoyo:true
+}
+);
+
+}
+
+function resetBuzzers(){
+
+const room=
+gameRooms[currentRoom];
+
+room.buzzed=false;
+
+room.winner='';
+
+document.getElementById('buzzBtn')
+.disabled=false;
+
+document.getElementById('buzzBtn')
+.classList.remove('locked');
+
+document.getElementById('winner')
+.innerHTML='';
+
+document.getElementById('reaction')
+.innerHTML='';
+
+document.getElementById('playerWinner')
+.innerHTML='';
+
+}
+
+function addPoints(){
+
+const room=
+gameRooms[currentRoom];
+
+const player=
+room.players.find(
+p=>p.username===room.winner
+);
+
+if(player){
+
+player.score+=10;
+
+updateBoards();
+
+}
+
+}
+
+function updateBoards(){
+
+const room=
+gameRooms[currentRoom];
+
+if(!room) return;
+
+let html='';
+
+room.players
+.sort((a,b)=>b.score-a.score)
+.forEach(player=>{
+
+html+=`
+
+<div class="player">
+
+<div class="player-left">
+
+<img src="${player.avatar}">
+
+<div>
+
+<b>${player.username}</b><br>
+
+<small>${player.email}</small>
+
+</div>
+
+</div>
+
+<div>
+${player.score} pts
+</div>
+
+</div>
+
+`;
+
+});
+
+if(document.getElementById('hostScoreboard')){
+
+document.getElementById('hostScoreboard')
+.innerHTML=html;
+
+}
+
+if(document.getElementById('playerScoreboard')){
+
+document.getElementById('playerScoreboard')
+.innerHTML=html;
+
+}
+
+}
+
+function startTimer(){
+
+clearInterval(timerInterval);
+
+let time=10;
+
+document.getElementById('timer')
+.innerHTML=time;
+
+document.getElementById('playerTimer')
+.innerHTML=time;
+
+timerInterval=setInterval(()=>{
+
+time--;
+
+document.getElementById('timer')
+.innerHTML=time;
+
+document.getElementById('playerTimer')
+.innerHTML=time;
+
+if(time<=0){
+
+clearInterval(timerInterval);
+
+}
+
+},1000);
+
+}
+
+document.addEventListener('keydown',e=>{
+
+if(e.code==='Space'){
+
+e.preventDefault();
+
+const btn=
+document.getElementById('buzzBtn');
+
+if(btn && !btn.disabled){
+
+buzz();
+
+}
+
+}
+
+});
+
 </script>
+
 </body>
 </html>
