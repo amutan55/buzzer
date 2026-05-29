@@ -10,7 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 
@@ -30,7 +33,7 @@ overflow-x:hidden;
 
 .container{
 width:95%;
-max-width:1400px;
+max-width:1500px;
 margin:auto;
 padding:20px;
 }
@@ -51,7 +54,7 @@ text-shadow:0 0 20px #00e5ff;
 .glass{
 background:rgba(255,255,255,0.06);
 backdrop-filter:blur(12px);
-border-radius:24px;
+border-radius:25px;
 padding:25px;
 margin-top:20px;
 border:1px solid rgba(255,255,255,0.08);
@@ -222,16 +225,30 @@ margin-top:15px;
 color:#00ff99;
 }
 
-.role-btn{
-background:#22c55e;
-width:auto;
-padding:10px 15px;
+.question-image{
+width:100%;
+max-height:350px;
+object-fit:contain;
+margin-top:20px;
+border-radius:20px;
+display:none;
+background:black;
 }
 
-.delete-btn{
-background:red;
-width:auto;
-padding:10px 15px;
+.qr-box{
+background:white;
+padding:15px;
+border-radius:20px;
+width:230px;
+margin:auto;
+margin-top:20px;
+}
+
+.score-buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:10px;
 }
 
 @media(max-width:900px){
@@ -288,17 +305,26 @@ font-size:2rem;
 
 <div class="topbar">
 
-<button class="back-btn" onclick="showLogin()">⬅ BACK</button>
+<button class="back-btn"
+onclick="showLogin()">
+⬅ BACK
+</button>
 
 </div>
 
 <h2>CREATE ACCOUNT</h2>
 
-<input type="text" id="signupUsername" placeholder="Username">
+<input type="text"
+id="signupUsername"
+placeholder="Username">
 
-<input type="email" id="signupEmail" placeholder="Email">
+<input type="email"
+id="signupEmail"
+placeholder="Email">
 
-<input type="password" id="signupPassword" placeholder="Password">
+<input type="password"
+id="signupPassword"
+placeholder="Password">
 
 <img id="avatarPreview"
 class="avatar-preview"
@@ -360,9 +386,8 @@ SETTINGS
 </button>
 
 <button class="big-btn"
-onclick="openAdminPanel()"
-id="adminBtn">
-ROLE MANAGEMENT
+onclick="clearRooms()">
+CLEAR ROOMS
 </button>
 
 </div>
@@ -435,26 +460,6 @@ SAVE SETTINGS
 
 </div>
 
-<!-- ADMIN -->
-
-<div id="adminPage"
-class="glass hidden">
-
-<div class="topbar">
-
-<button class="back-btn"
-onclick="goDashboard()">
-⬅ BACK
-</button>
-
-<h2>ROLE MANAGEMENT</h2>
-
-</div>
-
-<div id="allUsers"></div>
-
-</div>
-
 <!-- HOST -->
 
 <div id="hostPage"
@@ -474,8 +479,16 @@ onclick="goDashboard()">
 <div class="room-code"
 id="roomCode"></div>
 
+<div class="qr-box">
+<div id="qrcode"></div>
+</div>
+
 <textarea id="questionInput"
 placeholder="Enter Question"></textarea>
+
+<input type="file"
+id="questionImageInput"
+accept="image/*">
 
 <button onclick="sendQuestion()">
 SEND QUESTION
@@ -485,12 +498,20 @@ SEND QUESTION
 RESET BUZZERS
 </button>
 
-<button onclick="startTimer()">
-START TIMER
-</button>
+<div class="score-buttons">
 
 <button onclick="addPoints()">
 +10 POINTS
+</button>
+
+<button onclick="minusPoints()">
+-10 POINTS
+</button>
+
+</div>
+
+<button onclick="startTimer()">
+START TIMER
 </button>
 
 <div class="timer"
@@ -536,6 +557,9 @@ LOGOUT
 id="question">
 Waiting for question...
 </div>
+
+<img id="questionImage"
+class="question-image">
 
 <button class="buzzer"
 id="buzzBtn"
@@ -646,7 +670,6 @@ document.getElementById('signupPage').classList.add('hidden');
 document.getElementById('dashboard').classList.add('hidden');
 document.getElementById('joinPage').classList.add('hidden');
 document.getElementById('settingsPage').classList.add('hidden');
-document.getElementById('adminPage').classList.add('hidden');
 document.getElementById('hostPage').classList.add('hidden');
 document.getElementById('playerPage').classList.add('hidden');
 
@@ -711,11 +734,7 @@ email,
 password,
 avatar,
 sound:'1',
-score:0,
-role:
-username.toLowerCase()==='admin'
-? 'admin'
-: 'player'
+score:0
 
 });
 
@@ -784,24 +803,6 @@ document.getElementById('profileName')
 document.getElementById('profileEmail')
 .innerText=currentUser.email;
 
-if(currentUser.role==='admin'){
-
-document.getElementById('adminBtn')
-.style.display='block';
-
-}else{
-
-document.getElementById('adminBtn')
-.style.display='none';
-
-}
-
-}
-
-function goDashboard(){
-
-showDashboard();
-
 }
 
 function logout(){
@@ -811,6 +812,12 @@ localStorage.removeItem(
 );
 
 location.reload();
+
+}
+
+function goDashboard(){
+
+showDashboard();
 
 }
 
@@ -900,117 +907,6 @@ location.reload();
 
 }
 
-function openAdminPanel(){
-
-if(currentUser.role!=='admin'){
-
-alert('Admin Only');
-
-return;
-
-}
-
-hideAll();
-
-document.getElementById('adminPage')
-.classList.remove('hidden');
-
-loadUsers();
-
-}
-
-function loadUsers(){
-
-const users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
-
-let html='';
-
-users.forEach((user,index)=>{
-
-html+=`
-
-<div class="player">
-
-<div class="player-left">
-
-<img src="${user.avatar}">
-
-<div>
-
-<b>${user.username}</b><br>
-
-<small>${user.email}</small><br>
-
-Role: ${user.role}
-
-</div>
-
-</div>
-
-<div>
-
-<button class="role-btn"
-onclick="toggleRole(${index})">
-CHANGE ROLE
-</button>
-
-<button class="delete-btn"
-onclick="deleteUser(${index})">
-REMOVE
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById('allUsers')
-.innerHTML=html;
-
-}
-
-function toggleRole(index){
-
-let users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
-
-users[index].role=
-users[index].role==='admin'
-? 'player'
-: 'admin';
-
-localStorage.setItem(
-'mahilUsers',
-JSON.stringify(users)
-);
-
-loadUsers();
-
-}
-
-function deleteUser(index){
-
-let users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
-
-users.splice(index,1);
-
-localStorage.setItem(
-'mahilUsers',
-JSON.stringify(users)
-);
-
-loadUsers();
-
-}
-
 function openJoinPage(){
 
 hideAll();
@@ -1040,6 +936,8 @@ host:currentUser.username,
 
 question:'',
 
+questionImage:'',
+
 buzzed:false,
 
 winner:'',
@@ -1053,6 +951,18 @@ saveRooms();
 document.getElementById('roomCode')
 .innerHTML=
 'ROOM CODE: '+roomCode;
+
+document.getElementById('qrcode')
+.innerHTML='';
+
+new QRCode(
+document.getElementById('qrcode'),
+{
+text:roomCode,
+width:200,
+height:200
+}
+);
 
 addPlayerToRoom();
 
@@ -1129,7 +1039,9 @@ const q=
 document.getElementById('questionInput')
 .value.trim();
 
-if(!q) return;
+const file=
+document.getElementById('questionImageInput')
+.files[0];
 
 room.question=q;
 
@@ -1137,7 +1049,28 @@ room.buzzed=false;
 
 room.winner='';
 
+if(file){
+
+const reader=new FileReader();
+
+reader.onload=function(event){
+
+room.questionImage=
+event.target.result;
+
 saveRooms();
+
+};
+
+reader.readAsDataURL(file);
+
+}else{
+
+room.questionImage='';
+
+saveRooms();
+
+}
 
 document.getElementById('question')
 .innerText=q;
@@ -1226,9 +1159,14 @@ document.getElementById('buzzBtn')
 document.getElementById('buzzBtn')
 .classList.remove('locked');
 
-document.getElementById('winner').innerHTML='';
-document.getElementById('reaction').innerHTML='';
-document.getElementById('playerWinner').innerHTML='';
+document.getElementById('winner')
+.innerHTML='';
+
+document.getElementById('reaction')
+.innerHTML='';
+
+document.getElementById('playerWinner')
+.innerHTML='';
 
 }
 
@@ -1249,6 +1187,32 @@ p=>p.username===room.winner
 if(player){
 
 player.score+=10;
+
+saveRooms();
+
+updateBoards();
+
+}
+
+}
+
+function minusPoints(){
+
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
+
+const room=
+gameRooms[currentRoom];
+
+const player=
+room.players.find(
+p=>p.username===room.winner
+);
+
+if(player){
+
+player.score-=10;
 
 saveRooms();
 
@@ -1293,7 +1257,7 @@ html+=`
 
 </div>
 
-<div>
+<div style="font-size:1.2rem">
 ${player.score} pts
 </div>
 
@@ -1351,6 +1315,14 @@ clearInterval(timerInterval);
 
 }
 
+function clearRooms(){
+
+localStorage.removeItem('mahilRooms');
+
+alert('Rooms Cleared');
+
+}
+
 setInterval(()=>{
 
 if(!currentRoom) return;
@@ -1369,6 +1341,25 @@ if(document.getElementById('question')){
 document.getElementById('question')
 .innerText=
 room.question || 'Waiting for question...';
+
+}
+
+const img=
+document.getElementById('questionImage');
+
+if(img){
+
+if(room.questionImage){
+
+img.src=room.questionImage;
+
+img.style.display='block';
+
+}else{
+
+img.style.display='none';
+
+}
 
 }
 
