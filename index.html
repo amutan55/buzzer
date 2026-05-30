@@ -10,7 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 
@@ -30,7 +33,7 @@ overflow-x:hidden;
 
 .container{
 width:95%;
-max-width:1400px;
+max-width:1500px;
 margin:auto;
 padding:20px;
 }
@@ -41,21 +44,20 @@ display:none!important;
 
 .title{
 text-align:center;
-font-size:3.2rem;
+font-size:3rem;
 font-weight:900;
 margin:20px 0;
 color:#00e5ff;
-text-shadow:0 0 25px #00e5ff;
+text-shadow:0 0 20px #00e5ff;
 }
 
 .glass{
-background:rgba(255,255,255,0.07);
-backdrop-filter:blur(14px);
-border:1px solid rgba(255,255,255,0.08);
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(12px);
 border-radius:25px;
 padding:25px;
 margin-top:20px;
-box-shadow:0 0 30px rgba(0,0,0,0.3);
+border:1px solid rgba(255,255,255,0.08);
 }
 
 .topbar{
@@ -63,8 +65,8 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 gap:10px;
-margin-bottom:20px;
 flex-wrap:wrap;
+margin-bottom:20px;
 }
 
 .profile{
@@ -81,12 +83,6 @@ object-fit:cover;
 border:3px solid #00e5ff;
 }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
 .dashboard-buttons{
 display:grid;
 grid-template-columns:1fr 1fr;
@@ -96,8 +92,14 @@ margin-top:25px;
 
 .big-btn{
 height:140px;
-font-size:1.5rem;
+font-size:1.4rem;
 font-weight:900;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
 }
 
 input,
@@ -108,9 +110,9 @@ width:100%;
 padding:15px;
 margin-top:10px;
 border:none;
-border-radius:16px;
-font-size:1rem;
+border-radius:15px;
 font-family:'Orbitron',sans-serif;
+font-size:1rem;
 }
 
 input,
@@ -123,8 +125,8 @@ color:white;
 button{
 background:linear-gradient(135deg,#00e5ff,#ff00d4);
 color:white;
-font-weight:700;
 cursor:pointer;
+font-weight:700;
 transition:0.3s;
 }
 
@@ -133,41 +135,47 @@ transform:scale(1.03);
 }
 
 .logout-btn{
-width:auto;
-padding:12px 20px;
 background:red;
+width:auto;
+padding:12px 18px;
 }
 
 .back-btn{
-width:auto;
-padding:12px 20px;
 background:#2563eb;
+width:auto;
+padding:12px 18px;
 }
 
 .avatar-preview{
 width:120px;
 height:120px;
 border-radius:50%;
-object-fit:cover;
-border:4px solid #00e5ff;
 display:block;
 margin:auto;
+object-fit:cover;
+border:4px solid #00e5ff;
+}
+
+.room-code{
+font-size:2rem;
+text-align:center;
+color:#00e5ff;
+margin-top:10px;
 }
 
 .question{
 font-size:2rem;
 text-align:center;
-color:#00e5ff;
 margin-top:20px;
+color:#00e5ff;
 }
 
 .buzzer{
-width:260px;
-height:260px;
+width:240px;
+height:240px;
 border-radius:50%;
 margin:30px auto;
 display:block;
-border:none;
 font-size:3rem;
 font-weight:900;
 background:radial-gradient(circle,#ffe600,#ff9800);
@@ -180,20 +188,13 @@ background:#555!important;
 box-shadow:none!important;
 }
 
-.room-code{
-text-align:center;
-font-size:2rem;
-color:#00e5ff;
-margin-top:15px;
-}
-
 .player{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:15px;
-background:rgba(255,255,255,0.06);
-border-radius:18px;
+padding:14px;
+background:rgba(255,255,255,0.05);
+border-radius:16px;
 margin-top:10px;
 }
 
@@ -211,48 +212,62 @@ object-fit:cover;
 }
 
 .timer{
-font-size:2rem;
 text-align:center;
-color:#ffe600;
+font-size:2rem;
 margin-top:15px;
+color:#ffe600;
 }
 
 .winner{
-font-size:1.5rem;
 text-align:center;
-color:#00ff99;
+font-size:1.4rem;
 margin-top:15px;
+color:#00ff99;
 }
 
-.delete-btn{
-background:red;
-width:auto;
-padding:10px 15px;
+.question-image{
+width:100%;
+max-height:350px;
+object-fit:contain;
+margin-top:20px;
+border-radius:20px;
+display:none;
+background:black;
 }
 
-.role-btn{
-background:#22c55e;
-width:auto;
-padding:10px 15px;
+.qr-box{
+background:white;
+padding:15px;
+border-radius:20px;
+width:230px;
+margin:auto;
+margin-top:20px;
+}
+
+.score-buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:10px;
 }
 
 @media(max-width:900px){
-
-.grid{
-grid-template-columns:1fr;
-}
 
 .dashboard-buttons{
 grid-template-columns:1fr;
 }
 
+.grid{
+grid-template-columns:1fr;
+}
+
 .title{
-font-size:2.2rem;
+font-size:2rem;
 }
 
 .buzzer{
-width:210px;
-height:210px;
+width:200px;
+height:200px;
 font-size:2rem;
 }
 
@@ -274,28 +289,19 @@ font-size:2rem;
 
 <h2>LOGIN</h2>
 
-<input type="text"
-id="loginUsername"
-placeholder="Username">
+<input type="text" id="loginUsername" placeholder="Username">
 
-<input type="password"
-id="loginPassword"
-placeholder="Password">
+<input type="password" id="loginPassword" placeholder="Password">
 
-<button onclick="login()">
-LOGIN
-</button>
+<button onclick="login()">LOGIN</button>
 
-<button onclick="showSignup()">
-SIGN UP
-</button>
+<button onclick="showSignup()">SIGN UP</button>
 
 </div>
 
 <!-- SIGNUP -->
 
-<div id="signupPage"
-class="glass hidden">
+<div id="signupPage" class="glass hidden">
 
 <div class="topbar">
 
@@ -337,7 +343,7 @@ CREATE ACCOUNT
 <!-- DASHBOARD -->
 
 <div id="dashboard"
-class="hidden glass">
+class="glass hidden">
 
 <div class="topbar">
 
@@ -362,10 +368,6 @@ LOGOUT
 
 </div>
 
-<h2 style="text-align:center">
-WELCOME TO MAHIL QUIZ ARENA
-</h2>
-
 <div class="dashboard-buttons">
 
 <button class="big-btn"
@@ -384,9 +386,8 @@ SETTINGS
 </button>
 
 <button class="big-btn"
-onclick="openAdminPanel()"
-id="adminBtn">
-ROLE MANAGEMENT
+onclick="clearRooms()">
+CLEAR ROOMS
 </button>
 
 </div>
@@ -396,7 +397,7 @@ ROLE MANAGEMENT
 <!-- JOIN PAGE -->
 
 <div id="joinPage"
-class="hidden glass">
+class="glass hidden">
 
 <div class="topbar">
 
@@ -405,7 +406,7 @@ onclick="goDashboard()">
 ⬅ BACK
 </button>
 
-<h2>JOIN GAME</h2>
+<h2>JOIN ROOM</h2>
 
 </div>
 
@@ -422,7 +423,7 @@ JOIN ROOM
 <!-- SETTINGS -->
 
 <div id="settingsPage"
-class="hidden glass">
+class="glass hidden">
 
 <div class="topbar">
 
@@ -459,50 +460,10 @@ SAVE SETTINGS
 
 </div>
 
-<!-- ADMIN -->
-
-<div id="adminPage"
-class="hidden glass">
-
-<div class="topbar">
-
-<button class="back-btn"
-onclick="goDashboard()">
-⬅ BACK
-</button>
-
-<h2>ROLE MANAGEMENT</h2>
-
-</div>
-
-<div id="allUsers"></div>
-
-<h2 style="margin-top:30px">
-ADD NEW USER
-</h2>
-
-<input type="text"
-id="adminNewUser"
-placeholder="Username">
-
-<input type="email"
-id="adminNewMail"
-placeholder="Email">
-
-<input type="password"
-id="adminNewPass"
-placeholder="Password">
-
-<button onclick="adminAddUser()">
-ADD USER
-</button>
-
-</div>
-
 <!-- HOST -->
 
 <div id="hostPage"
-class="hidden glass">
+class="glass hidden">
 
 <div class="topbar">
 
@@ -513,18 +474,21 @@ onclick="goDashboard()">
 
 <h2>HOST PANEL</h2>
 
-<button class="logout-btn"
-onclick="logout()">
-LOGOUT
-</button>
-
 </div>
 
 <div class="room-code"
 id="roomCode"></div>
 
+<div class="qr-box">
+<div id="qrcode"></div>
+</div>
+
 <textarea id="questionInput"
 placeholder="Enter Question"></textarea>
+
+<input type="file"
+id="questionImageInput"
+accept="image/*">
 
 <button onclick="sendQuestion()">
 SEND QUESTION
@@ -534,12 +498,20 @@ SEND QUESTION
 RESET BUZZERS
 </button>
 
-<button onclick="startTimer()">
-START TIMER
-</button>
+<div class="score-buttons">
 
 <button onclick="addPoints()">
 +10 POINTS
+</button>
+
+<button onclick="minusPoints()">
+-10 POINTS
+</button>
+
+</div>
+
+<button onclick="startTimer()">
+START TIMER
 </button>
 
 <div class="timer"
@@ -586,6 +558,9 @@ id="question">
 Waiting for question...
 </div>
 
+<img id="questionImage"
+class="question-image">
+
 <button class="buzzer"
 id="buzzBtn"
 onclick="buzz()">
@@ -622,19 +597,33 @@ id="playerTimer">
 <script>
 
 let currentUser=null;
-let gameRoom='';
+
 let currentRoom='';
+
 let timerInterval=null;
 
-const gameRooms={};
+let gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
 
 const buzzSounds={
+
 1:'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',
 2:'https://assets.mixkit.co/active_storage/sfx/1018/1018-preview.mp3',
 3:'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3',
 4:'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3',
 5:'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'
+
 };
+
+function saveRooms(){
+
+localStorage.setItem(
+'mahilRooms',
+JSON.stringify(gameRooms)
+);
+
+}
 
 document.getElementById('avatarInput')
 .addEventListener('change',e=>{
@@ -681,7 +670,6 @@ document.getElementById('signupPage').classList.add('hidden');
 document.getElementById('dashboard').classList.add('hidden');
 document.getElementById('joinPage').classList.add('hidden');
 document.getElementById('settingsPage').classList.add('hidden');
-document.getElementById('adminPage').classList.add('hidden');
 document.getElementById('hostPage').classList.add('hidden');
 document.getElementById('playerPage').classList.add('hidden');
 
@@ -739,22 +727,16 @@ return;
 
 }
 
-const user={
+users.push({
 
 username,
 email,
 password,
 avatar,
-score:0,
 sound:'1',
-role:
-username.toLowerCase()==='admin'
-? 'admin'
-: 'player'
+score:0
 
-};
-
-users.push(user);
+});
 
 localStorage.setItem(
 'mahilUsers',
@@ -821,24 +803,6 @@ document.getElementById('profileName')
 document.getElementById('profileEmail')
 .innerText=currentUser.email;
 
-if(currentUser.role==='admin'){
-
-document.getElementById('adminBtn')
-.style.display='block';
-
-}else{
-
-document.getElementById('adminBtn')
-.style.display='none';
-
-}
-
-}
-
-function goDashboard(){
-
-showDashboard();
-
 }
 
 function logout(){
@@ -848,6 +812,12 @@ localStorage.removeItem(
 );
 
 location.reload();
+
+}
+
+function goDashboard(){
+
+showDashboard();
 
 }
 
@@ -874,9 +844,6 @@ document.getElementById('changeName').value.trim();
 const sound=
 document.getElementById('soundSelect').value;
 
-const avatarFile=
-document.getElementById('changeAvatar').files[0];
-
 if(newName){
 
 currentUser.username=newName;
@@ -884,6 +851,9 @@ currentUser.username=newName;
 }
 
 currentUser.sound=sound;
+
+const avatarFile=
+document.getElementById('changeAvatar').files[0];
 
 if(avatarFile){
 
@@ -931,166 +901,9 @@ localStorage.setItem(
 JSON.stringify(currentUser)
 );
 
-alert('Settings Saved');
+alert('Saved');
 
 location.reload();
-
-}
-
-function openAdminPanel(){
-
-if(currentUser.role!=='admin'){
-
-alert('Admin Only');
-
-return;
-
-}
-
-hideAll();
-
-document.getElementById('adminPage')
-.classList.remove('hidden');
-
-loadUsers();
-
-}
-
-function loadUsers(){
-
-const users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
-
-let html='';
-
-users.forEach((user,index)=>{
-
-html+=`
-
-<div class="player">
-
-<div class="player-left">
-
-<img src="${user.avatar}">
-
-<div>
-
-<b>${user.username}</b><br>
-
-<small>${user.email}</small><br>
-
-Role: ${user.role}
-
-</div>
-
-</div>
-
-<div>
-
-<button class="role-btn"
-onclick="toggleRole(${index})">
-CHANGE ROLE
-</button>
-
-<button class="delete-btn"
-onclick="deleteUser(${index})">
-REMOVE
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById('allUsers')
-.innerHTML=html;
-
-}
-
-function toggleRole(index){
-
-let users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
-
-users[index].role=
-users[index].role==='admin'
-? 'player'
-: 'admin';
-
-localStorage.setItem(
-'mahilUsers',
-JSON.stringify(users)
-);
-
-loadUsers();
-
-}
-
-function deleteUser(index){
-
-let users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
-
-users.splice(index,1);
-
-localStorage.setItem(
-'mahilUsers',
-JSON.stringify(users)
-);
-
-loadUsers();
-
-}
-
-function adminAddUser(){
-
-const username=
-document.getElementById('adminNewUser').value.trim();
-
-const email=
-document.getElementById('adminNewMail').value.trim();
-
-const password=
-document.getElementById('adminNewPass').value.trim();
-
-if(!username || !email || !password){
-
-alert('Fill all fields');
-
-return;
-
-}
-
-let users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
-
-users.push({
-
-username,
-email,
-password,
-avatar:'https://i.pravatar.cc/150?img=20',
-score:0,
-sound:'1',
-role:'player'
-
-});
-
-localStorage.setItem(
-'mahilUsers',
-JSON.stringify(users)
-);
-
-alert('User Added');
-
-loadUsers();
 
 }
 
@@ -1110,26 +923,46 @@ hideAll();
 document.getElementById('hostPage')
 .classList.remove('hidden');
 
-gameRoom=
+const roomCode=
 Math.floor(
 100000+Math.random()*900000
 ).toString();
 
-currentRoom=gameRoom;
+currentRoom=roomCode;
 
-gameRooms[gameRoom]={
+gameRooms[roomCode]={
 
 host:currentUser.username,
+
 question:'',
+
+questionImage:'',
+
 buzzed:false,
+
 winner:'',
+
 players:[]
 
 };
 
+saveRooms();
+
 document.getElementById('roomCode')
 .innerHTML=
-'ROOM CODE: '+gameRoom;
+'ROOM CODE: '+roomCode;
+
+document.getElementById('qrcode')
+.innerHTML='';
+
+new QRCode(
+document.getElementById('qrcode'),
+{
+text:roomCode,
+width:200,
+height:200
+}
+);
 
 addPlayerToRoom();
 
@@ -1138,6 +971,10 @@ updateBoards();
 }
 
 function joinGame(){
+
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
 
 const code=
 document.getElementById('joinCode')
@@ -1168,6 +1005,10 @@ alert('Joined Room '+code);
 
 function addPlayerToRoom(){
 
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
+
 const room=
 gameRooms[currentRoom];
 
@@ -1181,24 +1022,55 @@ room.players.push({
 
 }
 
+saveRooms();
+
 }
 
 function sendQuestion(){
+
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
+
+const room=
+gameRooms[currentRoom];
 
 const q=
 document.getElementById('questionInput')
 .value.trim();
 
-if(!q) return;
-
-const room=
-gameRooms[currentRoom];
+const file=
+document.getElementById('questionImageInput')
+.files[0];
 
 room.question=q;
 
 room.buzzed=false;
 
 room.winner='';
+
+if(file){
+
+const reader=new FileReader();
+
+reader.onload=function(event){
+
+room.questionImage=
+event.target.result;
+
+saveRooms();
+
+};
+
+reader.readAsDataURL(file);
+
+}else{
+
+room.questionImage='';
+
+saveRooms();
+
+}
 
 document.getElementById('question')
 .innerText=q;
@@ -1209,18 +1081,13 @@ document.getElementById('buzzBtn')
 document.getElementById('buzzBtn')
 .classList.remove('locked');
 
-document.getElementById('winner')
-.innerHTML='';
-
-document.getElementById('reaction')
-.innerHTML='';
-
-document.getElementById('playerWinner')
-.innerHTML='';
-
 }
 
 function buzz(){
+
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
 
 const room=
 gameRooms[currentRoom];
@@ -1230,6 +1097,8 @@ if(room.buzzed) return;
 room.buzzed=true;
 
 room.winner=currentUser.username;
+
+saveRooms();
 
 const reaction=
 (Math.random()*1.5+0.2)
@@ -1267,20 +1136,13 @@ particleCount:220,
 spread:140
 });
 
-gsap.fromTo(
-'.buzzer',
-{scale:1},
-{
-scale:1.15,
-duration:0.2,
-repeat:1,
-yoyo:true
-}
-);
-
 }
 
 function resetBuzzers(){
+
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
 
 const room=
 gameRooms[currentRoom];
@@ -1288,6 +1150,8 @@ gameRooms[currentRoom];
 room.buzzed=false;
 
 room.winner='';
+
+saveRooms();
 
 document.getElementById('buzzBtn')
 .disabled=false;
@@ -1308,6 +1172,10 @@ document.getElementById('playerWinner')
 
 function addPoints(){
 
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
+
 const room=
 gameRooms[currentRoom];
 
@@ -1320,6 +1188,34 @@ if(player){
 
 player.score+=10;
 
+saveRooms();
+
+updateBoards();
+
+}
+
+}
+
+function minusPoints(){
+
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
+
+const room=
+gameRooms[currentRoom];
+
+const player=
+room.players.find(
+p=>p.username===room.winner
+);
+
+if(player){
+
+player.score-=10;
+
+saveRooms();
+
 updateBoards();
 
 }
@@ -1327,6 +1223,10 @@ updateBoards();
 }
 
 function updateBoards(){
+
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
 
 const room=
 gameRooms[currentRoom];
@@ -1357,7 +1257,7 @@ html+=`
 
 </div>
 
-<div>
+<div style="font-size:1.2rem">
 ${player.score} pts
 </div>
 
@@ -1414,6 +1314,72 @@ clearInterval(timerInterval);
 },1000);
 
 }
+
+function clearRooms(){
+
+localStorage.removeItem('mahilRooms');
+
+alert('Rooms Cleared');
+
+}
+
+setInterval(()=>{
+
+if(!currentRoom) return;
+
+gameRooms=
+JSON.parse(localStorage.getItem('mahilRooms'))
+|| {};
+
+const room=
+gameRooms[currentRoom];
+
+if(!room) return;
+
+if(document.getElementById('question')){
+
+document.getElementById('question')
+.innerText=
+room.question || 'Waiting for question...';
+
+}
+
+const img=
+document.getElementById('questionImage');
+
+if(img){
+
+if(room.questionImage){
+
+img.src=room.questionImage;
+
+img.style.display='block';
+
+}else{
+
+img.style.display='none';
+
+}
+
+}
+
+updateBoards();
+
+if(room.winner){
+
+document.getElementById('playerWinner')
+.innerHTML=
+'⚡ '+room.winner+
+' BUZZED FIRST';
+
+document.getElementById('winner')
+.innerHTML=
+'⚡ '+room.winner+
+' BUZZED FIRST';
+
+}
+
+},500);
 
 document.addEventListener('keydown',e=>{
 
