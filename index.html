@@ -593,7 +593,35 @@ id="playerTimer">
 </div>
 
 </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  update,
+  onValue
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBtdB6TH1WyazTek7xRI-p82Ca44-hOiIY",
+  authDomain: "mahilbuzz-8d984.firebaseapp.com",
+  projectId: "mahilbuzz-8d984",
+  storageBucket: "mahilbuzz-8d984.firebasestorage.app",
+  messagingSenderId: "364076231129",
+  appId: "1:364076231129:web:538aad1882ce26704d11c8",
+  measurementId: "G-JR0172JSE9"
+};
+
+const app = initializeApp(firebaseConfig);
+window.db = getDatabase(app);
+window.fbRef = ref;
+window.fbSet = set;
+window.fbGet = get;
+window.fbUpdate = update;
+window.fbOnValue = onValue;
+</script>
 <script>
 
 let currentUser=null;
@@ -918,32 +946,17 @@ document.getElementById('joinPage')
 
 function hostGame(){
 
-hideAll();
-
-document.getElementById('hostPage')
-.classList.remove('hidden');
-
-const roomCode=
-Math.floor(
-100000+Math.random()*900000
-).toString();
-
-currentRoom=roomCode;
-
-gameRooms[roomCode]={
-
-host:currentUser.username,
-
-question:'',
-
-questionImage:'',
-
-buzzed:false,
-
-winner:'',
-
-players:[]
-
+await fbSet(
+  fbRef(db, "rooms/" + roomCode),
+  {
+    host: currentUser.username,
+    question: "",
+    questionImage: "",
+    winner: "",
+    buzzed: false,
+    players: {}
+  }
+);
 };
 
 saveRooms();
@@ -972,19 +985,31 @@ updateBoards();
 
 function joinGame(){
 
-gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
+async function joinGame(){
 
-const code=
-document.getElementById('joinCode')
-.value.trim();
+  const code =
+  document.getElementById('joinCode')
+  .value.trim();
 
-if(!gameRooms[code]){
+  const snap =
+  await fbGet(
+    fbRef(db,"rooms/"+code)
+  );
 
-alert('Room Not Found');
+  if(!snap.exists()){
+    alert("Room Not Found");
+    return;
+  }
 
-return;
+  currentRoom = code;
+
+  hideAll();
+
+  document
+  .getElementById("playerPage")
+  .classList.remove("hidden");
+
+}
 
 }
 
@@ -1295,35 +1320,22 @@ document.getElementById('timer')
 document.getElementById('playerTimer')
 .innerHTML=time;
 
-timerInterval=setInterval(()=>{
+timerInterval=fbOnValue(
+  fbRef(db,"rooms/"+currentRoom),
+  snapshot => {
 
-time--;
+    const room =
+    snapshot.val();
 
-document.getElementById('timer')
-.innerHTML=time;
+    if(!room) return;
 
-document.getElementById('playerTimer')
-.innerHTML=time;
+    document.getElementById(
+      "question"
+    ).innerText =
+    room.question || "";
 
-if(time<=0){
-
-clearInterval(timerInterval);
-
-}
-
-},1000);
-
-}
-
-function clearRooms(){
-
-localStorage.removeItem('mahilRooms');
-
-alert('Rooms Cleared');
-
-}
-
-setInterval(()=>{
+  }
+);
 
 if(!currentRoom) return;
 
