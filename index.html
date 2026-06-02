@@ -155,6 +155,7 @@ font-size:2rem;
 text-align:center;
 color:#00e5ff;
 margin-top:10px;
+word-break:break-word;
 }
 
 .question{
@@ -237,6 +238,10 @@ border-radius:20px;
 width:230px;
 margin:auto;
 margin-top:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:230px;
 }
 
 .score-buttons{
@@ -244,6 +249,14 @@ display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
 margin-top:10px;
+}
+
+.small-note{
+text-align:center;
+margin-top:12px;
+font-size:.9rem;
+color:#cbd5e1;
+word-break:break-all;
 }
 
 @media(max-width:900px){
@@ -286,7 +299,6 @@ font-size:2rem;
 </div>
 
 <h2>CREATE ACCOUNT</h2>
-
 <input type="text" id="signupUsername" placeholder="Username">
 <input type="email" id="signupEmail" placeholder="Email">
 <input type="password" id="signupPassword" placeholder="Password">
@@ -354,11 +366,13 @@ font-size:2rem;
 <h2>HOST PANEL</h2>
 </div>
 
-<div class="room-code" id="roomCode"></div>
+<div class="room-code" id="roomCode">ROOM CODE:</div>
 
 <div class="qr-box">
 <div id="qrcode"></div>
 </div>
+
+<div class="small-note" id="joinLinkNote"></div>
 
 <textarea id="questionInput" placeholder="Enter Question"></textarea>
 <input type="file" id="questionImageInput" accept="image/*">
@@ -419,7 +433,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "YOUR_REAL_API_KEY",
   authDomain: "mahilbuzz-8d984.firebaseapp.com",
   databaseURL: "https://mahilbuzz-8d984-default-rtdb.firebaseio.com",
   projectId: "mahilbuzz-8d984",
@@ -439,13 +453,15 @@ window.fbGet = get;
 window.fbUpdate = update;
 window.fbOnValue = onValue;
 window.fbRemove = remove;
+
+window.dispatchEvent(new Event("firebase-ready"));
 </script>
 
 <script>
 let currentUser = null;
 let currentRoom = '';
 let timerInterval = null;
-let roomListenerAttached = false;
+let roomListenerStartedFor = '';
 
 const buzzSounds = {
   1:'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',
@@ -466,13 +482,19 @@ document.getElementById('avatarInput').addEventListener('change', e => {
   }
 });
 
-window.onload = function(){
+window.addEventListener('load', () => {
   const saved = localStorage.getItem('mahilCurrentUser');
   if(saved){
     currentUser = JSON.parse(saved);
     showDashboard();
   }
-};
+
+  const params = new URLSearchParams(window.location.search);
+  const roomParam = params.get('room');
+  if(roomParam){
+    document.getElementById('joinCode').value = roomParam.toUpperCase();
+  }
+});
 
 function hideAll(){
   document.getElementById('loginPage').classList.add('hidden');
@@ -530,9 +552,7 @@ function login(){
   const password = document.getElementById('loginPassword').value.trim();
   const users = JSON.parse(localStorage.getItem('mahilUsers')) || [];
 
-  const user = users.find(
-    u => u.username === username && u.password === password
-  );
+  const user = users.find(u => u.username === username && u.password === password);
 
   if(!user){
     alert('Invalid Login');
@@ -542,6 +562,11 @@ function login(){
   currentUser = user;
   localStorage.setItem('mahilCurrentUser', JSON.stringify(currentUser));
   showDashboard();
+
+  const prefill = document.getElementById('joinCode').value.trim();
+  if(prefill){
+    openJoinPage();
+  }
 }
 
 function showDashboard(){
@@ -594,12 +619,9 @@ function saveSettings(){
 
 function finishSave(){
   let users = JSON.parse(localStorage.getItem('mahilUsers')) || [];
-
   users = users.map(u => u.email === currentUser.email ? currentUser : u);
-
   localStorage.setItem('mahilUsers', JSON.stringify(users));
   localStorage.setItem('mahilCurrentUser', JSON.stringify(currentUser));
-
   alert('Saved');
   location.reload();
 }
@@ -609,23 +631,100 @@ function openJoinPage(){
   document.getElementById('joinPage').classList.remove('hidden');
 }
 
+function waitForFirebase(){
+  return new Promise(resolve => {
+    if(window.db && window.fbRef){
+      resolve();
+    } else {
+      window.addEventListener("firebase-ready", resolve, { once:true });
+    }
+  });
+}
+
 async function hostGame(){
-  hideAll();
-  document.getElementById('hostPage').classList.remove('hidden');
+  await waitForFirebase();
 
-  const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-  currentRoom = roomCode;
+  try{
+    hideAll();
+    document.getElementById('hostPage').classList.remove('hidden');
 
-  await fbSet(
-    fbRef(db, 'rooms/' + roomCode),
-    {
-      host: currentUser.username,
-      question: '',
-      questionImage: '',
-      winner: '',
-      buzzed: false,
-      timer: 10,
-      players: {
+    const roomCode = generateRoomCode();
+    currentRoom = roomCode;
+
+    await fbSet(
+      fbRef(db, 'rooms/' + roomCode),
+      {
+        host: currentUser.username,
+        roomCode: roomCode,
+        question: '',
+        questionImage: '',
+        winner: '',
+        buzzed: false,
+        reaction: '',
+        timer: 10,
+        createdAt: Date.now(),
+        players: {
+          [sanitizeKey(currentUser.email)]: {
+            username: currentUser.username,
+            email: currentUser.email,
+            avatar: currentUser.avatar,
+            sound: currentUser.sound || '1',
+            score: 0
+          }
+        }
+      }
+    );
+
+    document.getElementById('roomCode').textContent = 'ROOM CODE: ' + roomCode;
+
+    const joinURL = new URL(window.location.href);
+    joinURL.searchParams.set('room', roomCode);
+
+    const qrContainer = document.getElementById('qrcode');
+    qrContainer.innerHTML = '';
+
+    new QRCode(qrContainer, {
+      text: joinURL.toString(),
+      width: 200,
+      height: 200,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    document.getElementById('joinLinkNote').textContent = joinURL.toString();
+
+    attachRoomListener();
+    alert('Room created: ' + roomCode);
+  }catch(error){
+    console.error(error);
+    alert('Failed to create room: ' + error.message);
+  }
+}
+
+async function joinGame(){
+  await waitForFirebase();
+
+  try{
+    const code = document.getElementById('joinCode').value.trim().toUpperCase();
+
+    if(!code){
+      alert('Enter Room Code');
+      return;
+    }
+
+    const snap = await fbGet(fbRef(db, 'rooms/' + code));
+
+    if(!snap.exists()){
+      alert('Room Not Found');
+      return;
+    }
+
+    currentRoom = code;
+
+    await fbUpdate(
+      fbRef(db, 'rooms/' + code + '/players'),
+      {
         [sanitizeKey(currentUser.email)]: {
           username: currentUser.username,
           email: currentUser.email,
@@ -634,203 +733,154 @@ async function hostGame(){
           score: 0
         }
       }
-    }
-  );
+    );
 
-  document.getElementById('roomCode').innerHTML = 'ROOM CODE: ' + roomCode;
-  document.getElementById('qrcode').innerHTML = '';
+    hideAll();
+    document.getElementById('playerPage').classList.remove('hidden');
 
-  new QRCode(document.getElementById('qrcode'), {
-    text: roomCode,
-    width: 200,
-    height: 200
-  });
+    attachRoomListener();
 
-  attachRoomListener();
-}
-
-async function joinGame(){
-  const code = document.getElementById('joinCode').value.trim().toUpperCase();
-
-  if(!code){
-    alert('Enter Room Code');
-    return;
+    alert('Joined Room ' + code);
+  }catch(error){
+    console.error(error);
+    alert('Join failed: ' + error.message);
   }
-
-  const snap = await fbGet(fbRef(db, 'rooms/' + code));
-
-  if(!snap.exists()){
-    alert('Room Not Found');
-    return;
-  }
-
-  currentRoom = code;
-
-  await addPlayerToRoom();
-
-  hideAll();
-  document.getElementById('playerPage').classList.remove('hidden');
-
-  attachRoomListener();
-
-  alert('Joined Room ' + code);
-}
-
-async function addPlayerToRoom(){
-  if(!currentRoom || !currentUser) return;
-
-  const playerKey = sanitizeKey(currentUser.email);
-
-  await fbUpdate(
-    fbRef(db, 'rooms/' + currentRoom + '/players'),
-    {
-      [playerKey]: {
-        username: currentUser.username,
-        email: currentUser.email,
-        avatar: currentUser.avatar,
-        sound: currentUser.sound || '1',
-        score: 0
-      }
-    }
-  );
 }
 
 async function sendQuestion(){
-  const q = document.getElementById('questionInput').value.trim();
-  const file = document.getElementById('questionImageInput').files[0];
+  await waitForFirebase();
 
-  if(!currentRoom){
-    alert('No active room');
-    return;
-  }
+  try{
+    const q = document.getElementById('questionInput').value.trim();
+    const file = document.getElementById('questionImageInput').files[0];
 
-  let questionImage = '';
-
-  if(file){
-    questionImage = await fileToBase64(file);
-  }
-
-  await fbUpdate(
-    fbRef(db, 'rooms/' + currentRoom),
-    {
-      question: q,
-      questionImage: questionImage,
-      winner: '',
-      buzzed: false,
-      timer: 10
+    if(!currentRoom){
+      alert('No active room');
+      return;
     }
-  );
+
+    let questionImage = '';
+
+    if(file){
+      questionImage = await fileToBase64(file);
+    }
+
+    await fbUpdate(
+      fbRef(db, 'rooms/' + currentRoom),
+      {
+        question: q,
+        questionImage: questionImage,
+        winner: '',
+        buzzed: false,
+        reaction: '',
+        timer: 10
+      }
+    );
+  }catch(error){
+    console.error(error);
+    alert('Failed to send question: ' + error.message);
+  }
 }
 
 async function buzz(){
-  if(!currentRoom) return;
+  await waitForFirebase();
 
-  const snap = await fbGet(fbRef(db, 'rooms/' + currentRoom));
-  if(!snap.exists()) return;
+  try{
+    if(!currentRoom) return;
 
-  const room = snap.val();
+    const snap = await fbGet(fbRef(db, 'rooms/' + currentRoom));
+    if(!snap.exists()) return;
 
-  if(room.buzzed) return;
+    const room = snap.val();
+    if(room.buzzed) return;
 
-  const reaction = (Math.random() * 1.5 + 0.2).toFixed(3);
+    const reaction = (Math.random() * 1.5 + 0.2).toFixed(3);
 
-  await fbUpdate(
-    fbRef(db, 'rooms/' + currentRoom),
-    {
-      buzzed: true,
-      winner: currentUser.username,
-      reaction: reaction
-    }
-  );
+    await fbUpdate(
+      fbRef(db, 'rooms/' + currentRoom),
+      {
+        buzzed: true,
+        winner: currentUser.username,
+        reaction: reaction
+      }
+    );
 
-  document.getElementById('reaction').innerHTML = 'Reaction Time: ' + reaction + 's';
+    const sound = new Audio(buzzSounds[currentUser.sound || '1']);
+    sound.play();
 
-  const sound = new Audio(buzzSounds[currentUser.sound || '1']);
-  sound.play();
-
-  confetti({
-    particleCount:220,
-    spread:140
-  });
+    confetti({
+      particleCount:220,
+      spread:140
+    });
+  }catch(error){
+    console.error(error);
+  }
 }
 
 async function resetBuzzers(){
-  if(!currentRoom) return;
+  await waitForFirebase();
 
-  await fbUpdate(
-    fbRef(db, 'rooms/' + currentRoom),
-    {
-      buzzed: false,
-      winner: '',
-      reaction: '',
-      timer: 10
-    }
-  );
+  try{
+    if(!currentRoom) return;
+
+    await fbUpdate(
+      fbRef(db, 'rooms/' + currentRoom),
+      {
+        buzzed: false,
+        winner: '',
+        reaction: '',
+        timer: 10
+      }
+    );
+  }catch(error){
+    console.error(error);
+  }
 }
 
 async function addPoints(){
-  if(!currentRoom) return;
-
-  const snap = await fbGet(fbRef(db, 'rooms/' + currentRoom));
-  if(!snap.exists()) return;
-
-  const room = snap.val();
-  const players = room.players || {};
-  const winnerName = room.winner;
-
-  let winnerKey = null;
-
-  for(const key in players){
-    if(players[key].username === winnerName){
-      winnerKey = key;
-      break;
-    }
-  }
-
-  if(winnerKey){
-    const currentScore = players[winnerKey].score || 0;
-    await fbUpdate(
-      fbRef(db, 'rooms/' + currentRoom + '/players/' + winnerKey),
-      { score: currentScore + 10 }
-    );
-  }
+  await changeWinnerScore(10);
 }
 
 async function minusPoints(){
-  if(!currentRoom) return;
+  await changeWinnerScore(-10);
+}
 
-  const snap = await fbGet(fbRef(db, 'rooms/' + currentRoom));
-  if(!snap.exists()) return;
+async function changeWinnerScore(delta){
+  await waitForFirebase();
 
-  const room = snap.val();
-  const players = room.players || {};
-  const winnerName = room.winner;
+  try{
+    if(!currentRoom) return;
 
-  let winnerKey = null;
+    const snap = await fbGet(fbRef(db, 'rooms/' + currentRoom));
+    if(!snap.exists()) return;
 
-  for(const key in players){
-    if(players[key].username === winnerName){
-      winnerKey = key;
-      break;
+    const room = snap.val();
+    const players = room.players || {};
+    const winnerName = room.winner;
+
+    let winnerKey = null;
+
+    for(const key in players){
+      if(players[key].username === winnerName){
+        winnerKey = key;
+        break;
+      }
     }
-  }
 
-  if(winnerKey){
-    const currentScore = players[winnerKey].score || 0;
-    await fbUpdate(
-      fbRef(db, 'rooms/' + currentRoom + '/players/' + winnerKey),
-      { score: currentScore - 10 }
-    );
+    if(winnerKey){
+      const currentScore = players[winnerKey].score || 0;
+      await fbUpdate(
+        fbRef(db, 'rooms/' + currentRoom + '/players/' + winnerKey),
+        { score: currentScore + delta }
+      );
+    }
+  }catch(error){
+    console.error(error);
   }
 }
 
 function updateBoards(room){
-  if(!room) return;
-
-  const playersObj = room.players || {};
-  const players = Object.values(playersObj);
-
-  players.sort((a, b) => (b.score || 0) - (a.score || 0));
+  const players = Object.values(room.players || {}).sort((a,b)=>(b.score||0)-(a.score||0));
 
   let html = '';
 
@@ -854,21 +904,23 @@ function updateBoards(room){
 }
 
 function attachRoomListener(){
-  if(!currentRoom || roomListenerAttached) return;
+  if(!currentRoom) return;
+  if(roomListenerStartedFor === currentRoom) return;
 
-  roomListenerAttached = true;
+  roomListenerStartedFor = currentRoom;
 
   fbOnValue(fbRef(db, 'rooms/' + currentRoom), snapshot => {
     const room = snapshot.val();
     if(!room) return;
 
+    document.getElementById('roomCode').textContent = 'ROOM CODE: ' + (room.roomCode || currentRoom);
     document.getElementById('question').innerText = room.question || 'Waiting for question...';
 
     const img = document.getElementById('questionImage');
     if(room.questionImage){
       img.src = room.questionImage;
       img.style.display = 'block';
-    } else {
+    }else{
       img.style.display = 'none';
     }
 
@@ -883,7 +935,7 @@ function attachRoomListener(){
       if(room.reaction){
         document.getElementById('reaction').innerHTML = 'Reaction Time: ' + room.reaction + 's';
       }
-    } else {
+    }else{
       document.getElementById('playerWinner').innerHTML = '';
       document.getElementById('winner').innerHTML = '';
       document.getElementById('reaction').innerHTML = '';
@@ -891,48 +943,66 @@ function attachRoomListener(){
       document.getElementById('buzzBtn').classList.remove('locked');
     }
 
-    if(typeof room.timer !== 'undefined'){
-      document.getElementById('timer').innerHTML = room.timer;
-      document.getElementById('playerTimer').innerHTML = room.timer;
-    }
+    document.getElementById('timer').innerHTML = room.timer ?? 10;
+    document.getElementById('playerTimer').innerHTML = room.timer ?? 10;
   });
 }
 
-function startTimer(){
-  if(!currentRoom) return;
+async function startTimer(){
+  await waitForFirebase();
 
-  clearInterval(timerInterval);
+  try{
+    if(!currentRoom) return;
 
-  let time = 10;
+    clearInterval(timerInterval);
 
-  fbUpdate(fbRef(db, 'rooms/' + currentRoom), { timer: time });
-
-  timerInterval = setInterval(async () => {
-    time--;
+    let time = 10;
     await fbUpdate(fbRef(db, 'rooms/' + currentRoom), { timer: time });
 
-    if(time <= 0){
-      clearInterval(timerInterval);
-    }
-  }, 1000);
+    timerInterval = setInterval(async () => {
+      time--;
+      await fbUpdate(fbRef(db, 'rooms/' + currentRoom), { timer: time });
+      if(time <= 0){
+        clearInterval(timerInterval);
+      }
+    }, 1000);
+  }catch(error){
+    console.error(error);
+  }
 }
 
 async function clearRooms(){
-  await fbRemove(fbRef(db, 'rooms'));
-  alert('All rooms cleared');
+  await waitForFirebase();
+
+  try{
+    await fbRemove(fbRef(db, 'rooms'));
+    alert('All rooms cleared');
+  }catch(error){
+    console.error(error);
+    alert('Failed to clear rooms: ' + error.message);
+  }
 }
 
 function sanitizeKey(email){
-  return email.replace(/[.#$\\[\\]]/g, '_');
+  return email.replace(/[.#$[\]]/g, '_');
 }
 
 function fileToBase64(file){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = e => resolve(e.target.result);
-    reader.onerror = error => reject(error);
+    reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+function generateRoomCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for(let i = 0; i < 6; i++){
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
 }
 
 document.addEventListener('keydown', e => {
