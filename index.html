@@ -3,72 +3,30 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MAHIL QUIZ ARENA </title>
+<title>MAHIL QUIZ ARENA</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg1:#020617;--bg2:#0f172a;--bg3:#1e293b;--cyan:#00e5ff;--pink:#ff00d4;--gold:#ffe600;
-  --green:#10b981;--red:#ef4444;--blue:#3b82f6;--text:#fff;--muted:#cbd5e1;
-}
-body{
-  font-family:'Orbitron',sans-serif;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-}
-body::before{
-  content:'';
-  position:fixed;inset:0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(0,229,255,.10), transparent 22%),
-    radial-gradient(circle at 80% 30%, rgba(255,0,212,.10), transparent 25%),
-    radial-gradient(circle at 50% 80%, rgba(255,230,0,.08), transparent 20%);
-  pointer-events:none;
-}
+:root{--bg1:#020617;--bg2:#0f172a;--bg3:#1e293b;--cyan:#00e5ff;--pink:#ff00d4;--gold:#ffe600;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--text:#fff;--muted:#cbd5e1}
+body{font-family:'Orbitron',sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 20% 20%, rgba(0,229,255,.10), transparent 22%),radial-gradient(circle at 80% 30%, rgba(255,0,212,.10), transparent 25%),radial-gradient(circle at 50% 80%, rgba(255,230,0,.08), transparent 20%);pointer-events:none}
 .container{width:95%;max-width:1600px;margin:auto;padding:20px;position:relative;z-index:1}
 .hidden{display:none!important}
-.title{
-  text-align:center;font-size:3rem;font-weight:900;margin:20px 0;color:var(--cyan);
-  text-shadow:0 0 20px var(--cyan),0 0 50px rgba(0,229,255,.2);
-  letter-spacing:2px;
-}
-.glass{
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(14px);
-  border-radius:24px;
-  padding:24px;
-  margin-top:20px;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 10px 40px rgba(0,0,0,.22);
-  animation:fadeIn .35s ease;
-}
+.title{text-align:center;font-size:3rem;font-weight:900;margin:20px 0;color:var(--cyan);text-shadow:0 0 20px var(--cyan),0 0 50px rgba(0,229,255,.2);letter-spacing:2px}
+.glass{background:rgba(255,255,255,.06);backdrop-filter:blur(14px);border-radius:24px;padding:24px;margin-top:20px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 40px rgba(0,0,0,.22);animation:fadeIn .35s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
 .profile{display:flex;align-items:center;gap:15px}
-.profile img,.avatar-preview{
-  width:65px;height:65px;border-radius:50%;object-fit:cover;border:3px solid var(--cyan);
-  box-shadow:0 0 18px rgba(0,229,255,.35);
-}
+.profile img,.avatar-preview{width:65px;height:65px;border-radius:50%;object-fit:cover;border:3px solid var(--cyan);box-shadow:0 0 18px rgba(0,229,255,.35)}
 .avatar-preview{width:120px;height:120px;display:block;margin:15px auto}
-.dashboard-buttons,.host-actions,.score-buttons,.mode-grid,.admin-actions{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px
-}
+.dashboard-buttons,.host-actions,.score-buttons,.mode-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}
 .big-btn{height:120px;font-size:1.1rem;font-weight:900}
 .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
-input,button,textarea,select{
-  width:100%;padding:14px;margin-top:10px;border:none;border-radius:15px;
-  font-family:'Orbitron',sans-serif;font-size:1rem;outline:none
-}
+input,button,textarea,select{width:100%;padding:14px;margin-top:10px;border:none;border-radius:15px;font-family:'Orbitron',sans-serif;font-size:1rem;outline:none}
 input,textarea,select{background:#111827;color:#fff;border:1px solid rgba(255,255,255,.08)}
-button{
-  background:linear-gradient(135deg,var(--cyan),var(--pink));
-  color:#fff;cursor:pointer;font-weight:700;transition:.22s ease;
-  box-shadow:0 6px 18px rgba(0,0,0,.18)
-}
+button{background:linear-gradient(135deg,var(--cyan),var(--pink));color:#fff;cursor:pointer;font-weight:700;transition:.22s ease;box-shadow:0 6px 18px rgba(0,0,0,.18)}
 button:hover{transform:translateY(-2px) scale(1.01)}
 button:active{transform:translateY(0) scale(.99)}
 .logout-btn{background:linear-gradient(135deg,#dc2626,#7f1d1d);width:auto;padding:12px 18px}
@@ -76,45 +34,22 @@ button:active{transform:translateY(0) scale(.99)}
 .warn-btn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
 .safe-btn{background:linear-gradient(135deg,#10b981,#06b6d4)}
 .dark-btn{background:linear-gradient(135deg,#334155,#0f172a)}
-.admin-btn{background:linear-gradient(135deg,#8b5cf6,#ec4899)}
 .avatar-preview{border-width:4px}
 .room-code,.section-title,.question,.timer,.winner{text-align:center}
-.room-code{
-  font-size:2rem;color:var(--cyan);margin-top:10px;word-break:break-word;
-  text-shadow:0 0 12px rgba(0,229,255,.35)
-}
+.room-code{font-size:2rem;color:var(--cyan);margin-top:10px;word-break:break-word;text-shadow:0 0 12px rgba(0,229,255,.35)}
 .question{font-size:2rem;margin-top:20px;color:var(--cyan);text-shadow:0 0 12px rgba(0,229,255,.3)}
-.buzzer{
-  width:240px;height:240px;border-radius:50%;margin:30px auto;display:block;
-  font-size:3rem;font-weight:900;background:radial-gradient(circle,#ffe600,#ff9800);
-  color:#000;box-shadow:0 0 50px rgba(255,230,0,.55);animation:pulse 1.8s infinite ease-in-out
-}
+.buzzer{width:240px;height:240px;border-radius:50%;margin:30px auto;display:block;font-size:3rem;font-weight:900;background:radial-gradient(circle,#ffe600,#ff9800);color:#000;box-shadow:0 0 50px rgba(255,230,0,.55);animation:pulse 1.8s infinite ease-in-out}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
 .locked{background:#555!important;box-shadow:none!important;animation:none!important}
-.player{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px;background:rgba(255,255,255,.05);border-radius:16px;margin-top:10px;
-  gap:10px;flex-wrap:wrap;border:1px solid rgba(255,255,255,.06)
-}
+.player{display:flex;justify-content:space-between;align-items:center;padding:14px;background:rgba(255,255,255,.05);border-radius:16px;margin-top:10px;gap:10px;flex-wrap:wrap;border:1px solid rgba(255,255,255,.06)}
 .player-left{display:flex;align-items:center;gap:12px}
 .player-left img{width:55px;height:55px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.14)}
 .timer{font-size:2rem;margin-top:15px;color:var(--gold)}
 .winner{font-size:1.1rem;margin-top:15px;color:#00ff99}
-.question-image{
-  width:100%;max-height:350px;object-fit:contain;margin-top:20px;border-radius:20px;display:none;background:#000
-}
-.qr-box{
-  background:#fff;padding:15px;border-radius:20px;width:230px;margin:auto;margin-top:20px;
-  min-height:230px;display:flex;align-items:center;justify-content:center
-}
-.card{
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
-  border-radius:18px;padding:16px;margin-top:15px
-}
-.badge{
-  display:inline-block;padding:6px 10px;border-radius:999px;font-size:.8rem;
-  background:#0ea5e9;color:#fff
-}
+.question-image{width:100%;max-height:350px;object-fit:contain;margin-top:20px;border-radius:20px;display:none;background:#000}
+.qr-box{background:#fff;padding:15px;border-radius:20px;width:230px;margin:auto;margin-top:20px;min-height:230px;display:flex;align-items:center;justify-content:center}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;margin-top:15px}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:.8rem;background:#0ea5e9;color:#fff}
 .muted{color:var(--muted);font-size:.9rem}
 .log-box{max-height:220px;overflow:auto}
 .table{width:100%;border-collapse:collapse;margin-top:10px}
@@ -122,25 +57,14 @@ button:active{transform:translateY(0) scale(.99)}
 .small-note{text-align:center;margin-top:12px;font-size:.9rem;color:var(--muted);word-break:break-all}
 .kick-btn{width:auto;padding:10px 12px;background:linear-gradient(135deg,#f43f5e,#b91c1c)}
 .inline-row{display:flex;gap:10px;flex-wrap:wrap}.inline-row>*{flex:1}
-.scoreboard-row{
-  display:grid;grid-template-columns:46px 1fr auto;gap:14px;align-items:center;
-  padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.08);margin-top:10px;transition:.35s ease;
-}
+.scoreboard-row{display:grid;grid-template-columns:46px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);margin-top:10px;transition:.35s ease}
 .scoreboard-row.rank-up{transform:translateY(-3px);box-shadow:0 0 22px rgba(0,229,255,.16)}
-.rank-pill{
-  width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,var(--cyan),var(--pink));font-weight:900;color:#fff
-}
+.rank-pill{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--cyan),var(--pink));font-weight:900;color:#fff}
 .rank-updated{animation:pop .35s ease}
 @keyframes pop{0%{transform:scale(.98);opacity:.4}100%{transform:scale(1);opacity:1}}
 .avatar-sm{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.16)}
-.scroll-glow{scrollbar-color:#00e5ff #0f172a}
 @media(max-width:1100px){.grid{grid-template-columns:1fr}}
-@media(max-width:900px){
-  .dashboard-buttons,.host-actions,.score-buttons,.mode-grid,.admin-actions,.grid{grid-template-columns:1fr}
-  .title{font-size:2rem}.buzzer{width:200px;height:200px;font-size:2rem}
-}
+@media(max-width:900px){.dashboard-buttons,.host-actions,.score-buttons,.mode-grid,.grid{grid-template-columns:1fr}.title{font-size:2rem}.buzzer{width:200px;height:200px;font-size:2rem}}
 </style>
 </head>
 <body>
@@ -180,10 +104,6 @@ button:active{transform:translateY(0) scale(.99)}
 <button class="big-btn" onclick="openSettings()">SETTINGS</button>
 <button class="big-btn warn-btn" onclick="clearRooms()">CLEAR ROOMS</button>
 </div>
-<div class="dashboard-buttons" style="margin-top:14px">
-<button class="big-btn admin-btn" onclick="openAdminPanel()">ADMIN PANEL</button>
-<button class="big-btn dark-btn" onclick="openProfileTools()">PROFILE TOOLS</button>
-</div>
 </div>
 
 <div id="joinPage" class="glass hidden">
@@ -204,45 +124,6 @@ button:active{transform:translateY(0) scale(.99)}
 <option value="5">Cyber Buzz</option>
 </select>
 <button onclick="saveSettings()">SAVE SETTINGS</button>
-</div>
-
-<div id="adminPage" class="glass hidden">
-<div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>ADMIN PANEL</h2></div>
-<div class="card">
-<h2>Admin Actions</h2>
-<div class="admin-actions">
-<button class="admin-btn" onclick="loadUsers()">REFRESH USERS</button>
-<button class="warn-btn" onclick="purgeInactiveUsers()">PURGE OFFLINE USERS</button>
-<button class="safe-btn" onclick="makeCurrentUserAdmin()">MAKE MYSELF ADMIN</button>
-<button class="dark-btn" onclick="exportRoomData()">EXPORT DATA</button>
-</div>
-</div>
-<div class="card">
-<h2>Manage Users</h2>
-<div id="adminUserList"></div>
-</div>
-<div class="card">
-<h2>Manage Rooms</h2>
-<div id="adminRoomList"></div>
-</div>
-</div>
-
-<div id="profileToolsPage" class="glass hidden">
-<div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>PROFILE TOOLS</h2></div>
-<div class="card">
-<h2>Set Role</h2>
-<select id="roleSelect">
-<option value="player">Player</option>
-<option value="host">Host</option>
-<option value="admin">Admin</option>
-</select>
-<button onclick="saveMyRole()">SAVE ROLE</button>
-</div>
-<div class="card">
-<h2>Quick Utilities</h2>
-<button onclick="copyMyProfile()">COPY PROFILE JSON</button>
-<button class="dark-btn" onclick="toggleCompactScoreboard()">TOGGLE COMPACT SCOREBOARD</button>
-</div>
 </div>
 
 <div id="hostPage" class="glass hidden">
@@ -283,8 +164,6 @@ button:active{transform:translateY(0) scale(.99)}
 <button onclick="minusPoints()">-10 POINTS</button>
 <button onclick="addTeamPoints()">+10 TEAM</button>
 <button onclick="minusTeamPoints()">-10 TEAM</button>
-<button onclick="awardComboPoints()">+BONUS STREAK</button>
-<button onclick="clearWinner()">CLEAR WINNER</button>
 </div>
 
 <div class="timer" id="timer">10</div>
@@ -294,7 +173,7 @@ button:active{transform:translateY(0) scale(.99)}
 <div>
 <div class="card">
 <h2>LIVE SCOREBOARD</h2>
-<div id="hostScoreboard" class="scroll-glow"></div>
+<div id="hostScoreboard"></div>
 </div>
 <div class="card">
 <h2>TEAMS</h2>
@@ -357,13 +236,12 @@ import { getDatabase, ref, set, get, update, onValue, remove, runTransaction, on
 
 const firebaseConfig = {
   apiKey: "YOUR_REAL_API_KEY",
-  authDomain: "mahilbuzz-8d984.firebaseapp.com",
-  databaseURL: "https://mahilbuzz-8d984-default-rtdb.firebaseio.com",
-  projectId: "mahilbuzz-8d984",
-  storageBucket: "mahilbuzz-8d984.firebasestorage.app",
-  messagingSenderId: "364076231129",
-  appId: "1:364076231129:web:538aad1882ce26704d11c8",
-  measurementId: "G-JR0172JSE9"
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -373,7 +251,7 @@ window.dispatchEvent(new Event('firebase-ready'));
 </script>
 
 <script>
-let currentUser=null,currentRoom='',timerInterval=null,roomListenerStartedFor='',presenceRegistered=false,scoreboardCompact=false;
+let currentUser=null,currentRoom='',timerInterval=null,roomListenerStartedFor='',presenceRegistered=false;
 const buzzSounds={1:'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',2:'https://assets.mixkit.co/active_storage/sfx/1018/1018-preview.mp3',3:'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3',4:'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3',5:'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'};
 let previousRanks={};
 
@@ -387,7 +265,7 @@ window.addEventListener('load',()=>{
   if(roomParam)document.getElementById('joinCode').value=roomParam.toUpperCase();
 });
 
-function hideAll(){['loginPage','signupPage','dashboard','joinPage','settingsPage','hostPage','playerPage','adminPage','profileToolsPage'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
+function hideAll(){['loginPage','signupPage','dashboard','joinPage','settingsPage','hostPage','playerPage'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
 function showSignup(){hideAll();document.getElementById('signupPage').classList.remove('hidden')}
 function showLogin(){hideAll();document.getElementById('loginPage').classList.remove('hidden')}
 
@@ -406,11 +284,9 @@ function login(){
   const users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
   const user=users.find(u=>u.username===username&&u.password===password&&!u.banned);
   if(!user)return alert('Invalid Login');
-  currentUser=user;
-  if(!currentUser.role) currentUser.role='player';
+  currentUser=user;if(!currentUser.role) currentUser.role='player';
   localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
-  showDashboard();
-  if(joinCode.value.trim())openJoinPage();
+  showDashboard();if(joinCode.value.trim())openJoinPage();
 }
 
 function showDashboard(){
@@ -422,8 +298,6 @@ function showDashboard(){
 function logout(){localStorage.removeItem('mahilCurrentUser');location.reload()}
 function goDashboard(){showDashboard()}
 function openSettings(){hideAll();settingsPage.classList.remove('hidden');changeName.value=currentUser.username;soundSelect.value=currentUser.sound||'1'}
-function openAdminPanel(){hideAll();adminPage.classList.remove('hidden');loadUsers();loadRooms()}
-function openProfileTools(){hideAll();profileToolsPage.classList.remove('hidden');roleSelect.value=currentUser.role||'player'}
 function openJoinPage(){hideAll();joinPage.classList.remove('hidden')}
 
 function saveSettings(){
@@ -431,11 +305,7 @@ function saveSettings(){
   if(newName)currentUser.username=newName;
   currentUser.sound=sound;
   const avatarFile=changeAvatar.files[0];
-  if(avatarFile){
-    const reader=new FileReader();
-    reader.onload=ev=>{currentUser.avatar=ev.target.result;finishSave()};
-    reader.readAsDataURL(avatarFile)
-  }else finishSave()
+  if(avatarFile){const reader=new FileReader();reader.onload=ev=>{currentUser.avatar=ev.target.result;finishSave()};reader.readAsDataURL(avatarFile)}else finishSave()
 }
 function finishSave(){
   let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
@@ -445,34 +315,11 @@ function finishSave(){
   alert('Saved');location.reload();
 }
 
-function saveMyRole(){
-  const role=roleSelect.value;
-  currentUser.role=role;
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  users=users.map(u=>u.email===currentUser.email?currentUser:u);
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
-  alert('Role saved');
-  showDashboard();
-}
-
-function copyMyProfile(){
-  navigator.clipboard.writeText(JSON.stringify(currentUser,null,2));
-  alert('Profile copied');
-}
-
-function toggleCompactScoreboard(){
-  scoreboardCompact=!scoreboardCompact;
-  alert(scoreboardCompact?'Compact scoreboard enabled':'Compact scoreboard disabled');
-}
-
 function waitForFirebase(){return new Promise(resolve=>{if(window.db&&window.fbRef)resolve();else window.addEventListener('firebase-ready',resolve,{once:true})})}
 function sanitizeKey(email){return email.replace(/[.#$[\]]/g,'_')}
 function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=e=>resolve(e.target.result);reader.onerror=reject;reader.readAsDataURL(file)})}
 function generateRoomCode(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='';for(let i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];return code}
 function getPlayerKey(){return sanitizeKey(currentUser.email)}
-function isAdmin(){return (currentUser.role||'player')==='admin'}
-function isHost(){return (currentUser.role||'player')==='host' || isAdmin()}
 function roomCodeEl(text){document.getElementById('roomCode').textContent=text}
 
 async function hostGame(){
@@ -485,7 +332,7 @@ async function hostGame(){
       question:'',questionImage:'',winner:'',buzzed:false,buzzerLocked:false,reaction:'',timer:10,
       createdAt:Date.now(),mode:'normal',scoreMode:'individual',buzzLog:{},teams:{},
       tournament:{active:false,name:'',currentRound:0,maxRounds:3,history:{}},
-      players:{[getPlayerKey()]:{username:currentUser.username,email:currentUser.email,avatar:currentUser.avatar,sound:currentUser.sound||'1',score:0,team:'',online:true,isHost:true,role:currentUser.role||'host',streak:0}}
+      players:{[getPlayerKey()]:{username:currentUser.username,email:currentUser.email,avatar:currentUser.avatar,sound:currentUser.sound||'1',score:0,team:'',online:true,isHost:true}}
     });
     roomCodeRender(roomCode);await registerPresence();attachRoomListener();alert('Room created: '+roomCode)
   }catch(error){console.error(error);alert('Failed to create room: '+error.message)}
@@ -507,9 +354,7 @@ async function joinGame(){
     const snap=await fbGet(fbRef(db,'rooms/'+code));
     if(!snap.exists())return alert('Room Not Found');
     currentRoom=code;
-    await fbUpdate(fbRef(db,'rooms/'+code+'/players'),{
-      [getPlayerKey()]:{username:currentUser.username,email:currentUser.email,avatar:currentUser.avatar,sound:currentUser.sound||'1',score:0,team:'',online:true,isHost:false,role:currentUser.role||'player',streak:0}
-    });
+    await fbUpdate(fbRef(db,'rooms/'+code+'/players'),{[getPlayerKey()]:{username:currentUser.username,email:currentUser.email,avatar:currentUser.avatar,sound:currentUser.sound||'1',score:0,team:'',online:true,isHost:false}});
     await registerPresence();hideAll();playerPage.classList.remove('hidden');attachRoomListener();alert('Joined Room '+code)
   }catch(error){console.error(error);alert('Join failed: '+error.message)}
 }
@@ -519,7 +364,7 @@ async function registerPresence(){
   presenceRegistered=true;
   const pRef=fbRef(db,'rooms/'+currentRoom+'/players/'+getPlayerKey());
   await fbUpdate(pRef,{online:true,lastSeen:Date.now()});
-  try{const disc=fbOnDisconnect(pRef);await disc.update({online:false,lastSeen:Date.now()})}catch(e){console.warn('Presence setup skipped',e)}
+  try{const disc=fbOnDisconnect(pRef);await disc.update({online:false,lastSeen:Date.now()})}catch(e){}
 }
 
 async function sendQuestion(){
@@ -552,7 +397,6 @@ async function buzz(){
 async function lockBuzzers(){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{buzzerLocked:true})}
 async function unlockBuzzers(){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{buzzerLocked:false,buzzed:false,winner:'',reaction:''})}
 async function resetBuzzers(){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{buzzed:false,winner:'',reaction:'',timer:10,buzzerLocked:false})}
-async function clearWinner(){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{winner:'',buzzed:false,reaction:''})}
 
 async function startTimer(){
   await waitForFirebase();
@@ -584,19 +428,9 @@ async function changeWinnerScore(delta,teamMode){
       await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/teams/'+teamKey),{name:team,score:cur+delta})
     }else{
       const currentScore=players[winnerKey].score||0;
-      const streak=(players[winnerKey].streak||0)+(delta>0?1:0);
-      await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+winnerKey),{score:currentScore+delta,streak})
+      await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+winnerKey),{score:currentScore+delta})
     }
   }catch(error){console.error(error)}
-}
-
-async function awardComboPoints(){
-  const snap=await fbGet(fbRef(db,'rooms/'+currentRoom));if(!snap.exists())return;
-  const room=snap.val(),players=room.players||{},winnerName=room.winner;
-  let winnerKey=null;for(const key in players){if(players[key].username===winnerName){winnerKey=key;break}}
-  if(!winnerKey)return;
-  const bonus=(players[winnerKey].streak||0)>=2?20:10;
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+winnerKey),{score:(players[winnerKey].score||0)+bonus,streak:(players[winnerKey].streak||0)+1});
 }
 
 async function setGameMode(mode){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{mode})}
@@ -627,59 +461,6 @@ async function joinSelectedTeam(){const team=teamSelect.value;if(!team)return al
 async function kickPlayer(email){const key=sanitizeKey(email);if(key===getPlayerKey())return alert('Host cannot kick self here');await fbRemove(fbRef(db,'rooms/'+currentRoom+'/players/'+key))}
 async function clearRooms(){await waitForFirebase();try{await fbRemove(fbRef(db,'rooms'));alert('All rooms cleared')}catch(error){console.error(error);alert('Failed to clear rooms: '+error.message)}}
 
-async function loadUsers(){
-  const users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  adminUserList.innerHTML=users.map(u=>`
-    <div class="player">
-      <div class="player-left"><img src="${u.avatar}" alt="${u.username}"><div><b>${u.username}</b><br><span class="muted">${u.email} • ${u.role||'player'}${u.banned?' • BANNED':''}</span></div></div>
-      <div class="inline-row" style="max-width:320px">
-        <select id="role_${sanitizeKey(u.email)}">
-          <option value="player" ${u.role==='player'?'selected':''}>player</option>
-          <option value="host" ${u.role==='host'?'selected':''}>host</option>
-          <option value="admin" ${u.role==='admin'?'selected':''}>admin</option>
-        </select>
-        <button class="safe-btn" onclick="updateUserRole('${u.email}')">SAVE</button>
-        <button class="warn-btn" onclick="toggleBanUser('${u.email}')">${u.banned?'UNBAN':'BAN'}</button>
-      </div>
-    </div>`).join('') || '<div class="muted">No users</div>';
-}
-
-function loadRooms(){
-  adminRoomList.innerHTML='<div class="muted">Room control is handled from the live host panel in this version.</div>';
-}
-
-function updateUserRole(email){
-  const users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  const key=sanitizeKey(email);
-  const role=document.getElementById('role_'+key).value;
-  const next=users.map(u=>u.email===email?{...u,role}:u);
-  localStorage.setItem('mahilUsers',JSON.stringify(next));
-  if(currentUser.email===email){currentUser.role=role;localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser))}
-  loadUsers();alert('Role updated');
-}
-function toggleBanUser(email){
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  users=users.map(u=>u.email===email?{...u,banned:!u.banned}:u);
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  loadUsers();alert('User status updated');
-}
-function purgeInactiveUsers(){
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  users=users.filter(u=>!u.banned);
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  loadUsers();alert('Inactive/banned users removed');
-}
-function makeCurrentUserAdmin(){
-  currentUser.role='admin';
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  users=users.map(u=>u.email===currentUser.email?currentUser:u);
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
-  alert('You are now admin');
-  showDashboard();
-}
-function exportRoomData(){navigator.clipboard.writeText(JSON.stringify(JSON.parse(localStorage.getItem('mahilUsers')||'[]'),null,2));alert('Exported users JSON to clipboard')}
-
 function attachRoomListener(){
   if(!currentRoom||roomListenerStartedFor===currentRoom)return;
   roomListenerStartedFor=currentRoom;
@@ -691,13 +472,8 @@ function attachRoomListener(){
     const img=document.getElementById('questionImage');
     if(room.questionImage){img.src=room.questionImage;img.style.display='block'}else img.style.display='none';
     renderPlayers(room);renderTeams(room);renderBuzzLog(room);renderTournament(room);updateBoards(room);
-    if(room.winner){
-      playerWinner.innerHTML='⚡ '+room.winner+' BUZZED FIRST';winner.innerHTML='⚡ '+room.winner+' BUZZED FIRST';buzzBtn.disabled=true;buzzBtn.classList.add('locked');
-      if(room.reaction)reaction.innerHTML='Reaction Time: '+room.reaction+'s';
-    }else{
-      playerWinner.innerHTML='';winner.innerHTML='';reaction.innerHTML='';
-      buzzBtn.disabled=!!room.buzzerLocked;buzzBtn.classList.toggle('locked',!!room.buzzerLocked);
-    }
+    if(room.winner){playerWinner.innerHTML='⚡ '+room.winner+' BUZZED FIRST';winner.innerHTML='⚡ '+room.winner+' BUZZED FIRST';buzzBtn.disabled=true;buzzBtn.classList.add('locked');if(room.reaction)reaction.innerHTML='Reaction Time: '+room.reaction+'s'}
+    else{playerWinner.innerHTML='';winner.innerHTML='';reaction.innerHTML='';buzzBtn.disabled=!!room.buzzerLocked;buzzBtn.classList.toggle('locked',!!room.buzzerLocked)}
     lockState.innerHTML=room.buzzerLocked?'🔒 Host locked buzzer':'🟢 Buzzer open';
     timer.innerHTML=room.timer??10;playerTimer.innerHTML=room.timer??10;fillTeamSelect(room);
   });
@@ -716,26 +492,13 @@ function animateLeaderboard(rows){
 
 function updateBoards(room){
   const players=Object.values(room.players||{}).sort((a,b)=>(b.score||0)-(a.score||0));
-  let html='';
-  const rowEls=[];
+  let html='';const rowEls=[];
   players.forEach((player,idx)=>{
     const elId='score_'+sanitizeKey(player.email);
-    html+=`
-      <div id="${elId}" class="${scoreboardCompact?'scoreboard-row compact':'scoreboard-row'}">
-        <div class="rank-pill">${idx+1}</div>
-        <div class="player-left">
-          <img class="avatar-sm" src="${player.avatar}" alt="${player.username}">
-          <div>
-            <b>${player.username}</b><br>
-            <small class="muted">${player.team||'No Team'} • ${player.online?'Online':'Offline'} • ${player.role||'player'}</small>
-          </div>
-        </div>
-        <div style="font-size:1.2rem">${player.score||0} pts</div>
-      </div>`;
+    html+=`<div id="${elId}" class="scoreboard-row"><div class="rank-pill">${idx+1}</div><div class="player-left"><img class="avatar-sm" src="${player.avatar}" alt="${player.username}"><div><b>${player.username}</b><br><small class="muted">${player.team||'No Team'} • ${player.online?'Online':'Offline'}</small></div></div><div style="font-size:1.2rem">${player.score||0} pts</div></div>`;
     rowEls.push({email:player.email,el:null});
   });
-  hostScoreboard.innerHTML=html;
-  playerScoreboard.innerHTML=html;
+  hostScoreboard.innerHTML=html;playerScoreboard.innerHTML=html;
   players.forEach((player,idx)=>{rowEls[idx].el=document.getElementById('score_'+sanitizeKey(player.email))});
   animateLeaderboard(rowEls);
 }
@@ -749,9 +512,7 @@ function renderTeams(room){
 
 function renderPlayers(room){
   const players=Object.values(room.players||{});
-  let html='';players.forEach(p=>{
-    html+=`<div class="player"><div class="player-left"><img src="${p.avatar}" alt="${p.username}"><div><b>${p.username}</b><br><span class="muted">${p.team||'No Team'} • ${p.online?'Online':'Offline'} • ${p.role||'player'}</span></div></div><button class="kick-btn" onclick="kickPlayer('${p.email}')">KICK</button></div>`;
-  });
+  let html='';players.forEach(p=>{html+=`<div class="player"><div class="player-left"><img src="${p.avatar}" alt="${p.username}"><div><b>${p.username}</b><br><span class="muted">${p.team||'No Team'} • ${p.online?'Online':'Offline'}</span></div></div><button class="kick-btn" onclick="kickPlayer('${p.email}')">KICK</button></div>`});
   hostPlayers.innerHTML=html;
 }
 
@@ -779,13 +540,7 @@ function fillTeamSelect(room){
   teamSelect.innerHTML=options;
 }
 
-document.addEventListener('keydown',e=>{
-  if(e.code==='Space'){
-    e.preventDefault();
-    const btn=document.getElementById('buzzBtn');
-    if(btn&&!btn.disabled)buzz();
-  }
-});
+document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();const btn=document.getElementById('buzzBtn');if(btn&&!btn.disabled)buzz()}})
 </script>
 </body>
 </html>
