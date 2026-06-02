@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>MAHIL QUIZ ARENA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -196,6 +190,7 @@ padding:14px;
 background:rgba(255,255,255,0.05);
 border-radius:16px;
 margin-top:10px;
+gap:10px;
 }
 
 .player-left{
@@ -252,7 +247,6 @@ margin-top:10px;
 }
 
 @media(max-width:900px){
-
 .dashboard-buttons{
 grid-template-columns:1fr;
 }
@@ -270,329 +264,148 @@ width:200px;
 height:200px;
 font-size:2rem;
 }
-
 }
-
 </style>
-
 </head>
 
 <body>
-
 <div class="container">
-
 <h1 class="title">MAHIL QUIZ ARENA</h1>
 
-<!-- LOGIN -->
-
 <div id="loginPage" class="glass">
-
 <h2>LOGIN</h2>
-
 <input type="text" id="loginUsername" placeholder="Username">
-
 <input type="password" id="loginPassword" placeholder="Password">
-
 <button onclick="login()">LOGIN</button>
-
 <button onclick="showSignup()">SIGN UP</button>
-
 </div>
 
-<!-- SIGNUP -->
-
 <div id="signupPage" class="glass hidden">
-
 <div class="topbar">
-
-<button class="back-btn"
-onclick="showLogin()">
-⬅ BACK
-</button>
-
+<button class="back-btn" onclick="showLogin()">⬅ BACK</button>
 </div>
 
 <h2>CREATE ACCOUNT</h2>
 
-<input type="text"
-id="signupUsername"
-placeholder="Username">
+<input type="text" id="signupUsername" placeholder="Username">
+<input type="email" id="signupEmail" placeholder="Email">
+<input type="password" id="signupPassword" placeholder="Password">
 
-<input type="email"
-id="signupEmail"
-placeholder="Email">
+<img id="avatarPreview" class="avatar-preview" src="https://i.pravatar.cc/150?img=12" alt="Avatar preview">
+<input type="file" id="avatarInput" accept="image/*">
 
-<input type="password"
-id="signupPassword"
-placeholder="Password">
-
-<img id="avatarPreview"
-class="avatar-preview"
-src="https://i.pravatar.cc/150?img=12">
-
-<input type="file"
-id="avatarInput"
-accept="image/*">
-
-<button onclick="signup()">
-CREATE ACCOUNT
-</button>
-
+<button onclick="signup()">CREATE ACCOUNT</button>
 </div>
 
-<!-- DASHBOARD -->
-
-<div id="dashboard"
-class="glass hidden">
-
+<div id="dashboard" class="glass hidden">
 <div class="topbar">
-
 <div class="profile">
-
-<img id="profileAvatar">
-
+<img id="profileAvatar" alt="Profile avatar">
 <div>
-
 <h2 id="profileName"></h2>
-
 <p id="profileEmail"></p>
-
+</div>
 </div>
 
-</div>
-
-<button class="logout-btn"
-onclick="logout()">
-LOGOUT
-</button>
-
+<button class="logout-btn" onclick="logout()">LOGOUT</button>
 </div>
 
 <div class="dashboard-buttons">
-
-<button class="big-btn"
-onclick="hostGame()">
-HOST GAME
-</button>
-
-<button class="big-btn"
-onclick="openJoinPage()">
-PLAY GAME
-</button>
-
-<button class="big-btn"
-onclick="openSettings()">
-SETTINGS
-</button>
-
-<button class="big-btn"
-onclick="clearRooms()">
-CLEAR ROOMS
-</button>
-
+<button class="big-btn" onclick="hostGame()">HOST GAME</button>
+<button class="big-btn" onclick="openJoinPage()">PLAY GAME</button>
+<button class="big-btn" onclick="openSettings()">SETTINGS</button>
+<button class="big-btn" onclick="clearRooms()">CLEAR ROOMS</button>
+</div>
 </div>
 
-</div>
-
-<!-- JOIN PAGE -->
-
-<div id="joinPage"
-class="glass hidden">
-
+<div id="joinPage" class="glass hidden">
 <div class="topbar">
-
-<button class="back-btn"
-onclick="goDashboard()">
-⬅ BACK
-</button>
-
+<button class="back-btn" onclick="goDashboard()">⬅ BACK</button>
 <h2>JOIN ROOM</h2>
-
 </div>
 
-<input type="text"
-id="joinCode"
-placeholder="Enter Room Code">
-
-<button onclick="joinGame()">
-JOIN ROOM
-</button>
-
+<input type="text" id="joinCode" placeholder="Enter Room Code">
+<button onclick="joinGame()">JOIN ROOM</button>
 </div>
 
-<!-- SETTINGS -->
-
-<div id="settingsPage"
-class="glass hidden">
-
+<div id="settingsPage" class="glass hidden">
 <div class="topbar">
-
-<button class="back-btn"
-onclick="goDashboard()">
-⬅ BACK
-</button>
-
+<button class="back-btn" onclick="goDashboard()">⬅ BACK</button>
 <h2>SETTINGS</h2>
-
 </div>
 
-<input type="text"
-id="changeName"
-placeholder="Change Username">
-
-<input type="file"
-id="changeAvatar"
-accept="image/*">
+<input type="text" id="changeName" placeholder="Change Username">
+<input type="file" id="changeAvatar" accept="image/*">
 
 <select id="soundSelect">
-
 <option value="1">Classic Buzz</option>
 <option value="2">Electric Buzz</option>
 <option value="3">Game Show</option>
 <option value="4">Laser Buzz</option>
 <option value="5">Cyber Buzz</option>
-
 </select>
 
-<button onclick="saveSettings()">
-SAVE SETTINGS
-</button>
-
+<button onclick="saveSettings()">SAVE SETTINGS</button>
 </div>
 
-<!-- HOST -->
-
-<div id="hostPage"
-class="glass hidden">
-
+<div id="hostPage" class="glass hidden">
 <div class="topbar">
-
-<button class="back-btn"
-onclick="goDashboard()">
-⬅ BACK
-</button>
-
+<button class="back-btn" onclick="goDashboard()">⬅ BACK</button>
 <h2>HOST PANEL</h2>
-
 </div>
 
-<div class="room-code"
-id="roomCode"></div>
+<div class="room-code" id="roomCode"></div>
 
 <div class="qr-box">
 <div id="qrcode"></div>
 </div>
 
-<textarea id="questionInput"
-placeholder="Enter Question"></textarea>
+<textarea id="questionInput" placeholder="Enter Question"></textarea>
+<input type="file" id="questionImageInput" accept="image/*">
 
-<input type="file"
-id="questionImageInput"
-accept="image/*">
-
-<button onclick="sendQuestion()">
-SEND QUESTION
-</button>
-
-<button onclick="resetBuzzers()">
-RESET BUZZERS
-</button>
+<button onclick="sendQuestion()">SEND QUESTION</button>
+<button onclick="resetBuzzers()">RESET BUZZERS</button>
 
 <div class="score-buttons">
-
-<button onclick="addPoints()">
-+10 POINTS
-</button>
-
-<button onclick="minusPoints()">
--10 POINTS
-</button>
-
+<button onclick="addPoints()">+10 POINTS</button>
+<button onclick="minusPoints()">-10 POINTS</button>
 </div>
 
-<button onclick="startTimer()">
-START TIMER
-</button>
+<button onclick="startTimer()">START TIMER</button>
 
-<div class="timer"
-id="timer">
-10
-</div>
+<div class="timer" id="timer">10</div>
+<div class="winner" id="winner"></div>
 
-<div class="winner"
-id="winner"></div>
-
-<h2 style="margin-top:20px">
-LIVE SCOREBOARD
-</h2>
-
+<h2 style="margin-top:20px">LIVE SCOREBOARD</h2>
 <div id="hostScoreboard"></div>
-
 </div>
 
-<!-- PLAYER -->
-
-<div id="playerPage"
-class="hidden">
-
+<div id="playerPage" class="hidden">
 <div class="grid">
-
 <div class="glass">
-
 <div class="topbar">
-
-<button class="back-btn"
-onclick="goDashboard()">
-⬅ BACK
-</button>
-
-<button class="logout-btn"
-onclick="logout()">
-LOGOUT
-</button>
-
+<button class="back-btn" onclick="goDashboard()">⬅ BACK</button>
+<button class="logout-btn" onclick="logout()">LOGOUT</button>
 </div>
 
-<div class="question"
-id="question">
-Waiting for question...
-</div>
+<div class="question" id="question">Waiting for question...</div>
+<img id="questionImage" class="question-image" alt="Question image">
 
-<img id="questionImage"
-class="question-image">
+<button class="buzzer" id="buzzBtn" onclick="buzz()">BUZZ</button>
 
-<button class="buzzer"
-id="buzzBtn"
-onclick="buzz()">
-BUZZ
-</button>
-
-<div class="winner"
-id="reaction"></div>
-
-<div class="winner"
-id="playerWinner"></div>
-
-<div class="timer"
-id="playerTimer">
-10
-</div>
-
+<div class="winner" id="reaction"></div>
+<div class="winner" id="playerWinner"></div>
+<div class="timer" id="playerTimer">10</div>
 </div>
 
 <div class="glass">
-
 <h2>LIVE SCOREBOARD</h2>
-
 <div id="playerScoreboard"></div>
-
+</div>
+</div>
+</div>
 </div>
 
-</div>
-
-</div>
-
-</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import {
@@ -601,12 +414,14 @@ import {
   set,
   get,
   update,
-  onValue
+  onValue,
+  remove
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBtdB6TH1WyazTek7xRI-p82Ca44-hOiIY",
+  apiKey: "YOUR_API_KEY",
   authDomain: "mahilbuzz-8d984.firebaseapp.com",
+  databaseURL: "https://mahilbuzz-8d984-default-rtdb.firebaseio.com",
   projectId: "mahilbuzz-8d984",
   storageBucket: "mahilbuzz-8d984.firebasestorage.app",
   messagingSenderId: "364076231129",
@@ -615,804 +430,520 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-window.db = getDatabase(app);
+const db = getDatabase(app);
+
+window.db = db;
 window.fbRef = ref;
 window.fbSet = set;
 window.fbGet = get;
 window.fbUpdate = update;
 window.fbOnValue = onValue;
+window.fbRemove = remove;
 </script>
+
 <script>
+let currentUser = null;
+let currentRoom = '';
+let timerInterval = null;
+let roomListenerAttached = false;
 
-let currentUser=null;
-
-let currentRoom='';
-
-let timerInterval=null;
-
-let gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
-
-const buzzSounds={
-
-1:'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',
-2:'https://assets.mixkit.co/active_storage/sfx/1018/1018-preview.mp3',
-3:'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3',
-4:'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3',
-5:'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'
-
+const buzzSounds = {
+  1:'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',
+  2:'https://assets.mixkit.co/active_storage/sfx/1018/1018-preview.mp3',
+  3:'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3',
+  4:'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3',
+  5:'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'
 };
 
-function saveRooms(){
-
-localStorage.setItem(
-'mahilRooms',
-JSON.stringify(gameRooms)
-);
-
-}
-
-document.getElementById('avatarInput')
-.addEventListener('change',e=>{
-
-const file=e.target.files[0];
-
-if(file){
-
-const reader=new FileReader();
-
-reader.onload=function(event){
-
-document.getElementById('avatarPreview')
-.src=event.target.result;
-
-};
-
-reader.readAsDataURL(file);
-
-}
-
+document.getElementById('avatarInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(event){
+      document.getElementById('avatarPreview').src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
 });
 
-window.onload=function(){
-
-const saved=
-localStorage.getItem('mahilCurrentUser');
-
-if(saved){
-
-currentUser=
-JSON.parse(saved);
-
-showDashboard();
-
-}
-
+window.onload = function(){
+  const saved = localStorage.getItem('mahilCurrentUser');
+  if(saved){
+    currentUser = JSON.parse(saved);
+    showDashboard();
+  }
 };
 
 function hideAll(){
-
-document.getElementById('loginPage').classList.add('hidden');
-document.getElementById('signupPage').classList.add('hidden');
-document.getElementById('dashboard').classList.add('hidden');
-document.getElementById('joinPage').classList.add('hidden');
-document.getElementById('settingsPage').classList.add('hidden');
-document.getElementById('hostPage').classList.add('hidden');
-document.getElementById('playerPage').classList.add('hidden');
-
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('signupPage').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('joinPage').classList.add('hidden');
+  document.getElementById('settingsPage').classList.add('hidden');
+  document.getElementById('hostPage').classList.add('hidden');
+  document.getElementById('playerPage').classList.add('hidden');
 }
 
 function showSignup(){
-
-hideAll();
-
-document.getElementById('signupPage')
-.classList.remove('hidden');
-
+  hideAll();
+  document.getElementById('signupPage').classList.remove('hidden');
 }
 
 function showLogin(){
-
-hideAll();
-
-document.getElementById('loginPage')
-.classList.remove('hidden');
-
+  hideAll();
+  document.getElementById('loginPage').classList.remove('hidden');
 }
 
 function signup(){
+  const username = document.getElementById('signupUsername').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value.trim();
+  const avatar = document.getElementById('avatarPreview').src;
 
-const username=
-document.getElementById('signupUsername').value.trim();
+  if(!username || !email || !password){
+    alert('Fill all fields');
+    return;
+  }
 
-const email=
-document.getElementById('signupEmail').value.trim();
+  let users = JSON.parse(localStorage.getItem('mahilUsers')) || [];
 
-const password=
-document.getElementById('signupPassword').value.trim();
+  if(users.find(u => u.username === username)){
+    alert('Username Exists');
+    return;
+  }
 
-const avatar=
-document.getElementById('avatarPreview').src;
+  users.push({
+    username,
+    email,
+    password,
+    avatar,
+    sound:'1'
+  });
 
-if(!username || !email || !password){
-
-alert('Fill all fields');
-
-return;
-
-}
-
-let users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
-
-if(users.find(u=>u.username===username)){
-
-alert('Username Exists');
-
-return;
-
-}
-
-users.push({
-
-username,
-email,
-password,
-avatar,
-sound:'1',
-score:0
-
-});
-
-localStorage.setItem(
-'mahilUsers',
-JSON.stringify(users)
-);
-
-alert('Account Created');
-
-showLogin();
-
+  localStorage.setItem('mahilUsers', JSON.stringify(users));
+  alert('Account Created');
+  showLogin();
 }
 
 function login(){
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const users = JSON.parse(localStorage.getItem('mahilUsers')) || [];
 
-const username=
-document.getElementById('loginUsername').value.trim();
+  const user = users.find(
+    u => u.username === username && u.password === password
+  );
 
-const password=
-document.getElementById('loginPassword').value.trim();
+  if(!user){
+    alert('Invalid Login');
+    return;
+  }
 
-const users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
-
-const user=
-users.find(
-u=>
-u.username===username &&
-u.password===password
-);
-
-if(!user){
-
-alert('Invalid Login');
-
-return;
-
-}
-
-currentUser=user;
-
-localStorage.setItem(
-'mahilCurrentUser',
-JSON.stringify(currentUser)
-);
-
-showDashboard();
-
+  currentUser = user;
+  localStorage.setItem('mahilCurrentUser', JSON.stringify(currentUser));
+  showDashboard();
 }
 
 function showDashboard(){
-
-hideAll();
-
-document.getElementById('dashboard')
-.classList.remove('hidden');
-
-document.getElementById('profileAvatar')
-.src=currentUser.avatar;
-
-document.getElementById('profileName')
-.innerText=currentUser.username;
-
-document.getElementById('profileEmail')
-.innerText=currentUser.email;
-
+  hideAll();
+  document.getElementById('dashboard').classList.remove('hidden');
+  document.getElementById('profileAvatar').src = currentUser.avatar;
+  document.getElementById('profileName').innerText = currentUser.username;
+  document.getElementById('profileEmail').innerText = currentUser.email;
 }
 
 function logout(){
-
-localStorage.removeItem(
-'mahilCurrentUser'
-);
-
-location.reload();
-
+  localStorage.removeItem('mahilCurrentUser');
+  location.reload();
 }
 
 function goDashboard(){
-
-showDashboard();
-
+  showDashboard();
 }
 
 function openSettings(){
-
-hideAll();
-
-document.getElementById('settingsPage')
-.classList.remove('hidden');
-
-document.getElementById('changeName')
-.value=currentUser.username;
-
-document.getElementById('soundSelect')
-.value=currentUser.sound;
-
+  hideAll();
+  document.getElementById('settingsPage').classList.remove('hidden');
+  document.getElementById('changeName').value = currentUser.username;
+  document.getElementById('soundSelect').value = currentUser.sound || '1';
 }
 
 function saveSettings(){
+  const newName = document.getElementById('changeName').value.trim();
+  const sound = document.getElementById('soundSelect').value;
 
-const newName=
-document.getElementById('changeName').value.trim();
+  if(newName){
+    currentUser.username = newName;
+  }
 
-const sound=
-document.getElementById('soundSelect').value;
+  currentUser.sound = sound;
 
-if(newName){
+  const avatarFile = document.getElementById('changeAvatar').files[0];
 
-currentUser.username=newName;
-
-}
-
-currentUser.sound=sound;
-
-const avatarFile=
-document.getElementById('changeAvatar').files[0];
-
-if(avatarFile){
-
-const reader=new FileReader();
-
-reader.onload=function(event){
-
-currentUser.avatar=
-event.target.result;
-
-finishSave();
-
-};
-
-reader.readAsDataURL(avatarFile);
-
-}else{
-
-finishSave();
-
-}
-
+  if(avatarFile){
+    const reader = new FileReader();
+    reader.onload = function(event){
+      currentUser.avatar = event.target.result;
+      finishSave();
+    };
+    reader.readAsDataURL(avatarFile);
+  } else {
+    finishSave();
+  }
 }
 
 function finishSave(){
+  let users = JSON.parse(localStorage.getItem('mahilUsers')) || [];
 
-let users=
-JSON.parse(localStorage.getItem('mahilUsers'))
-|| [];
+  users = users.map(u => u.email === currentUser.email ? currentUser : u);
 
-users=
-users.map(u=>
-u.email===currentUser.email
-? currentUser
-: u
-);
+  localStorage.setItem('mahilUsers', JSON.stringify(users));
+  localStorage.setItem('mahilCurrentUser', JSON.stringify(currentUser));
 
-localStorage.setItem(
-'mahilUsers',
-JSON.stringify(users)
-);
-
-localStorage.setItem(
-'mahilCurrentUser',
-JSON.stringify(currentUser)
-);
-
-alert('Saved');
-
-location.reload();
-
+  alert('Saved');
+  location.reload();
 }
 
 function openJoinPage(){
-
-hideAll();
-
-document.getElementById('joinPage')
-.classList.remove('hidden');
-
+  hideAll();
+  document.getElementById('joinPage').classList.remove('hidden');
 }
 
-function hostGame(){
+async function hostGame(){
+  hideAll();
+  document.getElementById('hostPage').classList.remove('hidden');
 
-await fbSet(
-  fbRef(db, "rooms/" + roomCode),
-  {
-    host: currentUser.username,
-    question: "",
-    questionImage: "",
-    winner: "",
-    buzzed: false,
-    players: {}
-  }
-);
-};
+  const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  currentRoom = roomCode;
 
-saveRooms();
-
-document.getElementById('roomCode')
-.innerHTML=
-'ROOM CODE: '+roomCode;
-
-document.getElementById('qrcode')
-.innerHTML='';
-
-new QRCode(
-document.getElementById('qrcode'),
-{
-text:roomCode,
-width:200,
-height:200
-}
-);
-
-addPlayerToRoom();
-
-updateBoards();
-
-}
-
-function joinGame(){
-
-async function joinGame(){
-
-  const code =
-  document.getElementById('joinCode')
-  .value.trim();
-
-  const snap =
-  await fbGet(
-    fbRef(db,"rooms/"+code)
+  await fbSet(
+    fbRef(db, 'rooms/' + roomCode),
+    {
+      host: currentUser.username,
+      question: '',
+      questionImage: '',
+      winner: '',
+      buzzed: false,
+      timer: 10,
+      players: {
+        [sanitizeKey(currentUser.email)]: {
+          username: currentUser.username,
+          email: currentUser.email,
+          avatar: currentUser.avatar,
+          sound: currentUser.sound || '1',
+          score: 0
+        }
+      }
+    }
   );
 
+  document.getElementById('roomCode').innerHTML = 'ROOM CODE: ' + roomCode;
+  document.getElementById('qrcode').innerHTML = '';
+
+  new QRCode(document.getElementById('qrcode'), {
+    text: roomCode,
+    width: 200,
+    height: 200
+  });
+
+  attachRoomListener();
+}
+
+async function joinGame(){
+  const code = document.getElementById('joinCode').value.trim().toUpperCase();
+
+  if(!code){
+    alert('Enter Room Code');
+    return;
+  }
+
+  const snap = await fbGet(fbRef(db, 'rooms/' + code));
+
   if(!snap.exists()){
-    alert("Room Not Found");
+    alert('Room Not Found');
     return;
   }
 
   currentRoom = code;
 
+  await addPlayerToRoom();
+
   hideAll();
+  document.getElementById('playerPage').classList.remove('hidden');
 
-  document
-  .getElementById("playerPage")
-  .classList.remove("hidden");
+  attachRoomListener();
 
+  alert('Joined Room ' + code);
 }
 
+async function addPlayerToRoom(){
+  if(!currentRoom || !currentUser) return;
+
+  const playerKey = sanitizeKey(currentUser.email);
+
+  await fbUpdate(
+    fbRef(db, 'rooms/' + currentRoom + '/players'),
+    {
+      [playerKey]: {
+        username: currentUser.username,
+        email: currentUser.email,
+        avatar: currentUser.avatar,
+        sound: currentUser.sound || '1',
+        score: 0
+      }
+    }
+  );
 }
 
-currentRoom=code;
+async function sendQuestion(){
+  const q = document.getElementById('questionInput').value.trim();
+  const file = document.getElementById('questionImageInput').files[0];
 
-hideAll();
+  if(!currentRoom){
+    alert('No active room');
+    return;
+  }
 
-document.getElementById('playerPage')
-.classList.remove('hidden');
+  let questionImage = '';
 
-addPlayerToRoom();
+  if(file){
+    questionImage = await fileToBase64(file);
+  }
 
-updateBoards();
-
-alert('Joined Room '+code);
-
+  await fbUpdate(
+    fbRef(db, 'rooms/' + currentRoom),
+    {
+      question: q,
+      questionImage: questionImage,
+      winner: '',
+      buzzed: false,
+      timer: 10
+    }
+  );
 }
 
-function addPlayerToRoom(){
+async function buzz(){
+  if(!currentRoom) return;
 
-gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
+  const snap = await fbGet(fbRef(db, 'rooms/' + currentRoom));
+  if(!snap.exists()) return;
 
-const room=
-gameRooms[currentRoom];
+  const room = snap.val();
 
-if(!room.players.find(
-p=>p.email===currentUser.email
-)){
+  if(room.buzzed) return;
 
-room.players.push({
-...currentUser
-});
+  const reaction = (Math.random() * 1.5 + 0.2).toFixed(3);
 
+  await fbUpdate(
+    fbRef(db, 'rooms/' + currentRoom),
+    {
+      buzzed: true,
+      winner: currentUser.username,
+      reaction: reaction
+    }
+  );
+
+  document.getElementById('reaction').innerHTML = 'Reaction Time: ' + reaction + 's';
+
+  const sound = new Audio(buzzSounds[currentUser.sound || '1']);
+  sound.play();
+
+  confetti({
+    particleCount:220,
+    spread:140
+  });
 }
 
-saveRooms();
+async function resetBuzzers(){
+  if(!currentRoom) return;
 
+  await fbUpdate(
+    fbRef(db, 'rooms/' + currentRoom),
+    {
+      buzzed: false,
+      winner: '',
+      reaction: '',
+      timer: 10
+    }
+  );
 }
 
-function sendQuestion(){
+async function addPoints(){
+  if(!currentRoom) return;
 
-gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
+  const snap = await fbGet(fbRef(db, 'rooms/' + currentRoom));
+  if(!snap.exists()) return;
 
-const room=
-gameRooms[currentRoom];
+  const room = snap.val();
+  const players = room.players || {};
+  const winnerName = room.winner;
 
-const q=
-document.getElementById('questionInput')
-.value.trim();
+  let winnerKey = null;
 
-const file=
-document.getElementById('questionImageInput')
-.files[0];
+  for(const key in players){
+    if(players[key].username === winnerName){
+      winnerKey = key;
+      break;
+    }
+  }
 
-room.question=q;
-
-room.buzzed=false;
-
-room.winner='';
-
-if(file){
-
-const reader=new FileReader();
-
-reader.onload=function(event){
-
-room.questionImage=
-event.target.result;
-
-saveRooms();
-
-};
-
-reader.readAsDataURL(file);
-
-}else{
-
-room.questionImage='';
-
-saveRooms();
-
+  if(winnerKey){
+    const currentScore = players[winnerKey].score || 0;
+    await fbUpdate(
+      fbRef(db, 'rooms/' + currentRoom + '/players/' + winnerKey),
+      { score: currentScore + 10 }
+    );
+  }
 }
 
-document.getElementById('question')
-.innerText=q;
+async function minusPoints(){
+  if(!currentRoom) return;
 
-document.getElementById('buzzBtn')
-.disabled=false;
+  const snap = await fbGet(fbRef(db, 'rooms/' + currentRoom));
+  if(!snap.exists()) return;
 
-document.getElementById('buzzBtn')
-.classList.remove('locked');
+  const room = snap.val();
+  const players = room.players || {};
+  const winnerName = room.winner;
 
+  let winnerKey = null;
+
+  for(const key in players){
+    if(players[key].username === winnerName){
+      winnerKey = key;
+      break;
+    }
+  }
+
+  if(winnerKey){
+    const currentScore = players[winnerKey].score || 0;
+    await fbUpdate(
+      fbRef(db, 'rooms/' + currentRoom + '/players/' + winnerKey),
+      { score: currentScore - 10 }
+    );
+  }
 }
 
-function buzz(){
+function updateBoards(room){
+  if(!room) return;
 
-gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
+  const playersObj = room.players || {};
+  const players = Object.values(playersObj);
 
-const room=
-gameRooms[currentRoom];
+  players.sort((a, b) => (b.score || 0) - (a.score || 0));
 
-if(room.buzzed) return;
+  let html = '';
 
-room.buzzed=true;
+  players.forEach(player => {
+    html += `
+      <div class="player">
+        <div class="player-left">
+          <img src="${player.avatar}" alt="${player.username}">
+          <div>
+            <b>${player.username}</b><br>
+            <small>${player.email}</small>
+          </div>
+        </div>
+        <div style="font-size:1.2rem">${player.score || 0} pts</div>
+      </div>
+    `;
+  });
 
-room.winner=currentUser.username;
-
-saveRooms();
-
-const reaction=
-(Math.random()*1.5+0.2)
-.toFixed(3);
-
-document.getElementById('reaction')
-.innerHTML=
-'Reaction Time: '+reaction+'s';
-
-document.getElementById('playerWinner')
-.innerHTML=
-'⚡ '+currentUser.username+
-' BUZZED FIRST';
-
-document.getElementById('winner')
-.innerHTML=
-'⚡ '+currentUser.username+
-' BUZZED FIRST';
-
-document.getElementById('buzzBtn')
-.disabled=true;
-
-document.getElementById('buzzBtn')
-.classList.add('locked');
-
-const sound=
-new Audio(
-buzzSounds[currentUser.sound]
-);
-
-sound.play();
-
-confetti({
-particleCount:220,
-spread:140
-});
-
+  document.getElementById('hostScoreboard').innerHTML = html;
+  document.getElementById('playerScoreboard').innerHTML = html;
 }
 
-function resetBuzzers(){
+function attachRoomListener(){
+  if(!currentRoom || roomListenerAttached) return;
 
-gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
+  roomListenerAttached = true;
 
-const room=
-gameRooms[currentRoom];
+  fbOnValue(fbRef(db, 'rooms/' + currentRoom), snapshot => {
+    const room = snapshot.val();
+    if(!room) return;
 
-room.buzzed=false;
+    document.getElementById('question').innerText = room.question || 'Waiting for question...';
 
-room.winner='';
+    const img = document.getElementById('questionImage');
+    if(room.questionImage){
+      img.src = room.questionImage;
+      img.style.display = 'block';
+    } else {
+      img.style.display = 'none';
+    }
 
-saveRooms();
+    updateBoards(room);
 
-document.getElementById('buzzBtn')
-.disabled=false;
+    if(room.winner){
+      document.getElementById('playerWinner').innerHTML = '⚡ ' + room.winner + ' BUZZED FIRST';
+      document.getElementById('winner').innerHTML = '⚡ ' + room.winner + ' BUZZED FIRST';
+      document.getElementById('buzzBtn').disabled = true;
+      document.getElementById('buzzBtn').classList.add('locked');
 
-document.getElementById('buzzBtn')
-.classList.remove('locked');
+      if(room.reaction){
+        document.getElementById('reaction').innerHTML = 'Reaction Time: ' + room.reaction + 's';
+      }
+    } else {
+      document.getElementById('playerWinner').innerHTML = '';
+      document.getElementById('winner').innerHTML = '';
+      document.getElementById('reaction').innerHTML = '';
+      document.getElementById('buzzBtn').disabled = false;
+      document.getElementById('buzzBtn').classList.remove('locked');
+    }
 
-document.getElementById('winner')
-.innerHTML='';
-
-document.getElementById('reaction')
-.innerHTML='';
-
-document.getElementById('playerWinner')
-.innerHTML='';
-
-}
-
-function addPoints(){
-
-gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
-
-const room=
-gameRooms[currentRoom];
-
-const player=
-room.players.find(
-p=>p.username===room.winner
-);
-
-if(player){
-
-player.score+=10;
-
-saveRooms();
-
-updateBoards();
-
-}
-
-}
-
-function minusPoints(){
-
-gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
-
-const room=
-gameRooms[currentRoom];
-
-const player=
-room.players.find(
-p=>p.username===room.winner
-);
-
-if(player){
-
-player.score-=10;
-
-saveRooms();
-
-updateBoards();
-
-}
-
-}
-
-function updateBoards(){
-
-gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
-
-const room=
-gameRooms[currentRoom];
-
-if(!room) return;
-
-let html='';
-
-room.players
-.sort((a,b)=>b.score-a.score)
-.forEach(player=>{
-
-html+=`
-
-<div class="player">
-
-<div class="player-left">
-
-<img src="${player.avatar}">
-
-<div>
-
-<b>${player.username}</b><br>
-
-<small>${player.email}</small>
-
-</div>
-
-</div>
-
-<div style="font-size:1.2rem">
-${player.score} pts
-</div>
-
-</div>
-
-`;
-
-});
-
-if(document.getElementById('hostScoreboard')){
-
-document.getElementById('hostScoreboard')
-.innerHTML=html;
-
-}
-
-if(document.getElementById('playerScoreboard')){
-
-document.getElementById('playerScoreboard')
-.innerHTML=html;
-
-}
-
+    if(typeof room.timer !== 'undefined'){
+      document.getElementById('timer').innerHTML = room.timer;
+      document.getElementById('playerTimer').innerHTML = room.timer;
+    }
+  });
 }
 
 function startTimer(){
+  if(!currentRoom) return;
 
-clearInterval(timerInterval);
+  clearInterval(timerInterval);
 
-let time=10;
+  let time = 10;
 
-document.getElementById('timer')
-.innerHTML=time;
+  fbUpdate(fbRef(db, 'rooms/' + currentRoom), { timer: time });
 
-document.getElementById('playerTimer')
-.innerHTML=time;
+  timerInterval = setInterval(async () => {
+    time--;
+    await fbUpdate(fbRef(db, 'rooms/' + currentRoom), { timer: time });
 
-timerInterval=fbOnValue(
-  fbRef(db,"rooms/"+currentRoom),
-  snapshot => {
+    if(time <= 0){
+      clearInterval(timerInterval);
+    }
+  }, 1000);
+}
 
-    const room =
-    snapshot.val();
+async function clearRooms(){
+  await fbRemove(fbRef(db, 'rooms'));
+  alert('All rooms cleared');
+}
 
-    if(!room) return;
+function sanitizeKey(email){
+  return email.replace(/[.#$\\[\\]]/g, '_');
+}
 
-    document.getElementById(
-      "question"
-    ).innerText =
-    room.question || "";
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
 
+document.addEventListener('keydown', e => {
+  if(e.code === 'Space'){
+    e.preventDefault();
+    const btn = document.getElementById('buzzBtn');
+    if(btn && !btn.disabled){
+      buzz();
+    }
   }
-);
-
-if(!currentRoom) return;
-
-gameRooms=
-JSON.parse(localStorage.getItem('mahilRooms'))
-|| {};
-
-const room=
-gameRooms[currentRoom];
-
-if(!room) return;
-
-if(document.getElementById('question')){
-
-document.getElementById('question')
-.innerText=
-room.question || 'Waiting for question...';
-
-}
-
-const img=
-document.getElementById('questionImage');
-
-if(img){
-
-if(room.questionImage){
-
-img.src=room.questionImage;
-
-img.style.display='block';
-
-}else{
-
-img.style.display='none';
-
-}
-
-}
-
-updateBoards();
-
-if(room.winner){
-
-document.getElementById('playerWinner')
-.innerHTML=
-'⚡ '+room.winner+
-' BUZZED FIRST';
-
-document.getElementById('winner')
-.innerHTML=
-'⚡ '+room.winner+
-' BUZZED FIRST';
-
-}
-
-},500);
-
-document.addEventListener('keydown',e=>{
-
-if(e.code==='Space'){
-
-e.preventDefault();
-
-const btn=
-document.getElementById('buzzBtn');
-
-if(btn && !btn.disabled){
-
-buzz();
-
-}
-
-}
-
 });
-
 </script>
-
 </body>
 </html>
