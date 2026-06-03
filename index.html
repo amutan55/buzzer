@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MAHIL QUIZ ARENA — All-in-One Game Platform</title>
+<title>MAHIL QUIZ ARENA</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -211,6 +211,7 @@ button:hover{transform:scale(1.02)}
 @keyframes scorePulseDown{0%{transform:scale(1)}45%{transform:scale(.99)}100%{transform:scale(1)}}
 @media(max-width:900px){.dashboard-buttons,.host-actions,.score-buttons,.mode-grid,.grid,.host-layout,.dashboard-top,.quick-auth-row,.mcq-options,.power-grid,.host-game-grid,.host-status-row{grid-template-columns:1fr}.title{font-size:2rem}.buzzer{width:200px;height:200px;font-size:2rem}.host-side{position:static}}
 @media(max-width:520px){.host-game-grid,.host-status-row{grid-template-columns:1fr}}
+.dashboard-layout{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start}.dashboard-sidebar{background:rgba(255,255,255,.05);border-radius:20px;padding:15px}.dashboard-sidebar button{margin-bottom:10px;width:100%;text-align:left}.dashboard-panel{display:none}.dashboard-panel.active{display:block}.host-game-sections{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0 18px}.host-game-sections button.active{outline:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12)}.host-game-panel{display:none}.host-game-panel.active{display:block}.csv-tools{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin-top:12px}.role-select{padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff}.buzzer.locked{opacity:.55;pointer-events:none;filter:grayscale(.2)}@media(max-width:900px){.dashboard-layout,.csv-tools{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -226,7 +227,6 @@ button:hover{transform:scale(1.02)}
   <label for="rememberMeToggle">Remember me on this device</label>
 </div>
 <div class="quick-auth-row">
-  <button class="dark-btn" onclick="fillDemoUser()">USE DEMO USER</button>
   <button class="safe-btn" onclick="showQuickTips()">QUICK TIPS</button>
 </div>
 <button class="warn-btn" onclick="continueLastRoom()">CONTINUE LAST ROOM</button>
@@ -254,6 +254,18 @@ button:hover{transform:scale(1.02)}
 </div>
 <button class="logout-btn" onclick="logout()">LOGOUT</button>
 </div>
+<div class="dashboard-layout">
+<div class="dashboard-sidebar">
+<button class="hub-btn active" data-dash="home" onclick="showDashboardPanel('home',this)">🏠 HOME</button>
+<button class="hub-btn" data-dash="host" onclick="showDashboardPanel('host',this)">🎤 HOST</button>
+<button class="hub-btn" data-dash="join" onclick="showDashboardPanel('join',this)">🎯 JOIN</button>
+<button class="hub-btn" data-dash="practice" onclick="showDashboardPanel('practice',this)">📚 PRACTICE</button>
+<button class="hub-btn" data-dash="leaderboard" onclick="showDashboardPanel('leaderboard',this)">🏆 LEADERBOARD</button>
+<button class="hub-btn" data-dash="library" onclick="showDashboardPanel('library',this)">📦 QUESTION BANK</button>
+<button class="hub-btn" data-dash="settings" onclick="showDashboardPanel('settings',this)">⚙ SETTINGS</button>
+</div>
+<div class="dashboard-content">
+<div id="dashPanel-home" class="dashboard-panel active">
 <div class="dashboard-top">
   <div class="card">
     <h2>DASHBOARD INSIGHTS</h2>
@@ -270,20 +282,14 @@ button:hover{transform:scale(1.02)}
     </div>
   </div>
 </div>
-<div class="card">
-  <h2>ARENA HUB — BEYOND THE BUZZER</h2>
-  <p class="muted">Practice solo, climb global ranks, join live rooms, or run polls &amp; team games.</p>
-  <div class="hub-grid">
-    <button class="hub-btn" onclick="hostGame()">🎤 HOST LIVE</button>
-    <button class="hub-btn" onclick="openJoinPage()">🎯 JOIN ROOM</button>
-    <button class="hub-btn safe-btn" onclick="openPracticeMode()">📚 PRACTICE</button>
-    <button class="hub-btn" onclick="openLeaderboard()">🏆 LEADERBOARD</button>
-    <button class="hub-btn" onclick="openDailyChallenge()">☀️ DAILY CHALLENGE</button>
-    <button class="hub-btn dark-btn" onclick="openPublicRooms()">🌐 PUBLIC ROOMS</button>
-    <button class="hub-btn" onclick="openQuizLibrary()">📦 QUIZ LIBRARY</button>
-    <button class="hub-btn" onclick="openSettings()">⚙️ SETTINGS</button>
-    <button class="hub-btn warn-btn" onclick="clearRooms()">🗑️ CLEAR ROOMS</button>
-  </div>
+</div>
+<div id="dashPanel-host" class="dashboard-panel"><div class="card"><h2>HOST</h2><p class="muted">Start and manage live quiz rooms.</p><div class="hub-grid"><button class="hub-btn" onclick="hostGame()">🎤 HOST LIVE</button><button class="hub-btn dark-btn" onclick="openPublicRooms()">🌐 PUBLIC ROOMS</button></div></div></div>
+<div id="dashPanel-join" class="dashboard-panel"><div class="card"><h2>JOIN</h2><p class="muted">Enter a room code or browse public rooms.</p><div class="hub-grid"><button class="hub-btn" onclick="openJoinPage()">🎯 JOIN ROOM</button><button class="hub-btn dark-btn" onclick="openPublicRooms()">🌐 PUBLIC ROOMS</button></div></div></div>
+<div id="dashPanel-practice" class="dashboard-panel"><div class="card"><h2>PRACTICE</h2><p class="muted">Solo training and challenge modes.</p><div class="hub-grid"><button class="hub-btn safe-btn" onclick="openPracticeMode()">📚 PRACTICE</button><button class="hub-btn" onclick="openDailyChallenge()">☀️ DAILY CHALLENGE</button></div></div></div>
+<div id="dashPanel-leaderboard" class="dashboard-panel"><div class="card"><h2>LEADERBOARD</h2><p class="muted">See rankings and season progress.</p><div class="hub-grid"><button class="hub-btn" onclick="openLeaderboard()">🏆 OPEN LEADERBOARD</button></div></div></div>
+<div id="dashPanel-library" class="dashboard-panel"><div class="card"><h2>QUESTION BANK</h2><p class="muted">Open packs or import CSV questions.</p><div class="hub-grid"><button class="hub-btn" onclick="openQuizLibrary()">📦 OPEN LIBRARY</button></div></div></div>
+<div id="dashPanel-settings" class="dashboard-panel"><div class="card"><h2>SETTINGS</h2><p class="muted">Theme, audio, and account preferences.</p><div class="hub-grid"><button class="hub-btn" onclick="openSettings()">⚙ OPEN SETTINGS</button><button class="hub-btn warn-btn" onclick="clearRooms()">🗑️ CLEAR ROOMS</button></div></div></div>
+</div>
 </div>
 <button class="big-btn dark-btn hidden" id="adminPanelBtn" onclick="openAdminPanel()" style="margin-top:14px">ADMIN PANEL</button>
 </div>
@@ -328,6 +334,11 @@ button:hover{transform:scale(1.02)}
   <p class="muted">Pick a question pack for your next live session (host only when in room).</p>
   <select id="libraryCategory"></select>
   <div id="libraryQuestions" class="log-box" style="margin-top:12px;max-height:320px"></div>
+  <div class="csv-tools">
+    <input type="file" id="csvQuestionFile" accept=".csv">
+    <button onclick="importQuestionsCSV()">IMPORT CSV</button>
+    <button class="dark-btn" onclick="downloadCSVTemplate()">DOWNLOAD CSV TEMPLATE</button>
+  </div>
   <button class="dark-btn" onclick="seedQuestionBank()">SEED DEFAULT PACKS (FIREBASE)</button>
 </div>
 
@@ -402,13 +413,25 @@ button:hover{transform:scale(1.02)}
   <button id="hostNavGame" class="active" onclick="showHostSection('game')"><span class="host-nav-icon">🎮</span><span class="host-nav-label">GAME</span></button>
   <button id="hostNavScore" onclick="showHostSection('score')"><span class="host-nav-icon">🏆</span><span class="host-nav-label">SCORES</span></button>
   <button id="hostNavPlayers" onclick="showHostSection('players')"><span class="host-nav-icon">👥</span><span class="host-nav-label">PLAYERS</span></button>
-  <button id="hostNavStats" onclick="showHostSection('stats')"><span class="host-nav-icon">📊</span><span class="host-nav-label">STATS</span></button>
-  <button id="hostNavLibrary" onclick="openQuizLibrary()"><span class="host-nav-icon">📦</span><span class="host-nav-label">LIBRARY</span></button>
+  <button id="hostNavBank" onclick="showHostSection('bank')"><span class="host-nav-icon">📚</span><span class="host-nav-label">QUESTION BANK</span></button>
+  <button id="hostNavTournament" onclick="showHostSection('tournament')"><span class="host-nav-icon">🏆</span><span class="host-nav-label">TOURNAMENT</span></button>
+  <button id="hostNavAnalytics" onclick="showHostSection('analytics')"><span class="host-nav-icon">📈</span><span class="host-nav-label">ANALYTICS</span></button>
   </div>
 </div>
 <div class="host-content">
 
 <div id="hostSectionGame" class="host-section">
+  <div class="host-game-sections">
+    <button class="dark-btn active" data-game-section="game" onclick="showHostGameSection('game',this)">GAME</button>
+    <button class="dark-btn" data-game-section="studio" onclick="showHostGameSection('studio',this)">QUESTION STUDIO</button>
+    <button class="dark-btn" data-game-section="mcq" onclick="showHostGameSection('mcq',this)">MCQ</button>
+    <button class="dark-btn" data-game-section="timer" onclick="showHostGameSection('timer',this)">TIMER</button>
+    <button class="dark-btn" data-game-section="players" onclick="showHostGameSection('players',this)">PLAYERS</button>
+    <button class="dark-btn" data-game-section="teams" onclick="showHostGameSection('teams',this)">TEAMS</button>
+    <button class="dark-btn" data-game-section="invitations" onclick="showHostGameSection('invitations',this)">INVITATIONS</button>
+    <button class="dark-btn" data-game-section="scoreboard" onclick="showHostGameSection('scoreboard',this)">SCOREBOARD</button>
+  </div>
+  <div class="host-game-panel active" id="hostGamePanel-game">
   <div class="card">
     <h2>ROOM CONTROLS</h2>
     <div class="section-title"><span class="badge" id="modeBadge">NORMAL MODE</span> <span class="badge" id="hostRoomPlayerCount" style="margin-left:6px">0 PLAYERS</span></div>
@@ -554,6 +577,8 @@ button:hover{transform:scale(1.02)}
   <div class="winner" id="winner"></div>
 </div>
 
+</div>
+</div>
 <div id="hostSectionScore" class="host-section hidden">
   <div class="card">
     <h2>LIVE SCOREBOARD</h2>
@@ -637,6 +662,9 @@ button:hover{transform:scale(1.02)}
 </div>
 </div>
 
+<div id="hostSectionBank" class="host-section hidden"><div class="card"><h2>QUESTION BANK</h2><p class="muted">Open the library or manage imported question sets.</p><div class="host-tool-row"><button onclick="openQuizLibrary()">OPEN LIBRARY</button></div></div></div>
+<div id="hostSectionTournament" class="host-section hidden"><div class="card"><h2>TOURNAMENT</h2><div id="tournamentPanel"></div></div></div>
+<div id="hostSectionAnalytics" class="host-section hidden"><div class="card"><h2>ANALYTICS</h2><div id="replayPanel" class="log-box muted"></div><div id="buzzLog" class="log-box muted" style="margin-top:12px"></div><div id="questionHistory" class="log-box muted" style="margin-top:12px"></div></div></div>
 <div id="playerPage" class="hidden">
 <div class="grid">
 <div class="glass">
@@ -871,12 +899,14 @@ function updateAdminButtonVisibility(){
   if(!btn)return;
   btn.classList.toggle('hidden',!isAdminUser(currentUser));
 }
+function showDashboardPanel(section,btn){document.querySelectorAll('.dashboard-panel').forEach(el=>el.classList.remove('active'));const target=document.getElementById('dashPanel-'+section);if(target)target.classList.add('active');document.querySelectorAll('[data-dash]').forEach(el=>el.classList.remove('active'));const active=btn||document.querySelector(`[data-dash="${section}"]`);if(active)active.classList.add('active')}
+function showHostGameSection(section,btn){document.querySelectorAll('.host-game-panel').forEach(el=>el.classList.remove('active'));const target=document.getElementById('hostGamePanel-'+section);if(target)target.classList.add('active');document.querySelectorAll('[data-game-section]').forEach(el=>el.classList.remove('active'));const active=btn||document.querySelector(`[data-game-section="${section}"]`);if(active)active.classList.add('active')}
 
 function showHostSection(section){
-  const sections=['game','score','players','stats'];
+  const sections=['game','score','players','bank','tournament','analytics'];
   sections.forEach(name=>{
-    const sectionEl=document.getElementById(`hostSection${name.charAt(0).toUpperCase()+name.slice(1)}`);
-    const navBtn=document.getElementById(`hostNav${name.charAt(0).toUpperCase()+name.slice(1)}`);
+    const map={game:'hostSectionGame',score:'hostSectionScore',players:'hostSectionPlayers',bank:'hostSectionBank',tournament:'hostSectionTournament',analytics:'hostSectionAnalytics'};const sectionEl=document.getElementById(map[name]);
+    const navMap={game:'hostNavGame',score:'hostNavScore',players:'hostNavPlayers',bank:'hostNavBank',tournament:'hostNavTournament',analytics:'hostNavAnalytics'};const navBtn=document.getElementById(navMap[name]);
     if(sectionEl)sectionEl.classList.toggle('hidden',name!==section);
     if(navBtn)navBtn.classList.toggle('active',name===section);
   });
@@ -905,10 +935,6 @@ function resetThemePreview(){
   if(themeSelect)themeSelect.value=currentUser?.theme||'neon';
 }
 
-function fillDemoUser(){
-  loginUsername.value='demo_user';
-  loginPassword.value='1234';
-}
 
 function showQuickTips(){
   alert('Arena tips:\n• Space = buzz in live rooms\n• Hub: Practice, Daily Challenge, Leaderboard\n• Host can switch Poll / True-False / Type Answer modes\n• Room chat + reactions for audience energy\n• Ctrl+K = quick command (host, join, settings)');
@@ -1051,6 +1077,8 @@ async function autoDraftTeams(){
   await logMatchEvent('auto_draft','Teams auto drafted');
 }
 
+function importQuestionsCSV(){const file=document.getElementById('csvQuestionFile')?.files?.[0];if(!file)return alert('Select CSV');const reader=new FileReader();reader.onload=function(e){const rows=String(e.target.result||'').split(/\r?\n/);const questions=[];rows.slice(1).forEach(row=>{if(!row.trim())return;const cols=row.split(',');if(cols.length>=6){questions.push({question:(cols[0]||'').trim(),options:{A:(cols[1]||'').trim(),B:(cols[2]||'').trim(),C:(cols[3]||'').trim(),D:(cols[4]||'').trim()},correct:(cols[5]||'').trim(),type:'mcq'})}});localStorage.setItem('importedQuestions',JSON.stringify(questions));alert(`${questions.length} questions imported`)};reader.readAsText(file)}
+function downloadCSVTemplate(){const csv=`question,optionA,optionB,optionC,optionD,correct\nCapital of India?,Mumbai,Delhi,Chennai,Kolkata,B\n2+2=?,3,4,5,6,B\nLargest Planet?,Earth,Mars,Jupiter,Venus,C`;const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='question_template.csv';a.click()}
 function exportQuestionPack(){
   const pack={
     question:questionInput.value.trim(),
@@ -1176,7 +1204,7 @@ async function login(){
   showDashboard();
   if(joinCode.value.trim())openJoinPage();
 }
-function showDashboard(){hideAll();dashboard.classList.remove('hidden');applyTheme(currentUser.theme||'neon');profileAvatar.src=currentUser.avatar;const season=getSeasonData();profileAvatar.style.border=season.level>=10?'4px solid #fbbf24':(season.level>=5?'4px solid #93c5fd':'3px solid #00e5ff');profileName.innerText=currentUser.username;profileEmail.innerText=currentUser.email;updateDailyStreak();updateAdminButtonVisibility();renderDashboardInsights();renderBadges();renderRecentRooms();renderGlobalAnnouncement()}
+function showDashboard(){hideAll();dashboard.classList.remove('hidden');applyTheme(currentUser.theme||'neon');profileAvatar.src=currentUser.avatar;const season=getSeasonData();profileAvatar.style.border=season.level>=10?'4px solid #fbbf24':(season.level>=5?'4px solid #93c5fd':'3px solid #00e5ff');profileName.innerText=currentUser.username;profileEmail.innerText=currentUser.email;updateDailyStreak();updateAdminButtonVisibility();renderDashboardInsights();renderBadges();renderRecentRooms();renderGlobalAnnouncement();showDashboardPanel('home')}
 function logout(){localStorage.removeItem('mahilCurrentUser');location.reload()}
 function goDashboard(){showDashboard()}
 function openSettings(){hideAll();settingsPage.classList.remove('hidden');changeName.value=currentUser.username;soundSelect.value=currentUser.sound||'1';themeSelect.value=currentUser.theme||'neon';confettiToggle.checked=currentUser.confetti!==false}
@@ -1210,14 +1238,15 @@ async function renderAdminPanel(){
   adminStats.innerHTML=`<div class="player"><div>Total Users</div><div>${totalUsers}</div></div><div class="player"><div>Admins</div><div>${adminCount}</div></div><div class="player"><div>Players</div><div>${normalCount}</div></div><div class="player"><div>Top Theme</div><div class="chip">${escapeHtml(topTheme)}</div></div><div class="player"><div>Last Lucky Draw</div><div>${lucky?escapeHtml(lucky.username):'-'}</div></div>`;
   let html='';
   users.forEach(user=>{
-    const roleLabel=isAdminUser(user)?'Admin':'User';
+    const roleLabel=(user.role||'user').charAt(0).toUpperCase()+(user.role||'user').slice(1);
     const protectedCurrent=user.email===currentUser.email;
     const encodedEmail=encodeURIComponent(user.email||'');
-    html+=`<div class="admin-user"><div><b>${escapeHtml(user.username)}</b><br><span class="muted">${escapeHtml(user.email)}</span><br><span class="chip">${roleLabel}</span></div><div class="admin-tools"><button class="dark-btn" onclick="toggleAdminRole('${encodedEmail}')" ${protectedCurrent?'disabled':''}>${isAdminUser(user)?'DEMOTE':'MAKE ADMIN'}</button><button class="safe-btn" onclick="resetUserPassword('${encodedEmail}')">RESET PASSWORD</button><button class="warn-btn" onclick="deleteUser('${encodedEmail}')" ${protectedCurrent?'disabled':''}>DELETE</button></div></div>`;
+    html+=`<div class="admin-user"><div><b>${escapeHtml(user.username)}</b><br><span class="muted">${escapeHtml(user.email)}</span><br><span class="chip">${roleLabel}</span></div><div class="admin-tools"><select class="role-select" onchange="changeUserRole(this.value,'${encodedEmail}')" ${protectedCurrent?'disabled':''}><option value="user" ${(user.role||'user')==='user'?'selected':''}>User</option><option value="moderator" ${(user.role||'user')==='moderator'?'selected':''}>Moderator</option><option value="host" ${(user.role||'user')==='host'?'selected':''}>Host</option><option value="admin" ${(user.role||'user')==='admin'?'selected':''}>Admin</option></select><button class="safe-btn" onclick="resetUserPassword('${encodedEmail}')">RESET PASSWORD</button><button class="warn-btn" onclick="deleteUser('${encodedEmail}')" ${protectedCurrent?'disabled':''}>DELETE</button></div></div>`;
   });
   adminUsers.innerHTML=html||'<div class="muted">No users found</div>';
 }
 
+function changeUserRole(role,encodedEmail){const email=decodeURIComponent(encodedEmail);const normalized=(role||'user').toLowerCase();const users=getUsers().map(user=>user.email===email?{...user,role:normalized}:user);saveUsers(users);if(currentUser&&currentUser.email===email)currentUser.role=normalized;renderAdminUsers();updateAdminButtonVisibility()}
 async function toggleAdminRole(encodedEmail){
   if(!ensureAdminAccess())return;
   const email=decodeURIComponent(encodedEmail);
