@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MAHIL QUIZ ARENA UPGRADED</title>
+<title>MAHIL QUIZ ARENA — All-in-One Game Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -132,6 +132,34 @@ button:hover{transform:scale(1.02)}
 .kick-btn{width:auto;padding:10px 12px;background:linear-gradient(135deg,#f43f5e,#b91c1c)}
 .inline-row{display:flex;gap:10px;flex-wrap:wrap}.inline-row>*{flex:1}
 .host-tool-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.host-game-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.host-status-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.user-pick-list{max-height:240px;overflow:auto;margin-top:10px}
+.user-pick-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.05);border-radius:12px;margin-top:8px;flex-wrap:wrap}
+.user-pick-item .player-left img{width:42px;height:42px}
+.host-live-status{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.host-live-status .chip{margin-top:0}
+.hub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.hub-btn{min-height:88px;font-size:.95rem}
+.activity-mode-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.poll-vote-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.poll-btn-a{background:linear-gradient(135deg,#ef4444,#b91c1c)}
+.poll-btn-b{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}
+.poll-btn-c{background:linear-gradient(135deg,#eab308,#ca8a04);color:#111}
+.poll-btn-d{background:linear-gradient(135deg,#22c55e,#15803d)}
+.tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tf-true{background:linear-gradient(135deg,#10b981,#059669)}
+.tf-false{background:linear-gradient(135deg,#ef4444,#991b1b)}
+.chat-box{max-height:160px;overflow:auto;margin-top:10px;padding:8px;background:rgba(0,0,0,.2);border-radius:12px}
+.chat-msg{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.85rem}
+.reaction-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.reaction-row button{width:auto;flex:1;min-width:52px;padding:10px;font-size:1.2rem}
+.leader-podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end;margin:16px 0}
+.leader-podium .podium-item{padding:14px 8px}
+.leader-podium .first{transform:scale(1.05);border:2px solid var(--primary)}
+.practice-score{font-size:2rem;text-align:center;color:var(--primary);margin:12px 0}
+.activity-panel{margin-top:12px;padding:12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.12)}
+@media(max-width:900px){.hub-grid,.activity-mode-grid{grid-template-columns:repeat(2,1fr)}}
 .host-layout{display:grid;grid-template-columns:76px 1fr;gap:14px;margin-top:18px;align-items:start}
 .host-side{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px;position:sticky;top:10px}
 .host-side.collapsed .host-nav-label{display:none}
@@ -181,7 +209,8 @@ button:hover{transform:scale(1.02)}
 @keyframes scoreEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes scorePulseUp{0%{transform:scale(1)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
 @keyframes scorePulseDown{0%{transform:scale(1)}45%{transform:scale(.99)}100%{transform:scale(1)}}
-@media(max-width:900px){.dashboard-buttons,.host-actions,.score-buttons,.mode-grid,.grid,.host-layout,.dashboard-top,.quick-auth-row,.mcq-options,.power-grid{grid-template-columns:1fr}.title{font-size:2rem}.buzzer{width:200px;height:200px;font-size:2rem}.host-side{position:static}}
+@media(max-width:900px){.dashboard-buttons,.host-actions,.score-buttons,.mode-grid,.grid,.host-layout,.dashboard-top,.quick-auth-row,.mcq-options,.power-grid,.host-game-grid,.host-status-row{grid-template-columns:1fr}.title{font-size:2rem}.buzzer{width:200px;height:200px;font-size:2rem}.host-side{position:static}}
+@media(max-width:520px){.host-game-grid,.host-status-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -189,7 +218,7 @@ button:hover{transform:scale(1.02)}
 <h1 class="title">MAHIL QUIZ ARENA</h1>
 
 <div id="loginPage" class="glass">
-<div class="auth-hero"><h2>LOGIN</h2><p>Fast quiz battles, smarter controls, cleaner experience.</p></div>
+<div class="auth-hero"><h2>LOGIN</h2><p>Buzzer battles, live polls, practice mode, leaderboards &amp; more — one arena for everything.</p></div>
 <input type="text" id="loginUsername" placeholder="Username">
 <input type="password" id="loginPassword" placeholder="Password">
 <div class="toggle-row">
@@ -241,13 +270,65 @@ button:hover{transform:scale(1.02)}
     </div>
   </div>
 </div>
-<div class="dashboard-buttons">
-<button class="big-btn" onclick="hostGame()">HOST GAME</button>
-<button class="big-btn" onclick="openJoinPage()">PLAY GAME</button>
-<button class="big-btn" onclick="openSettings()">SETTINGS</button>
-<button class="big-btn warn-btn" onclick="clearRooms()">CLEAR ROOMS</button>
-<button class="big-btn dark-btn hidden" id="adminPanelBtn" onclick="openAdminPanel()">ADMIN PANEL</button>
+<div class="card">
+  <h2>ARENA HUB — BEYOND THE BUZZER</h2>
+  <p class="muted">Practice solo, climb global ranks, join live rooms, or run polls &amp; team games.</p>
+  <div class="hub-grid">
+    <button class="hub-btn" onclick="hostGame()">🎤 HOST LIVE</button>
+    <button class="hub-btn" onclick="openJoinPage()">🎯 JOIN ROOM</button>
+    <button class="hub-btn safe-btn" onclick="openPracticeMode()">📚 PRACTICE</button>
+    <button class="hub-btn" onclick="openLeaderboard()">🏆 LEADERBOARD</button>
+    <button class="hub-btn" onclick="openDailyChallenge()">☀️ DAILY CHALLENGE</button>
+    <button class="hub-btn dark-btn" onclick="openPublicRooms()">🌐 PUBLIC ROOMS</button>
+    <button class="hub-btn" onclick="openQuizLibrary()">📦 QUIZ LIBRARY</button>
+    <button class="hub-btn" onclick="openSettings()">⚙️ SETTINGS</button>
+    <button class="hub-btn warn-btn" onclick="clearRooms()">🗑️ CLEAR ROOMS</button>
+  </div>
 </div>
+<button class="big-btn dark-btn hidden" id="adminPanelBtn" onclick="openAdminPanel()" style="margin-top:14px">ADMIN PANEL</button>
+</div>
+
+<div id="practicePage" class="glass hidden">
+  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>PRACTICE MODE</h2></div>
+  <p class="muted">Solo training — no room needed. Earn XP for your season rank.</p>
+  <select id="practiceDeckSelect"></select>
+  <div class="practice-score" id="practiceScore">Score: 0</div>
+  <div class="card"><div class="question" id="practiceQuestion">Pick a deck and start</div></div>
+  <div id="practiceOptions" class="mcq-options"></div>
+  <div class="host-tool-row">
+    <button class="safe-btn" onclick="startPracticeRound()">START / NEXT</button>
+    <button class="dark-btn" onclick="resetPractice()">RESET</button>
+  </div>
+</div>
+
+<div id="leaderboardPage" class="glass hidden">
+  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>GLOBAL LEADERBOARD</h2></div>
+  <button class="safe-btn" onclick="renderLeaderboard()">REFRESH</button>
+  <div id="leaderboardPodium" class="leader-podium"></div>
+  <div id="leaderboardList"></div>
+</div>
+
+<div id="dailyPage" class="glass hidden">
+  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>DAILY CHALLENGE</h2></div>
+  <p class="muted" id="dailyDateLabel"></p>
+  <div class="card"><div class="question" id="dailyQuestion">Loading...</div></div>
+  <div class="mcq-options" id="dailyOptions"></div>
+  <button onclick="submitDailyChallenge()">SUBMIT ANSWER</button>
+  <div id="dailyResult" class="announce-bar hidden"></div>
+</div>
+
+<div id="publicRoomsPage" class="glass hidden">
+  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>PUBLIC ROOMS</h2></div>
+  <button class="safe-btn" onclick="renderPublicRooms()">REFRESH LIVE ROOMS</button>
+  <div id="publicRoomsList" class="recent-rooms" style="margin-top:14px"></div>
+</div>
+
+<div id="libraryPage" class="glass hidden">
+  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>QUIZ LIBRARY</h2></div>
+  <p class="muted">Pick a question pack for your next live session (host only when in room).</p>
+  <select id="libraryCategory"></select>
+  <div id="libraryQuestions" class="log-box" style="margin-top:12px;max-height:320px"></div>
+  <button class="dark-btn" onclick="seedQuestionBank()">SEED DEFAULT PACKS (FIREBASE)</button>
 </div>
 
 <div id="joinPage" class="glass hidden">
@@ -322,28 +403,98 @@ button:hover{transform:scale(1.02)}
   <button id="hostNavScore" onclick="showHostSection('score')"><span class="host-nav-icon">🏆</span><span class="host-nav-label">SCORES</span></button>
   <button id="hostNavPlayers" onclick="showHostSection('players')"><span class="host-nav-icon">👥</span><span class="host-nav-label">PLAYERS</span></button>
   <button id="hostNavStats" onclick="showHostSection('stats')"><span class="host-nav-icon">📊</span><span class="host-nav-label">STATS</span></button>
+  <button id="hostNavLibrary" onclick="openQuizLibrary()"><span class="host-nav-icon">📦</span><span class="host-nav-label">LIBRARY</span></button>
   </div>
 </div>
 <div class="host-content">
 
 <div id="hostSectionGame" class="host-section">
   <div class="card">
-  <div class="section-title"><span class="badge" id="modeBadge">NORMAL MODE</span></div>
-  <div class="mode-grid">
-  <button onclick="setGameMode('normal')">NORMAL MODE</button>
-  <button onclick="setGameMode('tournament')">TOURNAMENT MODE</button>
-  <button onclick="setScoreMode('individual')">INDIVIDUAL SCORE</button>
-  <button onclick="setScoreMode('team')">TEAM SCORE</button>
-  </div>
-  <div class="inline-row">
-  <input type="text" id="tournamentName" placeholder="Tournament Name">
-  <input type="number" id="maxRounds" placeholder="Rounds" min="1" value="3">
-  </div>
-  <button class="safe-btn" onclick="startTournament()">START TOURNAMENT</button>
+    <h2>ROOM CONTROLS</h2>
+    <div class="section-title"><span class="badge" id="modeBadge">NORMAL MODE</span> <span class="badge" id="hostRoomPlayerCount" style="margin-left:6px">0 PLAYERS</span></div>
+    <div id="hostLiveStatus" class="host-live-status"></div>
+    <div class="host-status-row">
+      <button class="dark-btn" onclick="copyRoomCode()">COPY ROOM CODE</button>
+      <button class="dark-btn" onclick="copyJoinLink()">COPY JOIN LINK</button>
+      <button class="safe-btn" onclick="broadcastGameStart()">BROADCAST START</button>
+      <button onclick="hostCountdownUnlock()">3-2-1 UNLOCK</button>
+    </div>
   </div>
 
-  <textarea id="questionInput" placeholder="Enter Question"></textarea>
-  <input type="file" id="questionImageInput" accept="image/*">
+  <div class="card">
+    <h2>REGISTERED USERS (FIREBASE)</h2>
+    <p class="muted">Invite players from your Firebase user list into this room.</p>
+    <div class="inline-row">
+      <input type="text" id="hostUserSearch" placeholder="Search by name or email" oninput="filterFirebaseUsers()">
+      <button class="safe-btn" onclick="loadFirebaseUsersForHost()">REFRESH USERS</button>
+    </div>
+    <div class="host-tool-row">
+      <button onclick="inviteAllFirebaseUsers()">INVITE ALL ONLINE</button>
+      <button class="dark-btn" onclick="migrateLocalUsersToFirebase()">SYNC LOCAL → FIREBASE</button>
+    </div>
+    <div id="hostFirebaseUsers" class="user-pick-list muted">Loading users from Firebase...</div>
+  </div>
+
+  <div class="card">
+    <h2>ACTIVITY MODES <span class="badge" id="hostActivityBadge">BUZZER</span></h2>
+    <p class="muted">Switch how players interact — not only buzz-in.</p>
+    <div class="activity-mode-grid">
+      <button onclick="setRoomActivity('buzzer')">⚡ BUZZER</button>
+      <button onclick="setRoomActivity('poll')">📊 POLL</button>
+      <button onclick="setRoomActivity('truefalse')">✅ TRUE/FALSE</button>
+      <button onclick="setRoomActivity('typeanswer')">✍️ TYPE ANSWER</button>
+      <button onclick="setRoomActivity('speedquiz')">⏱️ SPEED QUIZ</button>
+    </div>
+    <div id="hostActivityPanel" class="activity-panel">
+      <input type="text" id="pollQuestionInput" placeholder="Poll question">
+      <input type="text" id="pollOptA" placeholder="Option A">
+      <input type="text" id="pollOptB" placeholder="Option B">
+      <input type="text" id="pollOptC" placeholder="Option C (optional)">
+      <input type="text" id="pollOptD" placeholder="Option D (optional)">
+      <div class="host-tool-row">
+        <button onclick="startLivePoll()">START POLL</button>
+        <button class="dark-btn" onclick="closePollResults()">SHOW RESULTS</button>
+      </div>
+      <input type="text" id="tfQuestionInput" placeholder="True/False statement">
+      <select id="tfCorrect"><option value="true">Correct: TRUE</option><option value="false">Correct: FALSE</option></select>
+      <button onclick="startTrueFalseRound()">START TRUE/FALSE</button>
+      <input type="text" id="typeAnswerPrompt" placeholder="Type-answer question">
+      <input type="text" id="typeAnswerExpected" placeholder="Expected answer (for host reference)">
+      <button onclick="startTypeAnswerRound()">START TYPE ANSWER</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title"><span class="badge">GAME MODE</span></div>
+    <div class="mode-grid">
+      <button onclick="setGameMode('normal')">NORMAL MODE</button>
+      <button onclick="setGameMode('tournament')">TOURNAMENT MODE</button>
+      <button onclick="setScoreMode('individual')">INDIVIDUAL SCORE</button>
+      <button onclick="setScoreMode('team')">TEAM SCORE</button>
+    </div>
+    <div class="inline-row">
+      <input type="text" id="tournamentName" placeholder="Tournament Name">
+      <input type="number" id="maxRounds" placeholder="Rounds" min="1" value="3">
+    </div>
+    <div class="host-tool-row">
+      <button class="safe-btn" onclick="startTournament()">START TOURNAMENT</button>
+      <button class="dark-btn" onclick="advanceTournamentRound()">NEXT ROUND</button>
+      <button onclick="autoDraftTeams()">AUTO DRAFT TEAMS</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>QUESTION STUDIO</h2>
+    <textarea id="questionInput" placeholder="Enter Question"></textarea>
+    <input type="file" id="questionImageInput" accept="image/*">
+    <div class="host-game-grid">
+      <button onclick="sendQuestion()">SEND QUESTION</button>
+      <button onclick="reuseLastQuestion()">REUSE LAST QUESTION</button>
+      <button class="warn-btn" onclick="clearCurrentQuestion()">CLEAR QUESTION</button>
+      <button onclick="startTimer()">START TIMER</button>
+    </div>
+  </div>
+
   <div class="card">
     <h2>MCQ MODE</h2>
     <input type="text" id="mcqQuestion" placeholder="MCQ Question">
@@ -359,32 +510,46 @@ button:hover{transform:scale(1.02)}
       <option value="C">Correct: C</option>
       <option value="D">Correct: D</option>
     </select>
-    <div class="host-tool-row">
+    <div class="host-game-grid">
       <button onclick="sendMcqQuestion()">SEND MCQ</button>
+      <button class="safe-btn" onclick="revealMcqAnswer()">REVEAL ANSWER</button>
+      <button onclick="gradeMcqAndAward()">GRADE &amp; AWARD</button>
       <button class="dark-btn" onclick="exportQuestionPack()">EXPORT PACK</button>
       <button class="dark-btn" onclick="importQuestionPack()">IMPORT PACK</button>
     </div>
     <textarea id="questionPackData" placeholder="Question pack JSON (import/export)"></textarea>
   </div>
 
-  <div class="host-actions">
-  <button onclick="sendQuestion()">SEND QUESTION</button>
-  <button onclick="startTimer()">START TIMER</button>
-  <button class="warn-btn" onclick="lockBuzzers()">LOCK BUZZERS</button>
-  <button class="safe-btn" onclick="unlockBuzzers()">UNLOCK BUZZERS</button>
-  <button onclick="resetBuzzers()">RESET BUZZERS</button>
-  <button class="dark-btn" onclick="advanceTournamentRound()">NEXT ROUND</button>
+  <div class="card">
+    <h2>BUZZER &amp; ROUND CONTROLS</h2>
+    <div class="host-game-grid">
+      <button class="warn-btn" onclick="lockBuzzers()">LOCK BUZZERS</button>
+      <button class="safe-btn" onclick="unlockBuzzers()">UNLOCK BUZZERS</button>
+      <button onclick="resetBuzzers()">RESET BUZZERS</button>
+      <button onclick="startLightningRound()">LIGHTNING (5s)</button>
+      <button class="warn-btn" onclick="freezeAllPlayers()">FREEZE ALL</button>
+      <button class="safe-btn" onclick="unfreezeAllPlayers()">UNFREEZE ALL</button>
+      <button onclick="pickRandomPlayer()">RANDOM PICK</button>
+      <button class="dark-btn" onclick="revealTopPerformer()">TOP PLAYER</button>
+    </div>
   </div>
-  <div class="host-tool-row">
-    <button onclick="startLightningRound()">LIGHTNING ROUND (5s)</button>
-    <button onclick="shuffleThemeForAll()">SHUFFLE ROOM THEME</button>
-    <button class="dark-btn" onclick="revealTopPerformer()">REVEAL TOP PLAYER</button>
+
+  <div class="card">
+    <h2>ROOM EXPERIENCE</h2>
+    <div class="host-game-grid">
+      <button onclick="shuffleThemeForAll()">SHUFFLE THEME</button>
+      <button onclick="toggleVoiceAnnouncer()">VOICE ANNOUNCER</button>
+      <button onclick="openOverlayMode()">OPEN OVERLAY</button>
+      <button onclick="showHostSection('score')">OPEN SCORES</button>
+      <button onclick="showHostSection('players')">OPEN PLAYERS</button>
+      <button class="safe-btn" onclick="sendQuickAnnouncement('Get ready! Next question incoming.')">READY UP</button>
+      <button class="dark-btn" onclick="sendQuickAnnouncement('Break time — 60 seconds.')">BREAK TIME</button>
+      <button class="warn-btn" onclick="endRoundNow()">END ROUND NOW</button>
+    </div>
+    <input type="text" id="quickAnnounceInput" placeholder="Quick announcement to all players">
+    <button onclick="sendQuickAnnouncement()">SEND QUICK ANNOUNCEMENT</button>
   </div>
-  <div class="host-tool-row">
-    <button onclick="autoDraftTeams()">AUTO DRAFT TEAMS</button>
-    <button onclick="toggleVoiceAnnouncer()">TOGGLE VOICE ANNOUNCER</button>
-    <button onclick="openOverlayMode()">OPEN OVERLAY MODE</button>
-  </div>
+
   <div class="timer" id="timer">10</div>
   <div class="winner" id="winner"></div>
 </div>
@@ -479,7 +644,52 @@ button:hover{transform:scale(1.02)}
 <div class="question" id="question">Waiting for question...</div>
 <img id="questionImage" class="question-image" alt="Question image">
 <div id="playerAnnouncement" class="announce-bar hidden"></div>
-<button class="buzzer" id="buzzBtn" onclick="buzz()">BUZZ</button>
+<div id="playerActivityBadge" class="section-title"><span class="badge">BUZZER MODE</span></div>
+
+<div id="playerActivityBuzzer">
+  <button class="buzzer" id="buzzBtn" onclick="buzz()">BUZZ</button>
+</div>
+
+<div id="playerActivityPoll" class="hidden">
+  <div class="question" id="pollQuestionDisplay">Waiting for poll...</div>
+  <div class="poll-vote-grid" id="pollVoteButtons"></div>
+</div>
+
+<div id="playerActivityTrueFalse" class="hidden">
+  <div class="question" id="tfQuestionDisplay">Waiting...</div>
+  <div class="tf-grid">
+    <button class="tf-true" onclick="submitTrueFalse('true')">TRUE</button>
+    <button class="tf-false" onclick="submitTrueFalse('false')">FALSE</button>
+  </div>
+</div>
+
+<div id="playerActivityTypeAnswer" class="hidden">
+  <div class="question" id="typeAnswerDisplay">Waiting...</div>
+  <input type="text" id="playerTypeAnswerInput" placeholder="Type your answer">
+  <button onclick="submitTypeAnswer()">SUBMIT</button>
+</div>
+
+<div class="card">
+  <h2>LIVE REACTIONS</h2>
+  <div class="reaction-row">
+    <button onclick="sendReaction('🔥')">🔥</button>
+    <button onclick="sendReaction('😂')">😂</button>
+    <button onclick="sendReaction('👏')">👏</button>
+    <button onclick="sendReaction('😮')">😮</button>
+    <button onclick="sendReaction('💯')">💯</button>
+  </div>
+  <div id="latestReaction" class="muted"></div>
+</div>
+
+<div class="card">
+  <h2>ROOM CHAT</h2>
+  <div id="roomChatBox" class="chat-box muted">No messages yet</div>
+  <div class="inline-row">
+    <input type="text" id="roomChatInput" placeholder="Message the room..." maxlength="120">
+    <button onclick="sendRoomChat()">SEND</button>
+  </div>
+</div>
+
 <div class="card">
   <h2>MCQ ANSWER</h2>
   <div id="playerMcqQuestion" class="muted">No MCQ active</div>
@@ -552,7 +762,44 @@ let previousScoreByPlayerKey={};
 let lastScoreAction=null;
 let voiceAnnouncerEnabled=true;
 let currentRoomDataCache=null;
+let firebaseUsersCache=[];
+let lastSentQuestion='';
+let practiceState={deck:'general',index:0,score:0,active:false};
 const ADMIN_USERNAMES=['admin','superadmin','mahiladmin'];
+const ACTIVITY_LABELS={buzzer:'⚡ BUZZER',poll:'📊 LIVE POLL',truefalse:'✅ TRUE/FALSE',typeanswer:'✍️ TYPE ANSWER',speedquiz:'⏱️ SPEED QUIZ'};
+const PRACTICE_DECKS={
+  general:[
+    {q:'Capital of France?',opts:['Paris','London','Rome','Berlin'],a:0},
+    {q:'2 + 2 = ?',opts:['3','4','5','22'],a:1},
+    {q:'Largest planet?',opts:['Earth','Mars','Jupiter','Venus'],a:2}
+  ],
+  science:[
+    {q:'Chemical symbol for water?',opts:['O2','H2O','CO2','NaCl'],a:1},
+    {q:'Speed of light unit?',opts:['mph','m/s','km/s','knots'],a:1},
+    {q:'Human body bones (approx)?',opts:['106','206','306','406'],a:1}
+  ],
+  trivia:[
+    {q:'Who painted the Mona Lisa?',opts:['Van Gogh','Da Vinci','Picasso','Monet'],a:1},
+    {q:'Year WW2 ended?',opts:['1943','1945','1947','1950'],a:1},
+    {q:'First man on moon?',opts:['Aldrin','Armstrong','Collins','Gagarin'],a:1}
+  ]
+};
+const DEFAULT_QUESTION_BANK={
+  general:[
+    {question:'What is 15 × 4?',answer:'60',type:'short'},
+    {question:'Name the longest river in the world.',answer:'Nile',type:'short'},
+    {question:'Which gas do plants absorb?',answer:'carbon dioxide',type:'short'}
+  ],
+  fun:[
+    {question:'What color is a ruby?',answer:'red',type:'short'},
+    {question:'How many sides does a hexagon have?',answer:'6',type:'short'},
+    {question:'Buzz in: fastest finger wins!',answer:'',type:'buzzer'}
+  ],
+  mcq:[
+    {question:'Select the prime number',options:{A:'9',B:'11',C:'15',D:'21'},correct:'B',type:'mcq'},
+    {question:'Select the mammal',options:{A:'Shark',B:'Frog',C:'Dolphin',D:'Spider'},correct:'C',type:'mcq'}
+  ]
+};
 const buzzSounds={1:'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',2:'https://assets.mixkit.co/active_storage/sfx/1018/1018-preview.mp3',3:'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3',4:'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3',5:'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',6:'https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3',7:'https://assets.mixkit.co/active_storage/sfx/220/220-preview.mp3',8:'https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3'};
 const themes=['neon','sunset','forest','midnight','aurora','rose','ice'];
 
@@ -633,6 +880,7 @@ function showHostSection(section){
     if(sectionEl)sectionEl.classList.toggle('hidden',name!==section);
     if(navBtn)navBtn.classList.toggle('active',name===section);
   });
+  if(section==='game'&&currentRoom)loadFirebaseUsersForHost();
 }
 
 function toggleHostSidebar(){
@@ -663,7 +911,7 @@ function fillDemoUser(){
 }
 
 function showQuickTips(){
-  alert('Tips:\n1) Use Space to buzz quickly.\n2) Pick your sound/theme in Settings.\n3) Use quick commands on dashboard.\n4) Press Ctrl+K for command helper.');
+  alert('Arena tips:\n• Space = buzz in live rooms\n• Hub: Practice, Daily Challenge, Leaderboard\n• Host can switch Poll / True-False / Type Answer modes\n• Room chat + reactions for audience energy\n• Ctrl+K = quick command (host, join, settings)');
 }
 
 function rememberRecentLogin(){
@@ -734,7 +982,7 @@ function renderDashboardInsights(){
   const mine=rooms.filter(r=>r.by===currentUser.email);
   const streakInfo=JSON.parse(localStorage.getItem('mahilDailyStreak_'+currentUser.email)||'null');
   const season=getSeasonData();
-  statsEl.innerHTML=`<div class="mini-stat"><div class="muted">Theme</div><b>${escapeHtml(currentUser.theme||'neon')}</b></div><div class="mini-stat"><div class="muted">Sound</div><b>#${escapeHtml(currentUser.sound||'1')}</b></div><div class="mini-stat"><div class="muted">Total Users</div><b>${users.length}</b></div><div class="mini-stat"><div class="muted">Rooms Joined</div><b>${mine.length}</b></div><div class="mini-stat"><div class="muted">Daily Streak</div><b>${streakInfo?.streak||1} day(s)</b></div><div class="mini-stat"><div class="muted">Season Rank</div><b>${season.rank} L${season.level}</b></div>`;
+  statsEl.innerHTML=`<div class="mini-stat"><div class="muted">Theme</div><b>${escapeHtml(currentUser.theme||'neon')}</b></div><div class="mini-stat"><div class="muted">Sound</div><b>#${escapeHtml(currentUser.sound||'1')}</b></div><div class="mini-stat"><div class="muted">Arena XP</div><b>L${season.level}</b></div><div class="mini-stat"><div class="muted">Rooms Joined</div><b>${mine.length}</b></div><div class="mini-stat"><div class="muted">Daily Streak</div><b>${streakInfo?.streak||1} day(s)</b></div><div class="mini-stat"><div class="muted">Season Rank</div><b>${season.rank}</b></div>`;
 }
 
 function renderRecentRooms(){
@@ -888,178 +1136,131 @@ window.addEventListener('load',()=>{
   if(roomParam)document.getElementById('joinCode').value=roomParam.toUpperCase();
   renderRecentLoginHint();
 });
-function hideAll(){['loginPage','signupPage','dashboard','joinPage','settingsPage','adminPage','hostPage','playerPage'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
+function hideAll(){['loginPage','signupPage','dashboard','joinPage','settingsPage','adminPage','hostPage','playerPage','practicePage','leaderboardPage','dailyPage','publicRoomsPage','libraryPage'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
+function getTodayKey(){return new Date().toISOString().slice(0,10)}
 function showSignup(){hideAll();document.getElementById('signupPage').classList.remove('hidden')}
 function showLogin(){hideAll();document.getElementById('loginPage').classList.remove('hidden')}
-function signup(){const username=signupUsername.value.trim(),email=signupEmail.value.trim(),password=signupPassword.value.trim(),avatar=avatarPreview.src;if(!username||!email||!password)return alert('Fill all fields');let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];if(users.find(u=>u.username===username))return alert('Username Exists');const role=(users.length===0||ADMIN_USERNAMES.includes(username.toLowerCase()))?'admin':'user';users.push({username,email,password,avatar,sound:'1',theme:'neon',confetti:true,role,cosmeticBorder:'none'});localStorage.setItem('mahilUsers',JSON.stringify(users));alert('Account Created');showLogin()}
-function login(){const username=loginUsername.value.trim(),password=loginPassword.value.trim();const users=JSON.parse(localStorage.getItem('mahilUsers'))||[];const user=users.find(u=>u.username===username&&u.password===password);if(!user)return alert('Invalid Login');if(isAdminUser(user)&&user.role!=='admin')user.role='admin';currentUser=user;if(rememberMeToggle.checked)localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));else localStorage.removeItem('mahilCurrentUser');localStorage.setItem('mahilUsers',JSON.stringify(users));rememberRecentLogin();showDashboard();if(joinCode.value.trim())openJoinPage()}
+async function signup(){
+  const username=signupUsername.value.trim(),email=signupEmail.value.trim(),password=signupPassword.value.trim(),avatar=avatarPreview.src;
+  if(!username||!email||!password)return alert('Fill all fields');
+  await waitForFirebase();
+  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  const fbUsers=await fetchAllFirebaseUsers();
+  if(users.find(u=>u.username===username)||fbUsers.find(u=>u.username===username))return alert('Username Exists');
+  if(users.find(u=>u.email===email)||fbUsers.find(u=>u.email===email))return alert('Email already registered');
+  const role=(users.length===0||ADMIN_USERNAMES.includes(username.toLowerCase()))?'admin':'user';
+  const newUser={username,email,password,avatar,sound:'1',theme:'neon',confetti:true,role,cosmeticBorder:'none',createdAt:Date.now()};
+  users.push(newUser);
+  localStorage.setItem('mahilUsers',JSON.stringify(users));
+  await syncUserToFirebase(newUser);
+  alert('Account Created');
+  showLogin();
+}
+async function login(){
+  const username=loginUsername.value.trim(),password=loginPassword.value.trim();
+  await waitForFirebase();
+  await migrateLocalUsersToFirebase();
+  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  const fbUsers=await fetchAllFirebaseUsers();
+  const merged=mergeUserLists(users,fbUsers);
+  localStorage.setItem('mahilUsers',JSON.stringify(merged));
+  const user=merged.find(u=>u.username===username&&u.password===password);
+  if(!user)return alert('Invalid Login');
+  if(isAdminUser(user)&&user.role!=='admin')user.role='admin';
+  currentUser=user;
+  await syncUserToFirebase(user);
+  if(rememberMeToggle.checked)localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
+  else localStorage.removeItem('mahilCurrentUser');
+  localStorage.setItem('mahilUsers',JSON.stringify(merged));
+  rememberRecentLogin();
+  showDashboard();
+  if(joinCode.value.trim())openJoinPage();
+}
 function showDashboard(){hideAll();dashboard.classList.remove('hidden');applyTheme(currentUser.theme||'neon');profileAvatar.src=currentUser.avatar;const season=getSeasonData();profileAvatar.style.border=season.level>=10?'4px solid #fbbf24':(season.level>=5?'4px solid #93c5fd':'3px solid #00e5ff');profileName.innerText=currentUser.username;profileEmail.innerText=currentUser.email;updateDailyStreak();updateAdminButtonVisibility();renderDashboardInsights();renderBadges();renderRecentRooms();renderGlobalAnnouncement()}
 function logout(){localStorage.removeItem('mahilCurrentUser');location.reload()}
 function goDashboard(){showDashboard()}
 function openSettings(){hideAll();settingsPage.classList.remove('hidden');changeName.value=currentUser.username;soundSelect.value=currentUser.sound||'1';themeSelect.value=currentUser.theme||'neon';confettiToggle.checked=currentUser.confetti!==false}
 function saveSettings(){const newName=changeName.value.trim(),sound=soundSelect.value,theme=themeSelect.value;if(newName)currentUser.username=newName;currentUser.sound=sound;currentUser.theme=theme;currentUser.confetti=!!confettiToggle.checked;applyTheme(theme);const avatarFile=changeAvatar.files[0];if(avatarFile){const reader=new FileReader();reader.onload=ev=>{currentUser.avatar=ev.target.result;finishSave()};reader.readAsDataURL(avatarFile)}else finishSave()}
-function finishSave(){let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];users=users.map(u=>u.email===currentUser.email?currentUser:u);localStorage.setItem('mahilUsers',JSON.stringify(users));localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));alert('Saved');location.reload()}
+async function finishSave(){
+  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  users=users.map(u=>u.email===currentUser.email?currentUser:u);
+  localStorage.setItem('mahilUsers',JSON.stringify(users));
+  localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
+  await waitForFirebase();
+  await syncUserToFirebase(currentUser);
+  alert('Saved');
+  location.reload();
+}
 function openJoinPage(){hideAll();joinPage.classList.remove('hidden')}
 function ensureAdminAccess(){if(!isAdminUser(currentUser)){alert('Admin access only');goDashboard();return false}return true}
 function openAdminPanel(){if(!ensureAdminAccess())return;hideAll();adminPage.classList.remove('hidden');renderAdminPanel()}
 
 async function renderAdminPanel(){
-
   await waitForFirebase();
-
-  const snap = await fbGet(
-    fbRef(db,'users')
-  );
-
-  const usersObj =
-    snap.exists()
-    ? snap.val()
-    : {};
-
-  const users =
-    Object.values(usersObj);
-
-  const totalUsers = users.length;
-
-  const adminCount =
-    users.filter(u=>u.role==='admin').length;
-
-  const normalCount =
-    totalUsers-adminCount;
-
-  adminStats.innerHTML=`
-  <div class="player">
-    <div>Total Users</div>
-    <div>${totalUsers}</div>
-  </div>
-
-  <div class="player">
-    <div>Admins</div>
-    <div>${adminCount}</div>
-  </div>
-
-  <div class="player">
-    <div>Players</div>
-    <div>${normalCount}</div>
-  </div>
-  `;
-
+  await migrateLocalUsersToFirebase();
+  const localUsers=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  const fbUsers=await fetchAllFirebaseUsers();
+  const users=mergeUserLists(localUsers,fbUsers);
+  localStorage.setItem('mahilUsers',JSON.stringify(users));
+  const lucky=JSON.parse(localStorage.getItem('mahilLuckyDrawWinner')||'null');
+  const totalUsers=users.length;
+  const adminCount=users.filter(u=>isAdminUser(u)).length;
+  const normalCount=totalUsers-adminCount;
+  const topTheme=(users.map(u=>u.theme||'neon').sort((a,b)=>users.filter(x=>(x.theme||'neon')===a).length-users.filter(x=>(x.theme||'neon')===b).length).pop())||'neon';
+  adminStats.innerHTML=`<div class="player"><div>Total Users</div><div>${totalUsers}</div></div><div class="player"><div>Admins</div><div>${adminCount}</div></div><div class="player"><div>Players</div><div>${normalCount}</div></div><div class="player"><div>Top Theme</div><div class="chip">${escapeHtml(topTheme)}</div></div><div class="player"><div>Last Lucky Draw</div><div>${lucky?escapeHtml(lucky.username):'-'}</div></div>`;
   let html='';
-
-  Object.entries(usersObj).forEach(
-    ([key,user])=>{
-
-    const protectedCurrent =
-      user.email===currentUser.email;
-
-    html+=`
-    <div class="admin-user">
-
-      <div>
-        <b>${escapeHtml(user.username||'User')}</b><br>
-
-        <span class="muted">
-          ${escapeHtml(user.email||'')}
-        </span><br>
-
-        <span class="chip">
-          ${user.role||'user'}
-        </span>
-      </div>
-
-      <div class="admin-tools">
-
-        <button
-          class="dark-btn"
-          onclick="toggleAdminRole('${key}')"
-          ${protectedCurrent?'disabled':''}
-        >
-          ${user.role==='admin'
-            ?'DEMOTE'
-            :'MAKE ADMIN'}
-        </button>
-
-        <button
-          class="safe-btn"
-          onclick="resetUserPassword('${key}')">
-          RESET PASSWORD
-        </button>
-
-        <button
-          class="warn-btn"
-          onclick="deleteUser('${key}')"
-          ${protectedCurrent?'disabled':''}
-        >
-          DELETE
-        </button>
-
-      </div>
-
-    </div>
-    `;
+  users.forEach(user=>{
+    const roleLabel=isAdminUser(user)?'Admin':'User';
+    const protectedCurrent=user.email===currentUser.email;
+    const encodedEmail=encodeURIComponent(user.email||'');
+    html+=`<div class="admin-user"><div><b>${escapeHtml(user.username)}</b><br><span class="muted">${escapeHtml(user.email)}</span><br><span class="chip">${roleLabel}</span></div><div class="admin-tools"><button class="dark-btn" onclick="toggleAdminRole('${encodedEmail}')" ${protectedCurrent?'disabled':''}>${isAdminUser(user)?'DEMOTE':'MAKE ADMIN'}</button><button class="safe-btn" onclick="resetUserPassword('${encodedEmail}')">RESET PASSWORD</button><button class="warn-btn" onclick="deleteUser('${encodedEmail}')" ${protectedCurrent?'disabled':''}>DELETE</button></div></div>`;
   });
-
-  adminUsers.innerHTML =
-    html ||
-    '<div class="muted">No users found</div>';
+  adminUsers.innerHTML=html||'<div class="muted">No users found</div>';
 }
 
-async function toggleAdminRole(userKey){
+async function toggleAdminRole(encodedEmail){
+  if(!ensureAdminAccess())return;
+  const email=decodeURIComponent(encodedEmail);
+  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  users=users.map(user=>{
+    if(user.email!==email)return user;
+    const nextRole=isAdminUser(user)?'user':'admin';
+    return {...user,role:nextRole};
+  });
+  localStorage.setItem('mahilUsers',JSON.stringify(users));
+  const updated=users.find(u=>u.email===email);
+  if(updated)await syncUserToFirebase(updated);
+  if(currentUser.email===email){
+    currentUser=updated||currentUser;
+    localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
+  }
+  renderAdminPanel();
+  updateAdminButtonVisibility();
+}
 
+async function resetUserPassword(encodedEmail){
+  if(!ensureAdminAccess())return;
+  const email=decodeURIComponent(encodedEmail);
+  const next=prompt('Enter new password for this user:');
+  if(!next)return;
+  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  users=users.map(user=>user.email===email?{...user,password:next}:user);
+  localStorage.setItem('mahilUsers',JSON.stringify(users));
+  const updated=users.find(u=>u.email===email);
+  if(updated)await syncUserToFirebase(updated);
+  alert('Password reset complete');
+}
+
+async function deleteUser(encodedEmail){
+  if(!ensureAdminAccess())return;
+  const email=decodeURIComponent(encodedEmail);
+  if(!confirm('Delete this user permanently?'))return;
+  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  users=users.filter(user=>user.email!==email);
+  localStorage.setItem('mahilUsers',JSON.stringify(users));
   await waitForFirebase();
-
-  const refUser =
-    fbRef(db,'users/'+userKey);
-
-  const snap =
-    await fbGet(refUser);
-
-  if(!snap.exists()) return;
-
-  const user=snap.val();
-
-  await fbUpdate(refUser,{
-    role:
-      user.role==='admin'
-      ? 'user'
-      : 'admin'
-  });
-
+  await fbRemove(fbRef(db,'users/'+sanitizeKey(email)));
   renderAdminPanel();
-}
-
-async function resetUserPassword(userKey){
-
-  const next =
-    prompt('Enter new password');
-
-  if(!next) return;
-
-  await fbUpdate(
-    fbRef(db,'users/'+userKey),
-    {
-      password:next
-    }
-  );
-
-  alert('Password Updated');
-}
-
-async function deleteUser(userKey){
-
-  if(
-    !confirm(
-      'Delete this user permanently?'
-    )
-  ) return;
-
-  await fbRemove(
-    fbRef(db,'users/'+userKey)
-  );
-
-  renderAdminPanel();
-
-  alert('User Deleted');
 }
 
 function broadcastGlobalAnnouncement(){
@@ -1085,9 +1286,12 @@ function renderGlobalAnnouncement(){
   }
 }
 
-function runLuckyDraw(){
+async function runLuckyDraw(){
   if(!ensureAdminAccess())return;
-  const users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  await waitForFirebase();
+  const localUsers=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  const fbUsers=await fetchAllFirebaseUsers();
+  const users=mergeUserLists(localUsers,fbUsers);
   const pool=users.filter(u=>!isAdminUser(u));
   if(!pool.length)return alert('No non-admin users for lucky draw');
   const winner=pool[Math.floor(Math.random()*pool.length)];
@@ -1096,22 +1300,663 @@ function runLuckyDraw(){
   renderAdminPanel();
 }
 function waitForFirebase(){return new Promise(resolve=>{if(window.db&&window.fbRef)resolve();else window.addEventListener('firebase-ready',resolve,{once:true})})}
-function sanitizeKey(email){return email.replace(/[.#$[\]]/g,'_')}
+function sanitizeKey(email){return String(email||'').replace(/[.#$[\]]/g,'_')}
 
-async function saveUserToFirebase(user){
-
-  await fbSet(
-    fbRef(
-      db,
-      'users/'+sanitizeKey(user.email)
-    ),
-    user
-  );
+function mergeUserLists(localUsers=[],firebaseUsers=[]){
+  const map=new Map();
+  [...localUsers,...firebaseUsers].forEach(user=>{
+    if(!user?.email)return;
+    const prev=map.get(user.email)||{};
+    map.set(user.email,{...prev,...user});
+  });
+  return Array.from(map.values());
 }
 
+async function syncUserToFirebase(user){
+  if(!user?.email)return;
+  await waitForFirebase();
+  const key=sanitizeKey(user.email);
+  await fbSet(fbRef(db,'users/'+key),{
+    username:user.username||'',
+    email:user.email||'',
+    password:user.password||'',
+    avatar:user.avatar||'',
+    sound:user.sound||'1',
+    theme:user.theme||'neon',
+    confetti:user.confetti!==false,
+    role:user.role||'user',
+    cosmeticBorder:user.cosmeticBorder||'none',
+    updatedAt:Date.now(),
+    createdAt:user.createdAt||Date.now()
+  });
+}
+
+async function fetchAllFirebaseUsers(){
+  await waitForFirebase();
+  const snap=await fbGet(fbRef(db,'users'));
+  if(!snap.exists())return [];
+  return Object.values(snap.val()||{}).filter(u=>u&&u.email);
+}
+
+async function migrateLocalUsersToFirebase(){
+  const local=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+  for(const user of local){
+    try{await syncUserToFirebase(user)}catch(e){console.warn('User sync skipped',user?.email,e)}
+  }
+  return local.length;
+}
+
+function renderFirebaseUserPickList(users){
+  const box=document.getElementById('hostFirebaseUsers');
+  if(!box)return;
+  if(!users.length){
+    box.innerHTML='<div class="muted">No registered users in Firebase yet. Ask players to sign up, or use SYNC LOCAL → FIREBASE.</div>';
+    return;
+  }
+  const roomPlayers=currentRoomDataCache?.players||{};
+  const inRoomEmails=new Set(Object.values(roomPlayers).map(p=>p.email).filter(Boolean));
+  box.innerHTML=users.map(user=>{
+    const encoded=encodeURIComponent(user.email||'');
+    const inRoom=inRoomEmails.has(user.email);
+    const hostSelf=user.email===currentUser?.email;
+    return `<div class="user-pick-item"><div class="player-left"><img src="${escapeHtml(user.avatar||'https://i.pravatar.cc/150')}" alt=""><div><b>${escapeHtml(user.username||'')}</b><br><span class="muted">${escapeHtml(user.email||'')}</span>${inRoom?' <span class="chip">In Room</span>':''}</div></div><button class="${inRoom||hostSelf?'dark-btn':'safe-btn'}" onclick="inviteFirebaseUser('${encoded}')" ${inRoom||hostSelf?'disabled':''}>${inRoom?'JOINED':'INVITE'}</button></div>`;
+  }).join('');
+}
+
+function filterFirebaseUsers(){
+  const q=(document.getElementById('hostUserSearch')?.value||'').trim().toLowerCase();
+  const filtered=!q?firebaseUsersCache:firebaseUsersCache.filter(u=>
+    String(u.username||'').toLowerCase().includes(q)||String(u.email||'').toLowerCase().includes(q)
+  );
+  renderFirebaseUserPickList(filtered);
+}
+
+async function loadFirebaseUsersForHost(){
+  const box=document.getElementById('hostFirebaseUsers');
+  if(box)box.innerHTML='<div class="muted">Loading users from Firebase...</div>';
+  try{
+    await waitForFirebase();
+    await migrateLocalUsersToFirebase();
+    const fbUsers=await fetchAllFirebaseUsers();
+    const local=JSON.parse(localStorage.getItem('mahilUsers'))||[];
+    firebaseUsersCache=mergeUserLists(local,fbUsers).filter(u=>u.email!==currentUser?.email);
+    filterFirebaseUsers();
+    notify(`Loaded ${firebaseUsersCache.length} user(s) from Firebase`,'success');
+  }catch(e){
+    console.error(e);
+    if(box)box.innerHTML='<div class="muted">Failed to load users. Check Firebase rules/network.</div>';
+    notify('Could not load Firebase users','error');
+  }
+}
+
+async function inviteFirebaseUser(encodedEmail,options={}){
+  if(!currentRoom)return alert('Create or open a room first');
+  const email=decodeURIComponent(encodedEmail);
+  const user=firebaseUsersCache.find(u=>u.email===email)||(await fetchAllFirebaseUsers()).find(u=>u.email===email);
+  if(!user)return alert('User not found');
+  const key=sanitizeKey(email);
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+key),{
+    username:user.username,
+    email:user.email,
+    avatar:user.avatar||'',
+    sound:user.sound||'1',
+    score:0,
+    team:'',
+    online:false,
+    isHost:false,
+    invited:true,
+    powerUps:{double:1,shield:1,steal:1},
+    activePowerUp:''
+  });
+  if(!options.silent){
+    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+      announcement:`📨 ${user.username}, join room ${currentRoom} now!`
+    });
+    notify(`Invited ${user.username}`,'success');
+    loadFirebaseUsersForHost();
+  }
+  return user.username;
+}
+
+async function inviteAllFirebaseUsers(){
+  if(!firebaseUsersCache.length)await loadFirebaseUsersForHost();
+  const roomPlayers=currentRoomDataCache?.players||{};
+  const inRoom=new Set(Object.values(roomPlayers).map(p=>p.email));
+  const names=[];
+  for(const user of firebaseUsersCache){
+    if(inRoom.has(user.email))continue;
+    const name=await inviteFirebaseUser(encodeURIComponent(user.email),{silent:true});
+    if(name)names.push(name);
+  }
+  if(names.length){
+    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+      announcement:`📨 ${names.length} player(s) invited to room ${currentRoom}`
+    });
+    notify(`Invited ${names.length} user(s)`,'success');
+    loadFirebaseUsersForHost();
+  }else{
+    notify('Everyone already in room');
+  }
+}
+
+function copyRoomCode(){
+  if(!currentRoom)return alert('No active room');
+  navigator.clipboard?.writeText(currentRoom).then(()=>notify('Room code copied','success')).catch(()=>alert('Room code: '+currentRoom));
+}
+
+function copyJoinLink(){
+  if(!currentRoom)return alert('No active room');
+  const joinURL=new URL(window.location.href);
+  joinURL.searchParams.set('room',currentRoom);
+  navigator.clipboard?.writeText(joinURL.toString()).then(()=>notify('Join link copied','success')).catch(()=>alert(joinURL.toString()));
+}
+
+async function broadcastGameStart(){
+  if(!currentRoom)return;
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+    announcement:`🎮 Game starting in room ${currentRoom}! Host: ${currentUser?.username||'Host'}`,
+    buzzerLocked:true,
+    buzzed:false,
+    winner:'',
+    reaction:''
+  });
+  speakText('Game is starting');
+}
+
+async function hostCountdownUnlock(){
+  if(!currentRoom)return;
+  const steps=['3','2','1','BUZZ!'];
+  for(let i=0;i<steps.length;i++){
+    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{announcement:steps[i],timer:i<3?3-i:10});
+    await new Promise(r=>setTimeout(r,900));
+  }
+  await unlockBuzzers();
+}
+
+async function sendQuickAnnouncement(preset){
+  const msg=typeof preset==='string'?preset:(document.getElementById('quickAnnounceInput')?.value||'').trim();
+  if(!msg||!currentRoom)return alert('Enter announcement text');
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{announcement:msg});
+  if(document.getElementById('quickAnnounceInput'))document.getElementById('quickAnnounceInput').value='';
+}
+
+function reuseLastQuestion(){
+  const q=lastSentQuestion||(currentRoomDataCache?.question||'');
+  if(!q)return alert('No previous question yet');
+  questionInput.value=q;
+  notify('Last question loaded into editor');
+}
+
+async function clearCurrentQuestion(){
+  if(!currentRoom)return;
+  questionInput.value='';
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+    question:'',
+    questionImage:'',
+    winner:'',
+    buzzed:false,
+    reaction:'',
+    mcq:{active:false,question:'',options:{},correct:'',responses:{}}
+  });
+}
+
+async function revealMcqAnswer(){
+  if(!currentRoom)return;
+  const mcq=currentRoomDataCache?.mcq||{};
+  if(!mcq.active||!mcq.correct)return alert('No active MCQ');
+  const correct=mcq.correct;
+  const text=mcq.options?.[correct]||correct;
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+    announcement:`✅ Correct answer: ${correct}) ${text}`,
+    mcq:{...mcq,revealed:true}
+  });
+}
+
+async function freezeAllPlayers(){
+  if(!currentRoom)return;
+  const players=currentRoomDataCache?.players||{};
+  const payload={};
+  Object.entries(players).forEach(([key,p])=>{
+    if(!p.isHost)payload[key]=true;
+  });
+  await fbSet(fbRef(db,'rooms/'+currentRoom+'/frozenPlayers'),payload);
+  notify('All players frozen');
+}
+
+async function unfreezeAllPlayers(){
+  if(!currentRoom)return;
+  await fbSet(fbRef(db,'rooms/'+currentRoom+'/frozenPlayers'),{});
+  notify('All players unfrozen','success');
+}
+
+async function endRoundNow(){
+  if(!currentRoom)return;
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+    buzzerLocked:true,
+    buzzed:false,
+    winner:'',
+    reaction:'',
+    announcement:'Round ended by host'
+  });
+  clearInterval(timerInterval);
+}
+
+function renderHostLiveStatus(room){
+  const statusEl=document.getElementById('hostLiveStatus');
+  const countEl=document.getElementById('hostRoomPlayerCount');
+  if(!room)return;
+  const players=Object.values(room.players||{}).filter(p=>!p.isHost);
+  const online=players.filter(p=>p.online).length;
+  const invited=players.filter(p=>p.invited&&!p.online).length;
+  if(countEl)countEl.textContent=`${players.length} PLAYER${players.length===1?'':'S'}`;
+  if(statusEl){
+    statusEl.innerHTML=`
+      <span class="chip">${room.buzzerLocked?'🔒 Locked':'🟢 Open'}</span>
+      <span class="chip">${online} online</span>
+      <span class="chip">${invited} invited</span>
+      <span class="chip">${(room.scoreMode||'individual').toUpperCase()}</span>
+      <span class="chip">${escapeHtml(ACTIVITY_LABELS[room.activityType]||'BUZZER')}</span>
+      ${room.winner?`<span class="chip">Winner: ${escapeHtml(room.winner)}</span>`:''}
+    `;
+  }
+}
 function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=e=>resolve(e.target.result);reader.onerror=reject;reader.readAsDataURL(file)})}
 function generateRoomCode(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='';for(let i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];return code}
 function getPlayerKey(){return sanitizeKey(currentUser.email)}
+
+async function recordLeaderboardStats(delta={}){
+  if(!currentUser?.email)return;
+  await waitForFirebase();
+  const key=sanitizeKey(currentUser.email);
+  const refPath=fbRef(db,'leaderboard/'+key);
+  const snap=await fbGet(refPath);
+  const cur=snap.exists()?snap.val():{};
+  await fbSet(refPath,{
+    username:currentUser.username,
+    email:currentUser.email,
+    avatar:currentUser.avatar||'',
+    totalXp:(cur.totalXp||0)+Math.max(0,delta.xp||0),
+    wins:(cur.wins||0)+Math.max(0,delta.wins||0),
+    gamesPlayed:(cur.gamesPlayed||0)+Math.max(0,delta.games||0),
+    lastActive:Date.now()
+  });
+}
+
+async function updatePublicRoomListing(room){
+  if(!currentRoom||!room)return;
+  const players=Object.values(room.players||{}).filter(p=>!p.isHost);
+  await fbSet(fbRef(db,'publicRooms/'+currentRoom),{
+    code:currentRoom,
+    host:room.host||currentUser?.username,
+    activityType:room.activityType||'buzzer',
+    mode:room.mode||'normal',
+    playerCount:players.length,
+    onlineCount:players.filter(p=>p.online).length,
+    updatedAt:Date.now()
+  });
+}
+
+function openPracticeMode(){
+  hideAll();
+  practicePage.classList.remove('hidden');
+  const sel=document.getElementById('practiceDeckSelect');
+  if(sel){
+    sel.innerHTML=Object.keys(PRACTICE_DECKS).map(d=>`<option value="${d}">${d.charAt(0).toUpperCase()+d.slice(1)}</option>`).join('');
+    sel.onchange=()=>{practiceState.deck=sel.value;practiceState.index=0};
+    practiceState.deck=sel.value||'general';
+  }
+  resetPractice();
+}
+function resetPractice(){
+  practiceState.index=0;practiceState.score=0;practiceState.active=false;
+  document.getElementById('practiceScore').textContent='Score: 0';
+  document.getElementById('practiceQuestion').textContent='Press START / NEXT';
+  document.getElementById('practiceOptions').innerHTML='';
+}
+function startPracticeRound(){
+  const deck=PRACTICE_DECKS[practiceState.deck]||PRACTICE_DECKS.general;
+  if(practiceState.index>=deck.length)practiceState.index=0;
+  const item=deck[practiceState.index];
+  practiceState.active=true;
+  document.getElementById('practiceQuestion').textContent=item.q;
+  document.getElementById('practiceOptions').innerHTML=item.opts.map((opt,i)=>
+    `<button onclick="answerPractice(${i})">${escapeHtml(opt)}</button>`
+  ).join('');
+}
+function answerPractice(choice){
+  const deck=PRACTICE_DECKS[practiceState.deck]||PRACTICE_DECKS.general;
+  const item=deck[practiceState.index];
+  if(choice===item.a){
+    practiceState.score+=10;
+    addSeasonXp(8);
+    recordLeaderboardStats({xp:8});
+    notify('Correct! +10','success');
+  }else notify('Wrong — try next one','error');
+  document.getElementById('practiceScore').textContent='Score: '+practiceState.score;
+  practiceState.index++;
+  setTimeout(startPracticeRound,600);
+}
+
+function openLeaderboard(){
+  hideAll();
+  leaderboardPage.classList.remove('hidden');
+  renderLeaderboard();
+}
+async function renderLeaderboard(){
+  await waitForFirebase();
+  const snap=await fbGet(fbRef(db,'leaderboard'));
+  const list=snap.exists()?Object.values(snap.val()||{}):[];
+  list.sort((a,b)=>(b.totalXp||0)-(a.totalXp||0));
+  const podium=document.getElementById('leaderboardPodium');
+  const box=document.getElementById('leaderboardList');
+  if(!list.length){
+    podium.innerHTML='';
+    box.innerHTML='<div class="muted">No rankings yet. Play games or practice to earn XP.</div>';
+    return;
+  }
+  const top3=list.slice(0,3);
+  const order=[1,0,2];
+  podium.innerHTML=order.map(i=>top3[i]).filter(Boolean).map((u,rank)=>{
+    const place=rank===1?'1st':rank===0?'2nd':'3rd';
+    return `<div class="podium-item ${rank===1?'first':''}"><div class="podium-rank">${place}</div><b>${escapeHtml(u.username)}</b><div>${u.totalXp||0} XP</div><div class="muted">${u.wins||0} wins</div></div>`;
+  }).join('');
+  box.innerHTML=list.map((u,i)=>`<div class="player"><div><b>#${i+1} ${escapeHtml(u.username)}</b></div><div>${u.totalXp||0} XP • ${u.wins||0} wins</div></div>`).join('');
+}
+
+function openDailyChallenge(){
+  hideAll();
+  dailyPage.classList.remove('hidden');
+  loadDailyChallenge();
+}
+async function ensureDailyChallenge(){
+  await waitForFirebase();
+  const day=getTodayKey();
+  const ref=fbRef(db,'dailyChallenge/'+day);
+  const snap=await fbGet(ref);
+  if(snap.exists())return snap.val();
+  const pool=PRACTICE_DECKS.general.concat(PRACTICE_DECKS.science);
+  const pick=pool[Math.floor(Math.random()*pool.length)];
+  const payload={
+    question:pick.q,
+    options:pick.opts,
+    correctIndex:pick.a,
+    date:day
+  };
+  await fbSet(ref,payload);
+  return payload;
+}
+async function loadDailyChallenge(){
+  document.getElementById('dailyDateLabel').textContent='Challenge for '+getTodayKey();
+  const data=await ensureDailyChallenge();
+  document.getElementById('dailyQuestion').textContent=data.question;
+  const labels=['A','B','C','D'];
+  document.getElementById('dailyOptions').innerHTML=data.options.map((opt,i)=>
+    `<button onclick="selectDailyOption(${i})" id="dailyOpt${i}">${labels[i]}) ${escapeHtml(opt)}</button>`
+  ).join('');
+  window._dailySelected=null;
+  const doneKey='mahilDailyDone_'+currentUser?.email+'_'+getTodayKey();
+  const res=document.getElementById('dailyResult');
+  if(localStorage.getItem(doneKey)){
+    res.classList.remove('hidden');
+    res.textContent='✅ You already completed today\'s challenge!';
+  }else{
+    res.classList.add('hidden');
+  }
+}
+function selectDailyOption(i){window._dailySelected=i;notify('Selected option '+(i+1))}
+async function submitDailyChallenge(){
+  if(!currentUser)return alert('Login first');
+  if(window._dailySelected==null)return alert('Pick an answer');
+  const data=await ensureDailyChallenge();
+  const correct=window._dailySelected===data.correctIndex;
+  const res=document.getElementById('dailyResult');
+  res.classList.remove('hidden');
+  res.textContent=correct?'🎉 Correct! +25 XP':'❌ Wrong — come back tomorrow';
+  if(correct){
+    addSeasonXp(25);
+    await recordLeaderboardStats({xp:25});
+  }
+  localStorage.setItem('mahilDailyDone_'+currentUser.email+'_'+getTodayKey(),correct?'win':'loss');
+}
+
+function openPublicRooms(){
+  hideAll();
+  publicRoomsPage.classList.remove('hidden');
+  renderPublicRooms();
+}
+async function renderPublicRooms(){
+  await waitForFirebase();
+  const snap=await fbGet(fbRef(db,'publicRooms'));
+  const box=document.getElementById('publicRoomsList');
+  if(!snap.exists()){
+    box.innerHTML='<div class="muted">No public rooms live right now. Be the first — Host Live!</div>';
+    return;
+  }
+  const rooms=Object.values(snap.val()||{}).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  box.innerHTML=rooms.map(r=>`<div class="player"><div><b>${escapeHtml(r.code)}</b><br><span class="muted">Host: ${escapeHtml(r.host||'')} • ${ACTIVITY_LABELS[r.activityType]||r.activityType} • ${r.playerCount||0} players</span></div><button onclick="quickJoinRecentRoom('${escapeHtml(r.code)}')">JOIN</button></div>`).join('');
+}
+
+function openQuizLibrary(){
+  hideAll();
+  libraryPage.classList.remove('hidden');
+  const cat=document.getElementById('libraryCategory');
+  if(cat){
+    cat.innerHTML=Object.keys(DEFAULT_QUESTION_BANK).map(c=>`<option value="${c}">${c}</option>`).join('');
+    cat.onchange=renderLibraryQuestions;
+  }
+  renderLibraryQuestions();
+}
+async function seedQuestionBank(){
+  await waitForFirebase();
+  for(const [cat,items] of Object.entries(DEFAULT_QUESTION_BANK)){
+    for(let i=0;i<items.length;i++){
+      await fbSet(fbRef(db,'questionBank/'+cat+'/q'+i),{...items[i],category:cat});
+    }
+  }
+  notify('Question bank seeded to Firebase','success');
+  renderLibraryQuestions();
+}
+async function renderLibraryQuestions(){
+  const cat=document.getElementById('libraryCategory')?.value||'general';
+  const box=document.getElementById('libraryQuestions');
+  await waitForFirebase();
+  const snap=await fbGet(fbRef(db,'questionBank/'+cat));
+  let items=[];
+  if(snap.exists())items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v}));
+  else items=(DEFAULT_QUESTION_BANK[cat]||[]).map((v,i)=>({id:'local'+i,...v}));
+  if(!items.length){box.innerHTML='<div class="muted">Empty. Click SEED DEFAULT PACKS.</div>';return;}
+  box.innerHTML=items.map(item=>{
+    const encCat=encodeURIComponent(cat);
+    const encId=encodeURIComponent(item.id);
+    return `<div class="player"><div><b>${escapeHtml(item.question)}</b><br><span class="muted">${escapeHtml(item.type||'text')}</span></div><button onclick="useLibraryQuestion('${encCat}','${encId}')">USE IN ROOM</button></div>`;
+  }).join('');
+}
+async function useLibraryQuestion(encCat,encId){
+  const cat=decodeURIComponent(encCat);
+  const id=decodeURIComponent(encId);
+  if(!currentRoom)return alert('Host a room first, then pick a question');
+  await waitForFirebase();
+  const snap=await fbGet(fbRef(db,'questionBank/'+cat+'/'+id));
+  const item=snap.exists()?snap.val():null;
+  if(!item)return alert('Question not found');
+  if(item.type==='mcq'&&item.options){
+    mcqQuestion.value=item.question;
+    mcqOptionA.value=item.options.A||'';
+    mcqOptionB.value=item.options.B||'';
+    mcqOptionC.value=item.options.C||'';
+    mcqOptionD.value=item.options.D||'';
+    mcqCorrect.value=item.correct||'A';
+    await setRoomActivity('speedquiz');
+    await sendMcqQuestion();
+    notify('MCQ loaded from library','success');
+    return;
+  }
+  questionInput.value=item.question||'';
+  if(item.type==='buzzer')await setRoomActivity('buzzer');
+  else if(item.type==='short')await setRoomActivity('typeanswer');
+  await sendQuestion();
+  notify('Question loaded from library','success');
+}
+
+async function setRoomActivity(type){
+  if(!currentRoom)return alert('Create a room first');
+  const label=ACTIVITY_LABELS[type]||type.toUpperCase();
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+    activityType:type,
+    announcement:`Activity switched to ${label}`
+  });
+  const badge=document.getElementById('hostActivityBadge');
+  if(badge)badge.textContent=label.replace(/[^\w\s/]/g,'').trim().toUpperCase();
+  if(type==='speedquiz'){
+    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{buzzerLocked:true});
+    notify('Speed quiz: players submit MCQ answers on timer');
+  }
+  notify(`Mode: ${label}`,'success');
+}
+
+async function startLivePoll(){
+  if(!currentRoom)return;
+  const question=(document.getElementById('pollQuestionInput')?.value||'').trim()||'Quick poll';
+  const opts={
+    A:(document.getElementById('pollOptA')?.value||'').trim()||'Option A',
+    B:(document.getElementById('pollOptB')?.value||'').trim()||'Option B',
+    C:(document.getElementById('pollOptC')?.value||'').trim(),
+    D:(document.getElementById('pollOptD')?.value||'').trim()
+  };
+  await setRoomActivity('poll');
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+    question,
+    poll:{active:true,question,options:opts,votes:{},closed:false}
+  });
+}
+async function closePollResults(){
+  if(!currentRoom)return;
+  const room=currentRoomDataCache;
+  const poll=room?.poll||{};
+  const votes=poll.votes||{};
+  const tally={A:0,B:0,C:0,D:0};
+  Object.values(votes).forEach(v=>{if(tally[v.choice]!=null)tally[v.choice]++});
+  const summary=Object.entries(tally).filter(([,n])=>n>0).map(([k,n])=>`${k}:${n}`).join(' • ');
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/poll'),{closed:true});
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{announcement:`Poll results — ${summary||'No votes'}`});
+}
+async function submitPollVote(choice){
+  if(!currentRoom)return;
+  await fbSet(fbRef(db,'rooms/'+currentRoom+'/poll/votes/'+getPlayerKey()),{
+    choice,user:currentUser.username,time:Date.now()
+  });
+  notify('Vote recorded','success');
+}
+
+async function startTrueFalseRound(){
+  if(!currentRoom)return;
+  const question=(document.getElementById('tfQuestionInput')?.value||'').trim()||'True or False?';
+  const correct=document.getElementById('tfCorrect')?.value||'true';
+  await setRoomActivity('truefalse');
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+    question,
+    trueFalse:{active:true,question,correct,answers:{}}
+  });
+}
+async function submitTrueFalse(answer){
+  if(!currentRoom)return;
+  await fbSet(fbRef(db,'rooms/'+currentRoom+'/trueFalse/answers/'+getPlayerKey()),{
+    answer,user:currentUser.username,time:Date.now()
+  });
+  const tf=currentRoomDataCache?.trueFalse||{};
+  const correct=String(tf.correct)===String(answer);
+  if(correct){
+    addSeasonXp(10);
+    recordLeaderboardStats({xp:10});
+    notify('Correct!','success');
+  }else notify('Submitted','info');
+}
+
+async function startTypeAnswerRound(){
+  if(!currentRoom)return;
+  const question=(document.getElementById('typeAnswerPrompt')?.value||'').trim()||'Type your answer';
+  const expected=(document.getElementById('typeAnswerExpected')?.value||'').trim();
+  await setRoomActivity('typeanswer');
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+    question,
+    typeAnswer:{active:true,question,expected,answers:{}}
+  });
+}
+async function submitTypeAnswer(){
+  if(!currentRoom)return;
+  const text=(document.getElementById('playerTypeAnswerInput')?.value||'').trim();
+  if(!text)return alert('Type an answer');
+  await fbSet(fbRef(db,'rooms/'+currentRoom+'/typeAnswer/answers/'+getPlayerKey()),{
+    text,user:currentUser.username,time:Date.now()
+  });
+  document.getElementById('playerTypeAnswerInput').value='';
+  notify('Answer sent to host','success');
+}
+
+async function sendRoomChat(){
+  if(!currentRoom)return;
+  const text=(document.getElementById('roomChatInput')?.value||'').trim();
+  if(!text)return;
+  const key=Date.now()+'_'+getPlayerKey().slice(0,6);
+  await fbSet(fbRef(db,'rooms/'+currentRoom+'/chat/'+key),{
+    user:currentUser.username,text,time:Date.now()
+  });
+  document.getElementById('roomChatInput').value='';
+}
+async function sendReaction(emoji){
+  if(!currentRoom)return;
+  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
+    latestReaction:{emoji,user:currentUser.username,time:Date.now()}
+  });
+}
+
+function renderPlayerActivity(room){
+  const type=room.activityType||'buzzer';
+  const label=ACTIVITY_LABELS[type]||'BUZZER MODE';
+  const badge=document.getElementById('playerActivityBadge');
+  if(badge)badge.innerHTML=`<span class="badge">${escapeHtml(label)}</span>`;
+  const panels={buzzer:'playerActivityBuzzer',poll:'playerActivityPoll',truefalse:'playerActivityTrueFalse',typeanswer:'playerActivityTypeAnswer',speedquiz:'playerActivityBuzzer'};
+  Object.values(panels).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.classList.add('hidden');
+  });
+  const showId=panels[type]||panels.buzzer;
+  const showEl=document.getElementById(showId);
+  if(showEl)showEl.classList.remove('hidden');
+  if(type==='poll'&&room.poll?.active){
+    document.getElementById('pollQuestionDisplay').textContent=room.poll.question||room.question||'';
+    const opts=room.poll.options||{};
+    const classes=['poll-btn-a','poll-btn-b','poll-btn-c','poll-btn-d'];
+    let html='';
+    ['A','B','C','D'].forEach((k,i)=>{
+      if(!opts[k])return;
+      html+=`<button class="${classes[i]}" onclick="submitPollVote('${k}')">${k}) ${escapeHtml(opts[k])}</button>`;
+    });
+    document.getElementById('pollVoteButtons').innerHTML=html;
+  }
+  if(type==='truefalse'&&room.trueFalse?.active){
+    document.getElementById('tfQuestionDisplay').textContent=room.trueFalse.question||room.question||'';
+  }
+  if(type==='typeanswer'&&room.typeAnswer?.active){
+    document.getElementById('typeAnswerDisplay').textContent=room.typeAnswer.question||room.question||'';
+  }
+  const buzzBtn=document.getElementById('buzzBtn');
+  if(buzzBtn){
+    const hideBuzz=type!=='buzzer'&&type!=='speedquiz';
+    buzzBtn.style.display=hideBuzz?'none':'block';
+  }
+}
+
+function renderRoomChat(room){
+  const box=document.getElementById('roomChatBox');
+  if(!box)return;
+  const msgs=Object.values(room.chat||{}).sort((a,b)=>(a.time||0)-(b.time||0)).slice(-25);
+  box.innerHTML=msgs.length?msgs.map(m=>`<div class="chat-msg"><b>${escapeHtml(m.user)}:</b> ${escapeHtml(m.text)}</div>`).join(''):'<div class="muted">No messages yet</div>';
+  box.scrollTop=box.scrollHeight;
+  const lr=room.latestReaction;
+  const rel=document.getElementById('latestReaction');
+  if(rel&&lr)rel.textContent=`${lr.emoji} ${lr.user}`;
+}
 
 async function hostGame(){
   await waitForFirebase();
@@ -1146,6 +1991,12 @@ async function hostGame(){
       frozenPlayers:{},
       tournament:{active:false,name:'',currentRound:0,maxRounds:3,history:{}},
       questionHistory:{},
+      activityType:'buzzer',
+      poll:{active:false,question:'',options:{},votes:{},closed:false},
+      trueFalse:{active:false,question:'',correct:'true',answers:{}},
+      typeAnswer:{active:false,question:'',expected:'',answers:{}},
+      chat:{},
+      latestReaction:null,
       players:{
         [getPlayerKey()]:{
           username:currentUser.username,
@@ -1165,6 +2016,10 @@ async function hostGame(){
     showHostSection('game');
     await registerPresence();
     attachRoomListener();
+    await migrateLocalUsersToFirebase();
+    loadFirebaseUsersForHost();
+    await updatePublicRoomListing({host:currentUser.username,players:{},activityType:'buzzer',mode:'normal'});
+    await recordLeaderboardStats({games:1});
     alert('Room created: '+roomCode);
   }catch(error){
     console.error(error);
@@ -1211,6 +2066,7 @@ async function joinGame(){
     hideAll();
     playerPage.classList.remove('hidden');
     attachRoomListener();
+    await recordLeaderboardStats({games:1});
     alert('Joined Room '+code);
   }catch(error){
     console.error(error);
@@ -1235,6 +2091,7 @@ async function sendQuestion(){
   await waitForFirebase();
   try{
     const q=questionInput.value.trim();
+    if(q)lastSentQuestion=q;
     const file=questionImageInput.files[0];
     if(!currentRoom)return alert('No active room');
     let questionImage='';
@@ -1340,6 +2197,7 @@ async function buzz(){
       sound.play();
       if(currentUser.confetti!==false)confetti({particleCount:220,spread:140});
       addSeasonXp(12);
+      recordLeaderboardStats({xp:12,wins:1});
     }
   }catch(error){
     console.error(error);
@@ -1476,6 +2334,7 @@ async function changeWinnerScore(delta,teamMode){
       await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+winnerKey),{score:currentScore+adjusted,activePowerUp:''});
       lastScoreAction={type:'player',playerKey:winnerKey,previous:currentScore,next:currentScore+adjusted,room:currentRoom,at:Date.now()};
       addSeasonXp(Math.max(2,Math.abs(adjusted)));
+      recordLeaderboardStats({xp:Math.max(2,Math.abs(adjusted))});
     }
     await logMatchEvent('score_update',`${winnerName} ${delta>0?'+':''}${delta}`);
   }catch(error){
@@ -1575,6 +2434,7 @@ async function clearRooms(){
   await waitForFirebase();
   try{
     await fbRemove(fbRef(db,'rooms'));
+    await fbRemove(fbRef(db,'publicRooms'));
     alert('All rooms cleared');
   }catch(error){
     console.error(error);
@@ -1678,6 +2538,8 @@ function attachRoomListener(){
     roomCodeEl('ROOM CODE: '+(room.roomCode||currentRoom));
     document.getElementById('question').innerText=room.question||'Waiting for question...';
     modeBadge.textContent=(room.mode||'normal').toUpperCase()+' MODE';
+    const actBadge=document.getElementById('hostActivityBadge');
+    if(actBadge)actBadge.textContent=(ACTIVITY_LABELS[room.activityType]||'BUZZER').replace(/[^\w\s]/g,'').trim().toUpperCase();
     applyTheme(room.roomTheme||currentUser?.theme||'neon');
 
     const img=document.getElementById('questionImage');
@@ -1688,6 +2550,7 @@ function attachRoomListener(){
       img.style.display='none';
     }
 
+    renderHostLiveStatus(room);
     renderPlayers(room);
     renderTeams(room);
     renderBuzzLog(room);
@@ -1699,16 +2562,19 @@ function attachRoomListener(){
     renderPowerState(room);
     renderReplayPanel(room);
     renderOverlay();
+    renderPlayerActivity(room);
+    renderRoomChat(room);
+    updatePublicRoomListing(room).catch(console.error);
     if(room.autoNextRound&&room.winner&&room.mode==='tournament'&&room.tournament?.active){
       setTimeout(()=>{advanceTournamentRound().catch(console.error)},1200);
       fbSet(fbRef(db,'rooms/'+currentRoom+'/autoNextRound'),false).catch(()=>{});
     }
 
-    if(room.winner){
+    const actType=room.activityType||'buzzer';
+    if(room.winner&&(actType==='buzzer'||actType==='speedquiz'||!actType)){
       playerWinner.innerHTML='⚡ '+room.winner+' BUZZED FIRST';
       winner.innerHTML='⚡ '+room.winner+' BUZZED FIRST';
-      buzzBtn.disabled=true;
-      buzzBtn.classList.add('locked');
+      if(buzzBtn){buzzBtn.disabled=true;buzzBtn.classList.add('locked')}
       if(room.reaction)reaction.innerHTML='Reaction Time: '+room.reaction+'s';
       speakText(`${room.winner} buzzed first`);
     }else{
@@ -1717,8 +2583,10 @@ function attachRoomListener(){
       reaction.innerHTML='';
       const isFrozen=!!(room.frozenPlayers&&room.frozenPlayers[getPlayerKey()]);
       const shouldLock=!!room.buzzerLocked||isFrozen;
-      buzzBtn.disabled=shouldLock;
-      buzzBtn.classList.toggle('locked',shouldLock);
+      if(buzzBtn){
+        buzzBtn.disabled=shouldLock;
+        buzzBtn.classList.toggle('locked',shouldLock);
+      }
     }
 
     const isFrozen=!!(room.frozenPlayers&&room.frozenPlayers[getPlayerKey()]);
@@ -1776,7 +2644,8 @@ function renderPlayers(room){
     const frozenTag=frozen[key]?'<span class="frozen-pill">Frozen</span>':'';
     const frozenBtnClass=frozen[key]?'safe-btn':'warn-btn';
     const frozenBtnLabel=frozen[key]?'UNFREEZE':'FREEZE';
-    html+=`<div class="player"><div class="player-left"><img src="${p.avatar}" alt="${escapeHtml(p.username)}"><div><b>${escapeHtml(p.username)}</b>${frozenTag}<br><span class="muted">${escapeHtml(p.team||'No Team')} • ${p.online?'Online':'Offline'}</span></div></div><div class="inline-row"><button class="${frozenBtnClass}" onclick="toggleFreezePlayer('${p.email}')">${frozenBtnLabel}</button><button class="kick-btn" onclick="kickPlayer('${p.email}')">KICK</button></div></div>`;
+    const inviteTag=p.invited&&!p.online?'<span class="chip">Invited</span>':'';
+    html+=`<div class="player"><div class="player-left"><img src="${p.avatar}" alt="${escapeHtml(p.username)}"><div><b>${escapeHtml(p.username)}</b>${frozenTag} ${inviteTag}<br><span class="muted">${escapeHtml(p.team||'No Team')} • ${p.online?'Online':(p.invited?'Invited':'Offline')}</span></div></div><div class="inline-row"><button class="${frozenBtnClass}" onclick="toggleFreezePlayer('${p.email}')">${frozenBtnLabel}</button><button class="kick-btn" onclick="kickPlayer('${p.email}')">KICK</button></div></div>`;
   });
   hostPlayers.innerHTML=html;
 }
@@ -1888,6 +2757,9 @@ document.addEventListener('keydown',e=>{
     else if(val==='join')openJoinPage();
     else if(val==='settings')openSettings();
     else if(val==='admin')openAdminPanel();
+    else if(val==='practice')openPracticeMode();
+    else if(val==='leaderboard')openLeaderboard();
+    else if(val==='daily')openDailyChallenge();
     return;
   }
   if(e.code==='Space'){
