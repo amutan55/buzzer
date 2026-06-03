@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MAHIL QUIZ ARENA</title>
+<title>MAHIL QUIZ ARENA — All-in-One Game Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -431,153 +431,198 @@ button:hover{transform:scale(1.02)}
     <button class="dark-btn" data-game-section="invitations" onclick="showHostGameSection('invitations',this)">INVITATIONS</button>
     <button class="dark-btn" data-game-section="scoreboard" onclick="showHostGameSection('scoreboard',this)">SCOREBOARD</button>
   </div>
+
   <div class="host-game-panel active" id="hostGamePanel-game">
-  <div class="card">
-    <h2>ROOM CONTROLS</h2>
-    <div class="section-title"><span class="badge" id="modeBadge">NORMAL MODE</span> <span class="badge" id="hostRoomPlayerCount" style="margin-left:6px">0 PLAYERS</span></div>
-    <div id="hostLiveStatus" class="host-live-status"></div>
-    <div class="host-status-row">
-      <button class="dark-btn" onclick="copyRoomCode()">COPY ROOM CODE</button>
-      <button class="dark-btn" onclick="copyJoinLink()">COPY JOIN LINK</button>
-      <button class="safe-btn" onclick="broadcastGameStart()">BROADCAST START</button>
-      <button onclick="hostCountdownUnlock()">3-2-1 UNLOCK</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>REGISTERED USERS (FIREBASE)</h2>
-    <p class="muted">Invite players from your Firebase user list into this room.</p>
-    <div class="inline-row">
-      <input type="text" id="hostUserSearch" placeholder="Search by name or email" oninput="filterFirebaseUsers()">
-      <button class="safe-btn" onclick="loadFirebaseUsersForHost()">REFRESH USERS</button>
-    </div>
-    <div class="host-tool-row">
-      <button onclick="inviteAllFirebaseUsers()">INVITE ALL ONLINE</button>
-      <button class="dark-btn" onclick="migrateLocalUsersToFirebase()">SYNC LOCAL → FIREBASE</button>
-    </div>
-    <div id="hostFirebaseUsers" class="user-pick-list muted">Loading users from Firebase...</div>
-  </div>
-
-  <div class="card">
-    <h2>ACTIVITY MODES <span class="badge" id="hostActivityBadge">BUZZER</span></h2>
-    <p class="muted">Switch how players interact — not only buzz-in.</p>
-    <div class="activity-mode-grid">
-      <button onclick="setRoomActivity('buzzer')">⚡ BUZZER</button>
-      <button onclick="setRoomActivity('poll')">📊 POLL</button>
-      <button onclick="setRoomActivity('truefalse')">✅ TRUE/FALSE</button>
-      <button onclick="setRoomActivity('typeanswer')">✍️ TYPE ANSWER</button>
-      <button onclick="setRoomActivity('speedquiz')">⏱️ SPEED QUIZ</button>
-    </div>
-    <div id="hostActivityPanel" class="activity-panel">
-      <input type="text" id="pollQuestionInput" placeholder="Poll question">
-      <input type="text" id="pollOptA" placeholder="Option A">
-      <input type="text" id="pollOptB" placeholder="Option B">
-      <input type="text" id="pollOptC" placeholder="Option C (optional)">
-      <input type="text" id="pollOptD" placeholder="Option D (optional)">
-      <div class="host-tool-row">
-        <button onclick="startLivePoll()">START POLL</button>
-        <button class="dark-btn" onclick="closePollResults()">SHOW RESULTS</button>
+    <div class="card">
+      <h2>GAME</h2>
+      <div class="section-title"><span class="badge" id="modeBadge">NORMAL MODE</span> <span class="badge" id="hostRoomPlayerCount" style="margin-left:6px">0 PLAYERS</span></div>
+      <div id="hostLiveStatus" class="host-live-status"></div>
+      <div class="host-status-row">
+        <button class="dark-btn" onclick="copyRoomCode()">COPY ROOM CODE</button>
+        <button class="dark-btn" onclick="copyJoinLink()">COPY JOIN LINK</button>
+        <button class="safe-btn" onclick="broadcastGameStart()">BROADCAST START</button>
+        <button onclick="hostCountdownUnlock()">3-2-1 UNLOCK</button>
       </div>
-      <input type="text" id="tfQuestionInput" placeholder="True/False statement">
-      <select id="tfCorrect"><option value="true">Correct: TRUE</option><option value="false">Correct: FALSE</option></select>
-      <button onclick="startTrueFalseRound()">START TRUE/FALSE</button>
-      <input type="text" id="typeAnswerPrompt" placeholder="Type-answer question">
-      <input type="text" id="typeAnswerExpected" placeholder="Expected answer (for host reference)">
-      <button onclick="startTypeAnswerRound()">START TYPE ANSWER</button>
+    </div>
+
+    <div class="card">
+      <h2>GAME MODE</h2>
+      <div class="mode-grid">
+        <button onclick="setGameMode('normal')">NORMAL MODE</button>
+        <button onclick="setGameMode('tournament')">TOURNAMENT MODE</button>
+        <button onclick="setScoreMode('individual')">INDIVIDUAL SCORE</button>
+        <button onclick="setScoreMode('team')">TEAM SCORE</button>
+      </div>
+      <div class="inline-row">
+        <input type="text" id="tournamentName" placeholder="Tournament Name">
+        <input type="number" id="maxRounds" placeholder="Rounds" min="1" value="3">
+      </div>
+      <div class="host-tool-row">
+        <button class="safe-btn" onclick="startTournament()">START TOURNAMENT</button>
+        <button class="dark-btn" onclick="advanceTournamentRound()">NEXT ROUND</button>
+        <button onclick="autoDraftTeams()">AUTO DRAFT TEAMS</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>BUZZER CONTROLS</h2>
+      <div class="host-game-grid">
+        <button class="warn-btn" onclick="lockBuzzers()">LOCK BUZZERS</button>
+        <button class="safe-btn" onclick="unlockBuzzers()">UNLOCK BUZZERS</button>
+        <button onclick="resetBuzzers()">RESET BUZZERS</button>
+        <button onclick="startLightningRound()">LIGHTNING (5s)</button>
+        <button class="warn-btn" onclick="freezeAllPlayers()">FREEZE ALL</button>
+        <button class="safe-btn" onclick="unfreezeAllPlayers()">UNFREEZE ALL</button>
+        <button onclick="pickRandomPlayer()">RANDOM PICK</button>
+        <button class="dark-btn" onclick="revealTopPerformer()">TOP PLAYER</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>ROOM EXPERIENCE</h2>
+      <div class="host-game-grid">
+        <button onclick="shuffleThemeForAll()">SHUFFLE THEME</button>
+        <button onclick="toggleVoiceAnnouncer()">VOICE ANNOUNCER</button>
+        <button onclick="openOverlayMode()">OPEN OVERLAY</button>
+        <button onclick="showHostSection('score')">OPEN SCORES</button>
+        <button onclick="showHostSection('players')">OPEN PLAYERS</button>
+        <button class="safe-btn" onclick="sendQuickAnnouncement('Get ready! Next question incoming.')">READY UP</button>
+        <button class="dark-btn" onclick="sendQuickAnnouncement('Break time — 60 seconds.')">BREAK TIME</button>
+        <button class="warn-btn" onclick="endRoundNow()">END ROUND NOW</button>
+      </div>
+      <input type="text" id="quickAnnounceInput" placeholder="Custom announcement">
+      <button onclick="sendHostAnnouncement()">SEND CUSTOM ANNOUNCEMENT</button>
     </div>
   </div>
 
-  <div class="card">
-    <div class="section-title"><span class="badge">GAME MODE</span></div>
-    <div class="mode-grid">
-      <button onclick="setGameMode('normal')">NORMAL MODE</button>
-      <button onclick="setGameMode('tournament')">TOURNAMENT MODE</button>
-      <button onclick="setScoreMode('individual')">INDIVIDUAL SCORE</button>
-      <button onclick="setScoreMode('team')">TEAM SCORE</button>
+  <div class="host-game-panel" id="hostGamePanel-studio">
+    <div class="card">
+      <h2>QUESTION STUDIO</h2>
+      <textarea id="questionInput" placeholder="Enter Question"></textarea>
+      <input type="file" id="questionImageInput" accept="image/*">
+      <div class="host-game-grid">
+        <button onclick="sendQuestion()">SEND QUESTION</button>
+        <button onclick="reuseLastQuestion()">REUSE LAST QUESTION</button>
+        <button class="warn-btn" onclick="clearCurrentQuestion()">CLEAR QUESTION</button>
+      </div>
     </div>
-    <div class="inline-row">
-      <input type="text" id="tournamentName" placeholder="Tournament Name">
-      <input type="number" id="maxRounds" placeholder="Rounds" min="1" value="3">
-    </div>
-    <div class="host-tool-row">
-      <button class="safe-btn" onclick="startTournament()">START TOURNAMENT</button>
-      <button class="dark-btn" onclick="advanceTournamentRound()">NEXT ROUND</button>
-      <button onclick="autoDraftTeams()">AUTO DRAFT TEAMS</button>
+
+    <div class="card">
+      <h2>ACTIVITY MODES</h2>
+      <p class="muted">Switch how players interact — not only buzz-in.</p>
+      <div class="activity-mode-grid">
+        <button onclick="setRoomActivity('buzzer')">⚡ BUZZER</button>
+        <button onclick="setRoomActivity('poll')">📊 POLL</button>
+        <button onclick="setRoomActivity('truefalse')">✅ TRUE/FALSE</button>
+        <button onclick="setRoomActivity('typeanswer')">✍️ TYPE ANSWER</button>
+        <button onclick="setRoomActivity('speedquiz')">⏱️ SPEED QUIZ</button>
+      </div>
+      <div id="hostActivityPanel" class="activity-panel">
+        <input type="text" id="pollQuestionInput" placeholder="Poll question">
+        <input type="text" id="pollOptA" placeholder="Option A">
+        <input type="text" id="pollOptB" placeholder="Option B">
+        <input type="text" id="pollOptC" placeholder="Option C (optional)">
+        <input type="text" id="pollOptD" placeholder="Option D (optional)">
+        <div class="host-tool-row">
+          <button onclick="startLivePoll()">START POLL</button>
+          <button class="dark-btn" onclick="closePollResults()">SHOW RESULTS</button>
+        </div>
+        <input type="text" id="tfQuestionInput" placeholder="True/False statement">
+        <select id="tfCorrect"><option value="true">Correct: TRUE</option><option value="false">Correct: FALSE</option></select>
+        <button onclick="startTrueFalseRound()">START TRUE/FALSE</button>
+        <input type="text" id="typeAnswerPrompt" placeholder="Type-answer question">
+        <input type="text" id="typeAnswerExpected" placeholder="Expected answer (for host reference)">
+        <button onclick="startTypeAnswerRound()">START TYPE ANSWER</button>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>QUESTION STUDIO</h2>
-    <textarea id="questionInput" placeholder="Enter Question"></textarea>
-    <input type="file" id="questionImageInput" accept="image/*">
-    <div class="host-game-grid">
-      <button onclick="sendQuestion()">SEND QUESTION</button>
-      <button onclick="reuseLastQuestion()">REUSE LAST QUESTION</button>
-      <button class="warn-btn" onclick="clearCurrentQuestion()">CLEAR QUESTION</button>
-      <button onclick="startTimer()">START TIMER</button>
+  <div class="host-game-panel" id="hostGamePanel-mcq">
+    <div class="card">
+      <h2>MCQ</h2>
+      <input type="text" id="mcqQuestion" placeholder="MCQ Question">
+      <div class="mcq-options">
+        <input type="text" id="mcqOptionA" placeholder="Option A">
+        <input type="text" id="mcqOptionB" placeholder="Option B">
+        <input type="text" id="mcqOptionC" placeholder="Option C">
+        <input type="text" id="mcqOptionD" placeholder="Option D">
+      </div>
+      <select id="mcqCorrect">
+        <option value="A">Correct: A</option>
+        <option value="B">Correct: B</option>
+        <option value="C">Correct: C</option>
+        <option value="D">Correct: D</option>
+      </select>
+      <div class="host-game-grid">
+        <button onclick="sendMcqQuestion()">SEND MCQ</button>
+        <button class="safe-btn" onclick="revealMcqAnswer()">REVEAL ANSWER</button>
+        <button onclick="gradeMcqAndAward()">GRADE &amp; AWARD</button>
+        <button class="dark-btn" onclick="exportQuestionPack()">EXPORT PACK</button>
+        <button class="dark-btn" onclick="importQuestionPack()">IMPORT PACK</button>
+      </div>
+      <textarea id="questionPackData" placeholder="Question pack JSON (import/export)"></textarea>
     </div>
   </div>
 
-  <div class="card">
-    <h2>MCQ MODE</h2>
-    <input type="text" id="mcqQuestion" placeholder="MCQ Question">
-    <div class="mcq-options">
-      <input type="text" id="mcqOptionA" placeholder="Option A">
-      <input type="text" id="mcqOptionB" placeholder="Option B">
-      <input type="text" id="mcqOptionC" placeholder="Option C">
-      <input type="text" id="mcqOptionD" placeholder="Option D">
-    </div>
-    <select id="mcqCorrect">
-      <option value="A">Correct: A</option>
-      <option value="B">Correct: B</option>
-      <option value="C">Correct: C</option>
-      <option value="D">Correct: D</option>
-    </select>
-    <div class="host-game-grid">
-      <button onclick="sendMcqQuestion()">SEND MCQ</button>
-      <button class="safe-btn" onclick="revealMcqAnswer()">REVEAL ANSWER</button>
-      <button onclick="gradeMcqAndAward()">GRADE &amp; AWARD</button>
-      <button class="dark-btn" onclick="exportQuestionPack()">EXPORT PACK</button>
-      <button class="dark-btn" onclick="importQuestionPack()">IMPORT PACK</button>
-    </div>
-    <textarea id="questionPackData" placeholder="Question pack JSON (import/export)"></textarea>
-  </div>
-
-  <div class="card">
-    <h2>BUZZER &amp; ROUND CONTROLS</h2>
-    <div class="host-game-grid">
-      <button class="warn-btn" onclick="lockBuzzers()">LOCK BUZZERS</button>
-      <button class="safe-btn" onclick="unlockBuzzers()">UNLOCK BUZZERS</button>
-      <button onclick="resetBuzzers()">RESET BUZZERS</button>
-      <button onclick="startLightningRound()">LIGHTNING (5s)</button>
-      <button class="warn-btn" onclick="freezeAllPlayers()">FREEZE ALL</button>
-      <button class="safe-btn" onclick="unfreezeAllPlayers()">UNFREEZE ALL</button>
-      <button onclick="pickRandomPlayer()">RANDOM PICK</button>
-      <button class="dark-btn" onclick="revealTopPerformer()">TOP PLAYER</button>
+  <div class="host-game-panel" id="hostGamePanel-timer">
+    <div class="card">
+      <h2>TIMER</h2>
+      <div class="host-game-grid">
+        <button onclick="startTimer()">START TIMER</button>
+        <button onclick="setTimerPreset(5)">5 SECONDS</button>
+        <button onclick="setTimerPreset(10)">10 SECONDS</button>
+        <button onclick="setTimerPreset(20)">20 SECONDS</button>
+        <button onclick="setTimerPreset(30)">30 SECONDS</button>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>ROOM EXPERIENCE</h2>
-    <div class="host-game-grid">
-      <button onclick="shuffleThemeForAll()">SHUFFLE THEME</button>
-      <button onclick="toggleVoiceAnnouncer()">VOICE ANNOUNCER</button>
-      <button onclick="openOverlayMode()">OPEN OVERLAY</button>
-      <button onclick="showHostSection('score')">OPEN SCORES</button>
-      <button onclick="showHostSection('players')">OPEN PLAYERS</button>
-      <button class="safe-btn" onclick="sendQuickAnnouncement('Get ready! Next question incoming.')">READY UP</button>
-      <button class="dark-btn" onclick="sendQuickAnnouncement('Break time — 60 seconds.')">BREAK TIME</button>
-      <button class="warn-btn" onclick="endRoundNow()">END ROUND NOW</button>
+  <div class="host-game-panel" id="hostGamePanel-players">
+    <div class="card">
+      <h2>PLAYERS</h2>
+      <p class="muted">Use the player management section below for full controls.</p>
+      <div class="host-tool-row">
+        <button onclick="showHostSection('players')">OPEN PLAYER MANAGEMENT</button>
+      </div>
     </div>
-    <input type="text" id="quickAnnounceInput" placeholder="Quick announcement to all players">
-    <button onclick="sendQuickAnnouncement()">SEND QUICK ANNOUNCEMENT</button>
   </div>
 
-  <div class="timer" id="timer">10</div>
-  <div class="winner" id="winner"></div>
-</div>
+  <div class="host-game-panel" id="hostGamePanel-teams">
+    <div class="card">
+      <h2>TEAMS</h2>
+      <p class="muted">Use team mode and player management to organize teams.</p>
+      <div class="host-tool-row">
+        <button onclick="autoDraftTeams()">AUTO DRAFT TEAMS</button>
+        <button class="dark-btn" onclick="showHostSection('players')">OPEN PLAYER MANAGEMENT</button>
+      </div>
+    </div>
+  </div>
 
-</div>
+  <div class="host-game-panel" id="hostGamePanel-invitations">
+    <div class="card">
+      <h2>INVITATIONS</h2>
+      <p class="muted">Invite players from your Firebase user list into this room.</p>
+      <div class="inline-row">
+        <input type="text" id="hostUserSearch" placeholder="Search by name or email" oninput="filterFirebaseUsers()">
+        <button class="safe-btn" onclick="loadFirebaseUsersForHost()">REFRESH USERS</button>
+      </div>
+      <div class="host-tool-row">
+        <button onclick="inviteAllFirebaseUsers()">INVITE ALL ONLINE</button>
+        <button class="dark-btn" onclick="migrateLocalUsersToFirebase()">SYNC LOCAL → FIREBASE</button>
+      </div>
+      <div id="hostFirebaseUsers" class="user-pick-list muted">Loading users from Firebase...</div>
+    </div>
+  </div>
+
+  <div class="host-game-panel" id="hostGamePanel-scoreboard">
+    <div class="card">
+      <h2>SCOREBOARD</h2>
+      <p class="muted">Open the main scores panel for awarding and adjusting points.</p>
+      <div class="host-tool-row">
+        <button onclick="showHostSection('score')">OPEN SCORES PANEL</button>
+      </div>
+    </div>
+  </div>
 </div>
 <div id="hostSectionScore" class="host-section hidden">
   <div class="card">
@@ -901,6 +946,7 @@ function updateAdminButtonVisibility(){
 }
 function showDashboardPanel(section,btn){document.querySelectorAll('.dashboard-panel').forEach(el=>el.classList.remove('active'));const target=document.getElementById('dashPanel-'+section);if(target)target.classList.add('active');document.querySelectorAll('[data-dash]').forEach(el=>el.classList.remove('active'));const active=btn||document.querySelector(`[data-dash="${section}"]`);if(active)active.classList.add('active')}
 function showHostGameSection(section,btn){document.querySelectorAll('.host-game-panel').forEach(el=>el.classList.remove('active'));const target=document.getElementById('hostGamePanel-'+section);if(target)target.classList.add('active');document.querySelectorAll('[data-game-section]').forEach(el=>el.classList.remove('active'));const active=btn||document.querySelector(`[data-game-section="${section}"]`);if(active)active.classList.add('active')}
+function setTimerPreset(seconds){const timerEl=document.getElementById('timer');const playerTimerEl=document.getElementById('playerTimer');if(timerEl)timerEl.innerText=String(seconds);if(playerTimerEl)playerTimerEl.innerText=String(seconds)}
 
 function showHostSection(section){
   const sections=['game','score','players','bank','tournament','analytics'];
