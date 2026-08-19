@@ -3,817 +3,328 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mahil Quiz Arena</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<title>Mahil Buzzer Arena</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
---bg-gradient:linear-gradient(135deg,#020617,#0f172a,#1e293b);
---text-color:#fff;
---primary:#00e5ff;
---secondary:#ff00d4;
---card-bg:rgba(255,255,255,.06);
---card-border:rgba(255,255,255,.08);
---input-bg:#111827;
---muted:#cbd5e1;
+:root {
+  --bg: #0b0f19;
+  --surface: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.1);
+  --primary: #00f2fe;
+  --secondary: #4facfe;
+  --accent: #ff007f;
+  --gold: #ffd700;
+  --success: #10b981;
+  --danger: #ef4444;
+  --text: #f8fafc;
+  --muted: #94a3b8;
 }
-body[data-theme="neon"]{
---bg-gradient:linear-gradient(135deg,#020617,#0f172a,#1e293b);
---text-color:#fff;
---primary:#00e5ff;
---secondary:#ff00d4;
---card-bg:rgba(255,255,255,.06);
---card-border:rgba(255,255,255,.08);
---input-bg:#111827;
---muted:#cbd5e1;
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #1e293b 0%, #0b0f19 100%);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 12px;
 }
-body[data-theme="sunset"]{
---bg-gradient:linear-gradient(135deg,#3f0d12,#a71d31,#f46036);
---text-color:#fff7ed;
---primary:#ffd166;
---secondary:#ef476f;
---card-bg:rgba(0,0,0,.18);
---card-border:rgba(255,209,102,.25);
---input-bg:#2d112b;
---muted:#ffe3b3;
+
+.container { width: 100%; max-width: 900px; }
+h1, h2, h3, .brand, .buzzer, .btn-orbitron { font-family: 'Orbitron', sans-serif; }
+.hidden { display: none !important; }
+
+.glass {
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
-body[data-theme="forest"]{
---bg-gradient:linear-gradient(135deg,#052e16,#14532d,#166534);
---text-color:#ecfdf5;
---primary:#86efac;
---secondary:#34d399;
---card-bg:rgba(5,46,22,.35);
---card-border:rgba(134,239,172,.2);
---input-bg:#042f1a;
---muted:#bbf7d0;
+
+.brand {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
 }
-body[data-theme="midnight"]{
---bg-gradient:linear-gradient(135deg,#0f172a,#1e1b4b,#312e81);
---text-color:#e0e7ff;
---primary:#a5b4fc;
---secondary:#22d3ee;
---card-bg:rgba(30,27,75,.35);
---card-border:rgba(165,180,252,.2);
---input-bg:#1f2348;
---muted:#c7d2fe;
+
+.sub-brand {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
 }
-body[data-theme="aurora"]{
---bg-gradient:linear-gradient(135deg,#001219,#005f73,#0a9396);
---text-color:#e6fffb;
---primary:#94f7ff;
---secondary:#ee9b00;
---card-bg:rgba(0,95,115,.28);
---card-border:rgba(148,247,255,.2);
---input-bg:#003845;
---muted:#b8f4ee;
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
-body[data-theme="rose"]{
---bg-gradient:linear-gradient(135deg,#2b0a3d,#7b2cbf,#c77dff);
---text-color:#f8edff;
---primary:#ff8fab;
---secondary:#ffd6ff;
---card-bg:rgba(64,20,84,.3);
---card-border:rgba(255,143,171,.25);
---input-bg:#3d1b5c;
---muted:#f4c2ff;
+
+input, select {
+  width: 100%;
+  padding: 14px 16px;
+  margin-top: 10px;
+  border-radius: 12px;
+  background: #151d30;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
 }
-body[data-theme="ice"]{
---bg-gradient:linear-gradient(135deg,#0b1e3a,#1d4e89,#60a5fa);
---text-color:#eff6ff;
---primary:#93c5fd;
---secondary:#e0f2fe;
---card-bg:rgba(11,30,58,.3);
---card-border:rgba(147,197,253,.25);
---input-bg:#112a4d;
---muted:#bfdbfe;
+input:focus, select:focus { border-color: var(--primary); }
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #040914;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+  font-size: 1rem;
 }
-body{font-family:'Orbitron',sans-serif;background:var(--bg-gradient);color:var(--text-color);min-height:100vh;overflow-x:hidden}
-.container{width:95%;max-width:1500px;margin:auto;padding:20px}
-.hidden{display:none!important}
-.title{text-align:center;font-size:3rem;font-weight:900;margin:20px 0;color:var(--primary);text-shadow:0 0 20px var(--primary)}
-.glass{background:var(--card-bg);backdrop-filter:blur(12px);border-radius:25px;padding:25px;margin-top:20px;border:1px solid var(--card-border)}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-.profile{display:flex;align-items:center;gap:15px}
-.profile img{width:65px;height:65px;border-radius:50%;object-fit:cover;border:3px solid #00e5ff}
-.dashboard-buttons,.host-actions,.score-buttons,.mode-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}
-.big-btn{height:120px;font-size:1.2rem;font-weight:900}
-.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
-input,button,textarea,select{width:100%;padding:15px;margin-top:10px;border:none;border-radius:15px;font-family:'Orbitron',sans-serif;font-size:1rem}
-input,textarea,select{background:var(--input-bg);color:var(--text-color)}
-button{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;cursor:pointer;font-weight:700;transition:.25s}
-button:hover{transform:scale(1.02)}
-.logout-btn{background:#dc2626;width:auto;padding:12px 18px}
-.back-btn{background:#2563eb;width:auto;padding:12px 18px}
-.warn-btn{background:linear-gradient(135deg,#f59e0b,#ef4444)}
-.safe-btn{background:linear-gradient(135deg,#10b981,#06b6d4)}
-.dark-btn{background:linear-gradient(135deg,#334155,#0f172a)}
-.avatar-preview{width:120px;height:120px;border-radius:50%;display:block;margin:auto;object-fit:cover;border:4px solid #00e5ff}
-.room-code,.section-title,.question,.timer,.winner{text-align:center}
-.room-code{font-size:2rem;color:var(--primary);margin-top:10px;word-break:break-word}
-.question{font-size:2rem;margin-top:20px;color:var(--primary)}
-.buzzer{width:240px;height:240px;border-radius:50%;margin:30px auto;display:block;font-size:3rem;font-weight:900;background:radial-gradient(circle,#ffe600,#ff9800);color:#000;box-shadow:0 0 50px #ffe600}
-.locked{background:#555!important;box-shadow:none!important}
-.player{display:flex;justify-content:space-between;align-items:center;padding:14px;background:rgba(255,255,255,.05);border-radius:16px;margin-top:10px;gap:10px;flex-wrap:wrap}
-.player-left{display:flex;align-items:center;gap:12px}
-.player-left img{width:55px;height:55px;border-radius:50%;object-fit:cover}
-.timer{font-size:2rem;margin-top:15px;color:#ffe600}
-.winner{font-size:1.1rem;margin-top:15px;color:#00ff99}
-.question-image{width:100%;max-height:350px;object-fit:contain;margin-top:20px;border-radius:20px;display:none;background:#000}
-.qr-box{background:#fff;padding:15px;border-radius:20px;width:230px;margin:auto;margin-top:20px;min-height:230px;display:flex;align-items:center;justify-content:center}
-.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;margin-top:15px}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:.8rem;background:var(--primary);color:#001018}
-.muted{color:var(--muted);font-size:.9rem}
-.log-box{max-height:220px;overflow:auto}
-.table{width:100%;border-collapse:collapse;margin-top:10px}
-.table th,.table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;font-size:.9rem}
-.small-note{text-align:center;margin-top:12px;font-size:.9rem;color:var(--muted);word-break:break-all}
-.kick-btn{width:auto;padding:10px 12px;background:linear-gradient(135deg,#f43f5e,#b91c1c)}
-.inline-row{display:flex;gap:10px;flex-wrap:wrap}.inline-row>*{flex:1}
-.host-tool-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
-.host-game-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
-.host-status-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
-.user-pick-list{max-height:240px;overflow:auto;margin-top:10px}
-.user-pick-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.05);border-radius:12px;margin-top:8px;flex-wrap:wrap}
-.user-pick-item .player-left img{width:42px;height:42px}
-.host-live-status{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.host-live-status .chip{margin-top:0}
-.hub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
-.hub-btn{min-height:88px;font-size:.95rem}
-.activity-mode-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
-.poll-vote-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
-.poll-btn-a{background:linear-gradient(135deg,#ef4444,#b91c1c)}
-.poll-btn-b{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}
-.poll-btn-c{background:linear-gradient(135deg,#eab308,#ca8a04);color:#111}
-.poll-btn-d{background:linear-gradient(135deg,#22c55e,#15803d)}
-.tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.tf-true{background:linear-gradient(135deg,#10b981,#059669)}
-.tf-false{background:linear-gradient(135deg,#ef4444,#991b1b)}
-.chat-box{max-height:160px;overflow:auto;margin-top:10px;padding:8px;background:rgba(0,0,0,.2);border-radius:12px}
-.chat-msg{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.85rem}
-.reaction-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.reaction-row button{width:auto;flex:1;min-width:52px;padding:10px;font-size:1.2rem}
-.leader-podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end;margin:16px 0}
-.leader-podium .podium-item{padding:14px 8px}
-.leader-podium .first{transform:scale(1.05);border:2px solid var(--primary)}
-.practice-score{font-size:2rem;text-align:center;color:var(--primary);margin:12px 0}
-.activity-panel{margin-top:12px;padding:12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.12)}
-@media(max-width:900px){.hub-grid,.activity-mode-grid{grid-template-columns:repeat(2,1fr)}}
-.host-layout{display:grid;grid-template-columns:76px 1fr;gap:14px;margin-top:18px;align-items:start}
-.host-side{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px;position:sticky;top:10px}
-.host-side.collapsed .host-nav-label{display:none}
-.host-toggle{padding:10px!important;font-size:1rem}
-.host-nav{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
-.host-nav button{padding:10px;font-size:.95rem;display:flex;align-items:center;gap:10px;justify-content:flex-start}
-.host-nav-icon{font-size:1rem;min-width:20px;text-align:center}
-.host-nav-label{white-space:nowrap}
-.host-side.collapsed{width:58px}
-.host-side.collapsed .host-nav button{justify-content:center}
-.host-side.collapsed .host-nav-icon{min-width:auto}
-.host-nav .active{outline:2px solid var(--primary);transform:translateY(-1px)}
-.host-content{min-width:0}
-.host-section{margin-top:0}
-.host-section.hidden{display:none}
-.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
-.podium-item{padding:10px;border-radius:12px;background:rgba(255,255,255,.07);text-align:center}
-.podium-rank{font-size:.8rem;color:var(--muted)}
-.danger-btn{background:linear-gradient(135deg,#ef4444,#7f1d1d)}
-.announce-bar{margin-top:14px;padding:12px;border-radius:12px;background:rgba(14,165,233,.18);border:1px solid rgba(14,165,233,.35);text-align:center}
-.frozen-pill{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;font-size:.75rem;background:#ef4444;color:#fff}
-.scoreboard-entry{animation:scoreEnter .3s ease;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
-.scoreboard-entry:hover{transform:translateY(-2px)}
-.score-up{border:1px solid rgba(16,185,129,.65);box-shadow:0 0 16px rgba(16,185,129,.28);animation:scorePulseUp .55s ease}
-.score-down{border:1px solid rgba(239,68,68,.65);box-shadow:0 0 16px rgba(239,68,68,.28);animation:scorePulseDown .55s ease}
-.toggle-row{display:flex;align-items:center;gap:10px;margin-top:10px}
-.toggle-row input{width:auto;margin-top:0}
-.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.admin-user{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px;background:rgba(255,255,255,.05);border-radius:14px;margin-top:10px}
-.admin-tools{display:flex;gap:8px;flex-wrap:wrap}
-.chip{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.75rem;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.4)}
-.auth-hero{text-align:center;margin-bottom:14px}
-.auth-hero p{color:var(--muted);margin-top:6px}
-.quick-auth-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.dashboard-top{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
-.mini-stat{padding:12px;border-radius:12px;background:rgba(255,255,255,.05);text-align:center}
-.recent-rooms{max-height:180px;overflow:auto}
-.badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.quick-commands{margin-top:10px}
-.quick-commands button{margin-top:8px}
-.mcq-options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
-.power-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.notif-wrap{position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;flex-direction:column;gap:8px;max-width:320px}
-.notif{padding:10px 12px;border-radius:10px;background:rgba(15,23,42,.92);border:1px solid rgba(148,163,184,.35);color:#fff}
-.overlay-page{position:fixed;inset:0;background:#020617;color:#fff;z-index:9998;padding:24px;overflow:auto}
-.overlay-page.hidden{display:none}
-@keyframes scoreEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes scorePulseUp{0%{transform:scale(1)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
-@keyframes scorePulseDown{0%{transform:scale(1)}45%{transform:scale(.99)}100%{transform:scale(1)}}
-@media(max-width:900px){.dashboard-buttons,.host-actions,.score-buttons,.mode-grid,.grid,.host-layout,.dashboard-top,.quick-auth-row,.mcq-options,.power-grid,.host-game-grid,.host-status-row{grid-template-columns:1fr}.title{font-size:2rem}.buzzer{width:200px;height:200px;font-size:2rem}.host-side{position:static}}
-@media(max-width:520px){.host-game-grid,.host-status-row{grid-template-columns:1fr}}
-.dashboard-layout{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start}.dashboard-sidebar{background:rgba(255,255,255,.05);border-radius:20px;padding:15px}.dashboard-sidebar button{margin-bottom:10px;width:100%;text-align:left}.dashboard-panel{display:none}.dashboard-panel.active{display:block}.host-game-sections{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0 18px}.host-game-sections button.active{outline:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12)}.host-game-panel{display:none}.host-game-panel.active{display:block}.csv-tools{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin-top:12px}.role-select{padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff}.buzzer.locked{opacity:.55;pointer-events:none;filter:grayscale(.2)}@media(max-width:900px){.dashboard-layout,.csv-tools{grid-template-columns:1fr}}
+button:hover { opacity: 0.92; transform: translateY(-1px); }
+button:active { transform: translateY(1px); }
+
+.btn-secondary { background: #1e293b; color: var(--text); border: 1px solid var(--border); }
+.btn-danger { background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; }
+.btn-success { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+.btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+/* Buzzer button */
+.buzzer-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 30px 0;
+}
+.buzzer {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffd000, #ff5100);
+  color: #000;
+  font-size: 2.2rem;
+  font-weight: 900;
+  border: 6px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 45px rgba(255, 115, 0, 0.6), inset 0 6px 12px rgba(255, 255, 255, 0.6), inset 0 -6px 12px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.08s, filter 0.2s, box-shadow 0.2s;
+}
+.buzzer:active:not(:disabled) {
+  transform: scale(0.94);
+  box-shadow: 0 0 20px rgba(255, 115, 0, 0.4);
+}
+.buzzer.locked {
+  background: #334155 !important;
+  color: #64748b !important;
+  box-shadow: none !important;
+  border-color: #1e293b !important;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+}
+.status-pill.open { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.4); }
+.status-pill.locked { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.4); }
+
+.winner-banner {
+  text-align: center;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(0, 242, 254, 0.08);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  margin-top: 14px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary);
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buzz-queue {
+  max-height: 260px;
+  overflow-y: auto;
+  margin-top: 12px;
+}
+.queue-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-top: 6px;
+}
+.queue-item:first-child {
+  border-color: var(--gold);
+  background: rgba(255, 215, 0, 0.08);
+}
+
+.scoreboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.score-card {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.score-card b { display: block; font-size: 1.1rem; }
+.score-card .pts { font-size: 1.4rem; color: var(--primary); font-weight: 800; font-family: 'Orbitron', sans-serif; }
+
+.qr-box {
+  background: #fff;
+  padding: 12px;
+  border-radius: 14px;
+  width: 170px;
+  height: 170px;
+  margin: 12px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .buzzer { width: 180px; height: 180px; font-size: 1.8rem; }
+}
 </style>
 </head>
 <body>
+
 <div class="container">
-<h1 class="title">MAHIL QUIZ ARENA</h1>
+  <h1 class="brand">MAHIL BUZZER</h1>
+  <p class="sub-brand">Fast Solo & Team Quizzing Arena</p>
 
-<div id="loginPage" class="glass">
-<div class="auth-hero"><h2>LOGIN</h2><p>Buzzer battles, live polls, practice mode, leaderboards &amp; more — one arena for everything.</p></div>
-<input type="text" id="loginUsername" placeholder="Username">
-<input type="password" id="loginPassword" placeholder="Password">
-<div class="toggle-row">
-  <input type="checkbox" id="rememberMeToggle" checked>
-  <label for="rememberMeToggle">Remember me on this device</label>
-</div>
-<div class="quick-auth-row">
-  <button class="safe-btn" onclick="showQuickTips()">QUICK TIPS</button>
-</div>
-<button class="warn-btn" onclick="continueLastRoom()">CONTINUE LAST ROOM</button>
-<button onclick="login()">LOGIN</button>
-<button onclick="showSignup()">SIGN UP</button>
-<div class="card"><h2 style="font-size:1rem">Recent Login</h2><div id="recentLoginHint" class="muted">No recent user</div></div>
-</div>
-
-<div id="signupPage" class="glass hidden">
-<div class="topbar"><button class="back-btn" onclick="showLogin()">⬅ BACK</button></div>
-<h2>CREATE ACCOUNT</h2>
-<input type="text" id="signupUsername" placeholder="Username">
-<input type="email" id="signupEmail" placeholder="Email">
-<input type="password" id="signupPassword" placeholder="Password">
-<img id="avatarPreview" class="avatar-preview" src="https://i.pravatar.cc/150?img=12" alt="Avatar preview">
-<input type="file" id="avatarInput" accept="image/*">
-<button onclick="signup()">CREATE ACCOUNT</button>
-</div>
-
-<div id="dashboard" class="glass hidden">
-<div class="topbar">
-<div class="profile">
-<img id="profileAvatar" alt="Profile avatar">
-<div><h2 id="profileName"></h2><p id="profileEmail"></p></div>
-</div>
-<button class="logout-btn" onclick="logout()">LOGOUT</button>
-</div>
-<div class="dashboard-layout">
-<div class="dashboard-sidebar">
-<button class="hub-btn active" data-dash="home" onclick="showDashboardPanel('home',this)">🏠 HOME</button>
-<button class="hub-btn" data-dash="host" onclick="showDashboardPanel('host',this)">🎤 HOST</button>
-<button class="hub-btn" data-dash="join" onclick="showDashboardPanel('join',this)">🎯 JOIN</button>
-<button class="hub-btn" data-dash="practice" onclick="showDashboardPanel('practice',this)">📚 PRACTICE</button>
-<button class="hub-btn" data-dash="leaderboard" onclick="showDashboardPanel('leaderboard',this)">🏆 LEADERBOARD</button>
-<button class="hub-btn" data-dash="library" onclick="showDashboardPanel('library',this)">📦 QUESTION BANK</button>
-<button class="hub-btn" data-dash="settings" onclick="showDashboardPanel('settings',this)">⚙ SETTINGS</button>
-</div>
-<div class="dashboard-content">
-<div id="dashPanel-home" class="dashboard-panel active">
-<div class="dashboard-top">
-  <div class="card">
-    <h2>DASHBOARD INSIGHTS</h2>
-    <div id="dashboardStats" class="dashboard-buttons" style="margin-top:10px"></div>
-    <div id="badgeRow" class="badge-row"></div>
-  </div>
-  <div class="card">
-    <h2>RECENT ROOMS</h2>
-    <div id="recentRooms" class="recent-rooms muted">No recent rooms</div>
-    <button onclick="openJoinPage()">QUICK JOIN ROOM</button>
-    <div class="quick-commands">
-      <button class="dark-btn" onclick="runQuickAction('host')">INSTANT HOST</button>
-      <button class="dark-btn" onclick="runQuickAction('settings')">OPEN SETTINGS</button>
-    </div>
-  </div>
-</div>
-</div>
-<div id="dashPanel-host" class="dashboard-panel"><div class="card"><h2>HOST</h2><p class="muted">Start and manage live quiz rooms.</p><div class="hub-grid"><button class="hub-btn" onclick="hostGame()">🎤 HOST LIVE</button><button class="hub-btn dark-btn" onclick="openPublicRooms()">🌐 PUBLIC ROOMS</button></div></div></div>
-<div id="dashPanel-join" class="dashboard-panel"><div class="card"><h2>JOIN</h2><p class="muted">Enter a room code or browse public rooms.</p><div class="hub-grid"><button class="hub-btn" onclick="openJoinPage()">🎯 JOIN ROOM</button><button class="hub-btn dark-btn" onclick="openPublicRooms()">🌐 PUBLIC ROOMS</button></div></div></div>
-<div id="dashPanel-practice" class="dashboard-panel"><div class="card"><h2>PRACTICE</h2><p class="muted">Solo training and challenge modes.</p><div class="hub-grid"><button class="hub-btn safe-btn" onclick="openPracticeMode()">📚 PRACTICE</button><button class="hub-btn" onclick="openDailyChallenge()">☀️ DAILY CHALLENGE</button></div></div></div>
-<div id="dashPanel-leaderboard" class="dashboard-panel"><div class="card"><h2>LEADERBOARD</h2><p class="muted">See rankings and season progress.</p><div class="hub-grid"><button class="hub-btn" onclick="openLeaderboard()">🏆 OPEN LEADERBOARD</button></div></div></div>
-<div id="dashPanel-library" class="dashboard-panel"><div class="card"><h2>QUESTION BANK</h2><p class="muted">Open packs or import CSV questions.</p><div class="hub-grid"><button class="hub-btn" onclick="openQuizLibrary()">📦 OPEN LIBRARY</button></div></div></div>
-<div id="dashPanel-settings" class="dashboard-panel"><div class="card"><h2>SETTINGS</h2><p class="muted">Theme, audio, and account preferences.</p><div class="hub-grid"><button class="hub-btn" onclick="openSettings()">⚙ OPEN SETTINGS</button><button class="hub-btn warn-btn" onclick="clearRooms()">🗑️ CLEAR ROOMS</button></div></div></div>
-</div>
-</div>
-<button class="big-btn dark-btn hidden" id="adminPanelBtn" onclick="openAdminPanel()" style="margin-top:14px">ADMIN PANEL</button>
-</div>
-
-<div id="practicePage" class="glass hidden">
-  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>PRACTICE MODE</h2></div>
-  <p class="muted">Solo training — no room needed. Earn XP for your season rank.</p>
-  <select id="practiceDeckSelect"></select>
-  <div class="practice-score" id="practiceScore">Score: 0</div>
-  <div class="card"><div class="question" id="practiceQuestion">Pick a deck and start</div></div>
-  <div id="practiceOptions" class="mcq-options"></div>
-  <div class="host-tool-row">
-    <button class="safe-btn" onclick="startPracticeRound()">START / NEXT</button>
-    <button class="dark-btn" onclick="resetPractice()">RESET</button>
-  </div>
-</div>
-
-<div id="leaderboardPage" class="glass hidden">
-  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>GLOBAL LEADERBOARD</h2></div>
-  <button class="safe-btn" onclick="renderLeaderboard()">REFRESH</button>
-  <div id="leaderboardPodium" class="leader-podium"></div>
-  <div id="leaderboardList"></div>
-</div>
-
-<div id="dailyPage" class="glass hidden">
-  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>DAILY CHALLENGE</h2></div>
-  <p class="muted" id="dailyDateLabel"></p>
-  <div class="card"><div class="question" id="dailyQuestion">Loading...</div></div>
-  <div class="mcq-options" id="dailyOptions"></div>
-  <button onclick="submitDailyChallenge()">SUBMIT ANSWER</button>
-  <div id="dailyResult" class="announce-bar hidden"></div>
-</div>
-
-<div id="publicRoomsPage" class="glass hidden">
-  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>PUBLIC ROOMS</h2></div>
-  <button class="safe-btn" onclick="renderPublicRooms()">REFRESH LIVE ROOMS</button>
-  <div id="publicRoomsList" class="recent-rooms" style="margin-top:14px"></div>
-</div>
-
-<div id="libraryPage" class="glass hidden">
-  <div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>QUIZ LIBRARY</h2></div>
-  <p class="muted">Pick a question pack for your next live session (host only when in room).</p>
-  <select id="libraryCategory"></select>
-  <div id="libraryQuestions" class="log-box" style="margin-top:12px;max-height:320px"></div>
-  <div class="csv-tools">
-    <input type="file" id="csvQuestionFile" accept=".csv">
-    <button onclick="importQuestionsCSV()">IMPORT CSV</button>
-    <button class="dark-btn" onclick="downloadCSVTemplate()">DOWNLOAD CSV TEMPLATE</button>
-  </div>
-  <button class="dark-btn" onclick="seedQuestionBank()">SEED DEFAULT PACKS (FIREBASE)</button>
-</div>
-
-<div id="joinPage" class="glass hidden">
-<div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>JOIN ROOM</h2></div>
-<input type="text" id="joinCode" placeholder="Enter Room Code">
-<button onclick="joinGame()">JOIN ROOM</button>
-<button class="dark-btn" onclick="joinAsSpectator()">JOIN AS SPECTATOR</button>
-</div>
-
-<div id="settingsPage" class="glass hidden">
-<div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>SETTINGS</h2></div>
-<input type="text" id="changeName" placeholder="Change Username">
-<input type="file" id="changeAvatar" accept="image/*">
-<select id="themeSelect">
-<option value="neon">Neon</option>
-<option value="sunset">Sunset</option>
-<option value="forest">Forest</option>
-<option value="midnight">Midnight</option>
-<option value="aurora">Aurora</option>
-<option value="rose">Rose</option>
-<option value="ice">Ice</option>
-</select>
-<select id="soundSelect">
-<option value="1">Classic Buzz</option>
-<option value="2">Electric Buzz</option>
-<option value="3">Game Show</option>
-<option value="4">Laser Buzz</option>
-<option value="5">Cyber Buzz</option>
-<option value="6">Deep Bass</option>
-<option value="7">Arcade Blip</option>
-<option value="8">Retro Synth</option>
-</select>
-<div class="host-tool-row">
-  <button onclick="previewSound()">PREVIEW BUZZER SOUND</button>
-  <button onclick="previewTheme()">PREVIEW THEME</button>
-  <button class="dark-btn" onclick="resetThemePreview()">RESET PREVIEW</button>
-</div>
-<div class="toggle-row">
-  <input type="checkbox" id="confettiToggle">
-  <label for="confettiToggle">Enable confetti when you buzz first</label>
-</div>
-<button onclick="saveSettings()">SAVE SETTINGS</button>
-</div>
-
-<div id="adminPage" class="glass hidden">
-<div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>ADMIN PANEL</h2></div>
-<div class="admin-grid">
-  <div class="card">
-    <h2>PLATFORM STATS</h2>
-    <div id="adminStats"></div>
-    <input type="text" id="globalAnnouncementInput" placeholder="Global announcement message">
-    <button onclick="broadcastGlobalAnnouncement()">PUBLISH ANNOUNCEMENT</button>
-    <button class="dark-btn" onclick="runLuckyDraw()">RUN LUCKY DRAW</button>
-  </div>
-  <div class="card">
-    <h2>USER MANAGEMENT</h2>
-    <div id="adminUsers"></div>
-  </div>
-</div>
-</div>
-
-<div id="hostPage" class="glass hidden">
-<div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><h2>HOST PANEL</h2></div>
-<div class="room-code" id="roomCode">ROOM CODE:</div>
-<div class="qr-box"><div id="qrcode"></div></div>
-<div class="small-note" id="joinLinkNote"></div>
-<div class="host-layout">
-<div id="hostSidebar" class="host-side collapsed">
-  <button class="dark-btn host-toggle" onclick="toggleHostSidebar()">☰</button>
-  <div class="host-nav">
-  <button id="hostNavGame" class="active" onclick="showHostSection('game')"><span class="host-nav-icon">🎮</span><span class="host-nav-label">GAME</span></button>
-  <button id="hostNavScore" onclick="showHostSection('score')"><span class="host-nav-icon">🏆</span><span class="host-nav-label">SCORES</span></button>
-  <button id="hostNavPlayers" onclick="showHostSection('players')"><span class="host-nav-icon">👥</span><span class="host-nav-label">PLAYERS</span></button>
-  <button id="hostNavBank" onclick="showHostSection('bank')"><span class="host-nav-icon">📚</span><span class="host-nav-label">QUESTION BANK</span></button>
-  <button id="hostNavTournament" onclick="showHostSection('tournament')"><span class="host-nav-icon">🏆</span><span class="host-nav-label">TOURNAMENT</span></button>
-  <button id="hostNavAnalytics" onclick="showHostSection('analytics')"><span class="host-nav-icon">📈</span><span class="host-nav-label">ANALYTICS</span></button>
-  </div>
-</div>
-<div class="host-content">
-
-<div id="hostSectionGame" class="host-section">
-  <div class="host-game-sections">
-    <button class="dark-btn active" data-game-section="game" onclick="showHostGameSection('game',this)">GAME</button>
-    <button class="dark-btn" data-game-section="studio" onclick="showHostGameSection('studio',this)">QUESTION STUDIO</button>
-    <button class="dark-btn" data-game-section="mcq" onclick="showHostGameSection('mcq',this)">MCQ</button>
-    <button class="dark-btn" data-game-section="timer" onclick="showHostGameSection('timer',this)">TIMER</button>
-    <button class="dark-btn" data-game-section="players" onclick="showHostGameSection('players',this)">PLAYERS</button>
-    <button class="dark-btn" data-game-section="teams" onclick="showHostGameSection('teams',this)">TEAMS</button>
-    <button class="dark-btn" data-game-section="invitations" onclick="showHostGameSection('invitations',this)">INVITATIONS</button>
-    <button class="dark-btn" data-game-section="scoreboard" onclick="showHostGameSection('scoreboard',this)">SCOREBOARD</button>
-  </div>
-
-  <div class="host-game-panel active" id="hostGamePanel-game">
-    <div class="card">
-      <h2>GAME</h2>
-      <div class="section-title"><span class="badge" id="modeBadge">NORMAL MODE</span> <span class="badge" id="hostRoomPlayerCount" style="margin-left:6px">0 PLAYERS</span></div>
-      <div id="hostLiveStatus" class="host-live-status"></div>
-      <div class="host-status-row">
-        <button class="dark-btn" onclick="copyRoomCode()">COPY ROOM CODE</button>
-        <button class="dark-btn" onclick="copyJoinLink()">COPY JOIN LINK</button>
-        <button class="safe-btn" onclick="broadcastGameStart()">BROADCAST START</button>
-        <button onclick="hostCountdownUnlock()">3-2-1 UNLOCK</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>GAME MODE</h2>
-      <div class="mode-grid">
-        <button onclick="setGameMode('normal')">NORMAL MODE</button>
-        <button onclick="setGameMode('tournament')">TOURNAMENT MODE</button>
-        <button onclick="setScoreMode('individual')">INDIVIDUAL SCORE</button>
-        <button onclick="setScoreMode('team')">TEAM SCORE</button>
-      </div>
-      <div class="inline-row">
-        <input type="text" id="tournamentName" placeholder="Tournament Name">
-        <input type="number" id="maxRounds" placeholder="Rounds" min="1" value="3">
-      </div>
-      <div class="host-tool-row">
-        <button class="safe-btn" onclick="startTournament()">START TOURNAMENT</button>
-        <button class="dark-btn" onclick="advanceTournamentRound()">NEXT ROUND</button>
-        <button onclick="autoDraftTeams()">AUTO DRAFT TEAMS</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>BUZZER CONTROLS</h2>
-      <div class="host-game-grid">
-        <button class="warn-btn" onclick="lockBuzzers()">LOCK BUZZERS</button>
-        <button class="safe-btn" onclick="unlockBuzzers()">UNLOCK BUZZERS</button>
-        <button onclick="resetBuzzers()">RESET BUZZERS</button>
-        <button onclick="startLightningRound()">LIGHTNING (5s)</button>
-        <button class="warn-btn" onclick="freezeAllPlayers()">FREEZE ALL</button>
-        <button class="safe-btn" onclick="unfreezeAllPlayers()">UNFREEZE ALL</button>
-        <button onclick="pickRandomPlayer()">RANDOM PICK</button>
-        <button class="dark-btn" onclick="revealTopPerformer()">TOP PLAYER</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>ROOM EXPERIENCE</h2>
-      <div class="host-game-grid">
-        <button onclick="shuffleThemeForAll()">SHUFFLE THEME</button>
-        <button onclick="toggleVoiceAnnouncer()">VOICE ANNOUNCER</button>
-        <button onclick="openOverlayMode()">OPEN OVERLAY</button>
-        <button onclick="showHostSection('score')">OPEN SCORES</button>
-        <button onclick="showHostSection('players')">OPEN PLAYERS</button>
-        <button class="safe-btn" onclick="sendQuickAnnouncement('Get ready! Next question incoming.')">READY UP</button>
-        <button class="dark-btn" onclick="sendQuickAnnouncement('Break time — 60 seconds.')">BREAK TIME</button>
-        <button class="warn-btn" onclick="endRoundNow()">END ROUND NOW</button>
-      </div>
-      <input type="text" id="quickAnnounceInput" placeholder="Custom announcement">
-      <button onclick="sendHostAnnouncement()">SEND CUSTOM ANNOUNCEMENT</button>
-    </div>
-  </div>
-
-  <div class="host-game-panel" id="hostGamePanel-studio">
-    <div class="card">
-      <h2>QUESTION STUDIO</h2>
-      <textarea id="questionInput" placeholder="Enter Question"></textarea>
-      <input type="file" id="questionImageInput" accept="image/*">
-      <div class="host-game-grid">
-        <button onclick="sendQuestion()">SEND QUESTION</button>
-        <button onclick="reuseLastQuestion()">REUSE LAST QUESTION</button>
-        <button class="warn-btn" onclick="clearCurrentQuestion()">CLEAR QUESTION</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>ACTIVITY MODES</h2>
-      <p class="muted">Switch how players interact — not only buzz-in.</p>
-      <div class="activity-mode-grid">
-        <button onclick="setRoomActivity('buzzer')">⚡ BUZZER</button>
-        <button onclick="setRoomActivity('poll')">📊 POLL</button>
-        <button onclick="setRoomActivity('truefalse')">✅ TRUE/FALSE</button>
-        <button onclick="setRoomActivity('typeanswer')">✍️ TYPE ANSWER</button>
-        <button onclick="setRoomActivity('speedquiz')">⏱️ SPEED QUIZ</button>
-      </div>
-      <div id="hostActivityPanel" class="activity-panel">
-        <input type="text" id="pollQuestionInput" placeholder="Poll question">
-        <input type="text" id="pollOptA" placeholder="Option A">
-        <input type="text" id="pollOptB" placeholder="Option B">
-        <input type="text" id="pollOptC" placeholder="Option C (optional)">
-        <input type="text" id="pollOptD" placeholder="Option D (optional)">
-        <div class="host-tool-row">
-          <button onclick="startLivePoll()">START POLL</button>
-          <button class="dark-btn" onclick="closePollResults()">SHOW RESULTS</button>
-        </div>
-        <input type="text" id="tfQuestionInput" placeholder="True/False statement">
-        <select id="tfCorrect"><option value="true">Correct: TRUE</option><option value="false">Correct: FALSE</option></select>
-        <button onclick="startTrueFalseRound()">START TRUE/FALSE</button>
-        <input type="text" id="typeAnswerPrompt" placeholder="Type-answer question">
-        <input type="text" id="typeAnswerExpected" placeholder="Expected answer (for host reference)">
-        <button onclick="startTypeAnswerRound()">START TYPE ANSWER</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="host-game-panel" id="hostGamePanel-mcq">
-    <div class="card">
-      <h2>MCQ</h2>
-      <input type="text" id="mcqQuestion" placeholder="MCQ Question">
-      <div class="mcq-options">
-        <input type="text" id="mcqOptionA" placeholder="Option A">
-        <input type="text" id="mcqOptionB" placeholder="Option B">
-        <input type="text" id="mcqOptionC" placeholder="Option C">
-        <input type="text" id="mcqOptionD" placeholder="Option D">
-      </div>
-      <select id="mcqCorrect">
-        <option value="A">Correct: A</option>
-        <option value="B">Correct: B</option>
-        <option value="C">Correct: C</option>
-        <option value="D">Correct: D</option>
+  <!-- LOBBY SCREEN -->
+  <div id="lobbyPage" class="glass">
+    <h2>JOIN OR CREATE ARENA</h2>
+    <input type="text" id="usernameInput" placeholder="Your Display Name" maxlength="20">
+    
+    <div style="margin-top: 16px;">
+      <label style="font-size:0.9rem; color:var(--muted)">Mode Selection</label>
+      <select id="gameModeSelect">
+        <option value="solo">Solo Buzzer (Individual)</option>
+        <option value="team">Team Buzzer</option>
       </select>
-      <div class="host-game-grid">
-        <button onclick="sendMcqQuestion()">SEND MCQ</button>
-        <button class="safe-btn" onclick="revealMcqAnswer()">REVEAL ANSWER</button>
-        <button onclick="gradeMcqAndAward()">GRADE &amp; AWARD</button>
-        <button class="dark-btn" onclick="exportQuestionPack()">EXPORT PACK</button>
-        <button class="dark-btn" onclick="importQuestionPack()">IMPORT PACK</button>
-      </div>
-      <textarea id="questionPackData" placeholder="Question pack JSON (import/export)"></textarea>
+    </div>
+
+    <div id="teamField" class="hidden">
+      <input type="text" id="teamInput" placeholder="Team Name (e.g. Red Dragons, Alpha)" maxlength="20">
+    </div>
+
+    <div class="grid-2" style="margin-top: 12px;">
+      <button class="btn-success btn-orbitron" onclick="hostRoom()">HOST ARENA</button>
+      <button class="btn-orbitron" onclick="showJoinBox()">JOIN ARENA</button>
+    </div>
+
+    <div id="joinBox" class="hidden" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px;">
+      <input type="text" id="roomCodeInput" placeholder="6-Letter Room Code" style="text-transform:uppercase;">
+      <button onclick="joinRoom()">CONNECT TO ROOM</button>
     </div>
   </div>
 
-  <div class="host-game-panel" id="hostGamePanel-timer">
-    <div class="card">
-      <h2>TIMER</h2>
-      <div class="host-game-grid">
-        <button onclick="startTimer()">START TIMER</button>
-        <button onclick="setTimerPreset(5)">5 SECONDS</button>
-        <button onclick="setTimerPreset(10)">10 SECONDS</button>
-        <button onclick="setTimerPreset(20)">20 SECONDS</button>
-        <button onclick="setTimerPreset(30)">30 SECONDS</button>
+  <!-- HOST CONTROLS SCREEN -->
+  <div id="hostPage" class="glass hidden">
+    <div class="topbar">
+      <div>
+        <span class="status-pill" id="hostRoomCodeLabel">ROOM: -</span>
+        <span class="status-pill" id="hostModeLabel">SOLO</span>
       </div>
+      <button class="btn-secondary" style="width:auto; padding:8px 14px; margin:0;" onclick="leaveRoom()">EXIT</button>
     </div>
+
+    <div class="qr-box"><div id="qrcode"></div></div>
+    
+    <div class="winner-banner" id="hostWinnerBanner">Waiting for buzzes...</div>
+
+    <div class="grid-3" style="margin-top:14px;">
+      <button class="btn-warning btn-orbitron" onclick="unlockBuzzers()">⚡ UNLOCK (CLEAR)</button>
+      <button class="btn-danger btn-orbitron" onclick="lockBuzzers()">🔒 LOCK</button>
+      <button class="btn-orbitron" onclick="awardPoints(10)">+10 PTS</button>
+    </div>
+    
+    <div class="grid-3" style="margin-top:4px;">
+      <button class="btn-secondary" onclick="awardPoints(-5)">-5 PTS</button>
+      <button class="btn-secondary" onclick="resetAllScores()">RESET SCORES</button>
+      <button class="btn-secondary" onclick="copyJoinLink()">COPY LINK</button>
+    </div>
+
+    <h3 style="margin-top: 20px; font-size:1rem; color:var(--muted);">BUZZ QUEUE (FIRST TO LAST)</h3>
+    <div id="hostBuzzQueue" class="buzz-queue"></div>
+
+    <h3 style="margin-top: 20px; font-size:1rem; color:var(--muted);">SCOREBOARD</h3>
+    <div id="hostScoreboard" class="scoreboard-grid"></div>
   </div>
 
-  <div class="host-game-panel" id="hostGamePanel-players">
-    <div class="card">
-      <h2>PLAYERS</h2>
-      <p class="muted">Use the player management section below for full controls.</p>
-      <div class="host-tool-row">
-        <button onclick="showHostSection('players')">OPEN PLAYER MANAGEMENT</button>
+  <!-- PLAYER SCREEN -->
+  <div id="playerPage" class="glass hidden">
+    <div class="topbar">
+      <div>
+        <span class="status-pill" id="playerRoomCodeLabel">ROOM: -</span>
+        <span class="status-pill" id="playerStatusPill">STATUS</span>
       </div>
+      <button class="btn-secondary" style="width:auto; padding:8px 14px; margin:0;" onclick="leaveRoom()">LEAVE</button>
     </div>
-  </div>
 
-  <div class="host-game-panel" id="hostGamePanel-teams">
-    <div class="card">
-      <h2>TEAMS</h2>
-      <p class="muted">Use team mode and player management to organize teams.</p>
-      <div class="host-tool-row">
-        <button onclick="autoDraftTeams()">AUTO DRAFT TEAMS</button>
-        <button class="dark-btn" onclick="showHostSection('players')">OPEN PLAYER MANAGEMENT</button>
-      </div>
+    <div class="winner-banner" id="playerWinnerBanner">Ready for next question</div>
+
+    <div class="buzzer-wrap">
+      <button class="buzzer locked" id="buzzerBtn" onclick="triggerBuzz()">BUZZ</button>
+      <p style="margin-top:12px; font-size:0.85rem; color:var(--muted);">Press SPACEBAR or click to buzz</p>
     </div>
-  </div>
 
-  <div class="host-game-panel" id="hostGamePanel-invitations">
-    <div class="card">
-      <h2>INVITATIONS</h2>
-      <p class="muted">Invite players from your Firebase user list into this room.</p>
-      <div class="inline-row">
-        <input type="text" id="hostUserSearch" placeholder="Search by name or email" oninput="filterFirebaseUsers()">
-        <button class="safe-btn" onclick="loadFirebaseUsersForHost()">REFRESH USERS</button>
-      </div>
-      <div class="host-tool-row">
-        <button onclick="inviteAllFirebaseUsers()">INVITE ALL ONLINE</button>
-        <button class="dark-btn" onclick="migrateLocalUsersToFirebase()">SYNC LOCAL → FIREBASE</button>
-      </div>
-      <div id="hostFirebaseUsers" class="user-pick-list muted">Loading users from Firebase...</div>
-    </div>
+    <h3 style="margin-top: 10px; font-size:1rem; color:var(--muted);">LIVE STANDINGS</h3>
+    <div id="playerScoreboard" class="scoreboard-grid"></div>
   </div>
-
-  <div class="host-game-panel" id="hostGamePanel-scoreboard">
-    <div class="card">
-      <h2>SCOREBOARD</h2>
-      <p class="muted">Open the main scores panel for awarding and adjusting points.</p>
-      <div class="host-tool-row">
-        <button onclick="showHostSection('score')">OPEN SCORES PANEL</button>
-      </div>
-    </div>
-  </div>
-</div>
-<div id="hostSectionScore" class="host-section hidden">
-  <div class="card">
-    <h2>LIVE SCOREBOARD</h2>
-    <div id="hostScoreboard"></div>
-  </div>
-  <div class="score-buttons">
-  <button onclick="addPoints()">ADD POINTS</button>
-  <button onclick="minusPoints()">REMOVE POINTS</button>
-  <button onclick="addTeamPoints()">ADD TEAM POINTS</button>
-  <button onclick="minusTeamPoints()">REMOVE TEAM POINTS</button>
-  </div>
-  <div class="host-tool-row">
-  <input type="number" id="timerSeconds" min="3" max="90" value="10" placeholder="Timer (sec)">
-  <input type="number" id="pointsInput" min="1" max="100" value="10" placeholder="Points">
-  <button class="dark-btn" onclick="exportScores()">EXPORT SCORES CSV</button>
-  </div>
-<div class="host-tool-row">
-  <button class="safe-btn" onclick="applyQuickPreset(8,5)">QUICK PRESET (8s / 5pts)</button>
-  <button class="safe-btn" onclick="applyQuickPreset(12,10)">STANDARD (12s / 10pts)</button>
-  <button class="safe-btn" onclick="applyQuickPreset(20,15)">CHALLENGE (20s / 15pts)</button>
-</div>
-  <div class="host-tool-row">
-  <button class="danger-btn" onclick="resetScores()">RESET PLAYER SCORES</button>
-  <button class="danger-btn" onclick="resetTeamScores()">RESET TEAM SCORES</button>
-  <button onclick="clearBuzzLog()">CLEAR BUZZ LOG</button>
-  </div>
-  <div class="host-tool-row">
-  <button class="safe-btn" onclick="awardWinnerWithStreak()">AWARD WINNER + STREAK</button>
-  <button onclick="pickRandomPlayer()">RANDOM PLAYER PICK</button>
-  <button class="dark-btn" onclick="clearStreaks()">RESET STREAKS</button>
-  </div>
-<div class="host-tool-row">
-  <button class="warn-btn" onclick="undoLastScoreAction()">UNDO LAST SCORE ACTION</button>
-  <button class="dark-btn" onclick="toggleAutoNextRound()">TOGGLE AUTO NEXT ROUND</button>
-  <button onclick="showHostSection('game')">GO TO GAME PANEL</button>
-</div>
-</div>
-
-<div id="hostSectionPlayers" class="host-section hidden">
-  <div class="card">
-  <h2>TEAMS</h2>
-  <div class="inline-row">
-  <input type="text" id="teamNameInput" placeholder="New Team Name">
-  <button onclick="createTeam()">ADD TEAM</button>
-  </div>
-  <div id="teamBoard"></div>
-  </div>
-  <div class="card">
-  <h2>PLAYERS</h2>
-  <div id="hostPlayers"></div>
-  </div>
-  <div class="card">
-    <input type="text" id="announcementInput" placeholder="Host announcement for players">
-    <div class="host-tool-row">
-      <button onclick="sendAnnouncement()">SEND ANNOUNCEMENT</button>
-      <button class="dark-btn" onclick="clearAnnouncement()">CLEAR ANNOUNCEMENT</button>
-      <button onclick="pickRandomPlayer()">RANDOM PLAYER PICK</button>
-    </div>
-  </div>
-</div>
-
-<div id="hostSectionStats" class="host-section hidden">
-  <div class="card">
-  <h2>TOURNAMENT PANEL</h2>
-  <div id="tournamentPanel"></div>
-  </div>
-  <div class="card">
-  <h2>MATCH REPLAY</h2>
-  <div id="replayPanel" class="log-box muted"></div>
-  </div>
-  <div class="card">
-  <h2>BUZZ LOG</h2>
-  <div id="buzzLog" class="log-box muted"></div>
-  </div>
-  <div class="card">
-  <h2>QUESTION HISTORY</h2>
-  <div id="questionHistory" class="log-box muted"></div>
-  </div>
-</div>
-</div>
-</div>
-</div>
-
-<div id="hostSectionBank" class="host-section hidden"><div class="card"><h2>QUESTION BANK</h2><p class="muted">Open the library or manage imported question sets.</p><div class="host-tool-row"><button onclick="openQuizLibrary()">OPEN LIBRARY</button></div></div></div>
-<div id="hostSectionTournament" class="host-section hidden"><div class="card"><h2>TOURNAMENT</h2><div id="tournamentPanel"></div></div></div>
-<div id="hostSectionAnalytics" class="host-section hidden"><div class="card"><h2>ANALYTICS</h2><div id="replayPanel" class="log-box muted"></div><div id="buzzLog" class="log-box muted" style="margin-top:12px"></div><div id="questionHistory" class="log-box muted" style="margin-top:12px"></div></div></div>
-<div id="playerPage" class="hidden">
-<div class="grid">
-<div class="glass">
-<div class="topbar"><button class="back-btn" onclick="goDashboard()">⬅ BACK</button><button class="logout-btn" onclick="logout()">LOGOUT</button></div>
-<div class="question" id="question">Waiting for question...</div>
-<img id="questionImage" class="question-image" alt="Question image">
-<div id="playerAnnouncement" class="announce-bar hidden"></div>
-<div id="playerActivityBadge" class="section-title"><span class="badge">BUZZER MODE</span></div>
-
-<div id="playerActivityBuzzer">
-  <button class="buzzer" id="buzzBtn" onclick="buzz()">BUZZ</button>
-</div>
-
-<div id="playerActivityPoll" class="hidden">
-  <div class="question" id="pollQuestionDisplay">Waiting for poll...</div>
-  <div class="poll-vote-grid" id="pollVoteButtons"></div>
-</div>
-
-<div id="playerActivityTrueFalse" class="hidden">
-  <div class="question" id="tfQuestionDisplay">Waiting...</div>
-  <div class="tf-grid">
-    <button class="tf-true" onclick="submitTrueFalse('true')">TRUE</button>
-    <button class="tf-false" onclick="submitTrueFalse('false')">FALSE</button>
-  </div>
-</div>
-
-<div id="playerActivityTypeAnswer" class="hidden">
-  <div class="question" id="typeAnswerDisplay">Waiting...</div>
-  <input type="text" id="playerTypeAnswerInput" placeholder="Type your answer">
-  <button onclick="submitTypeAnswer()">SUBMIT</button>
-</div>
-
-<div class="card">
-  <h2>LIVE REACTIONS</h2>
-  <div class="reaction-row">
-    <button onclick="sendReaction('🔥')">🔥</button>
-    <button onclick="sendReaction('😂')">😂</button>
-    <button onclick="sendReaction('👏')">👏</button>
-    <button onclick="sendReaction('😮')">😮</button>
-    <button onclick="sendReaction('💯')">💯</button>
-  </div>
-  <div id="latestReaction" class="muted"></div>
-</div>
-
-<div class="card">
-  <h2>ROOM CHAT</h2>
-  <div id="roomChatBox" class="chat-box muted">No messages yet</div>
-  <div class="inline-row">
-    <input type="text" id="roomChatInput" placeholder="Message the room..." maxlength="120">
-    <button onclick="sendRoomChat()">SEND</button>
-  </div>
-</div>
-
-<div class="card">
-  <h2>MCQ ANSWER</h2>
-  <div id="playerMcqQuestion" class="muted">No MCQ active</div>
-  <select id="playerMcqAnswer">
-    <option value="">Choose answer</option>
-    <option value="A">A</option>
-    <option value="B">B</option>
-    <option value="C">C</option>
-    <option value="D">D</option>
-  </select>
-  <button onclick="submitMcqAnswer()">SUBMIT ANSWER</button>
-</div>
-<div class="winner" id="reaction"></div>
-<div class="winner" id="playerWinner"></div>
-<div class="timer" id="playerTimer">10</div>
-<div class="winner" id="lockState"></div>
-</div>
-<div class="glass">
-<h2>LIVE SCOREBOARD</h2>
-<div id="playerScoreboard"></div>
-<div class="card">
-<h2>YOUR TEAM</h2>
-<select id="teamSelect"></select>
-<button onclick="joinSelectedTeam()">SAVE TEAM</button>
-</div>
-<div class="card">
-<h2>TOURNAMENT STATUS</h2>
-<div id="playerTournamentPanel"></div>
-</div>
-<div class="card">
-  <h2>POWER UPS</h2>
-  <div class="power-grid">
-    <button onclick="activatePowerUp('double')">DOUBLE</button>
-    <button onclick="activatePowerUp('shield')">SHIELD</button>
-    <button onclick="activatePowerUp('steal')">STEAL</button>
-  </div>
-  <div id="powerUpState" class="muted"></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div id="notificationCenter" class="notif-wrap"></div>
-<div id="overlayPage" class="overlay-page hidden">
-  <div class="topbar"><h2>LIVE OVERLAY</h2><button class="logout-btn" onclick="closeOverlayMode()">CLOSE</button></div>
-  <div id="overlayContent"></div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-import { getDatabase, ref, set, get, update, onValue, remove, runTransaction, onDisconnect } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+import { getDatabase, ref, set, get, update, onValue, remove, runTransaction } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "YOUR_REAL_API_KEY",
   authDomain: "mahilbuzz-8d984.firebaseapp.com",
@@ -821,2027 +332,395 @@ const firebaseConfig = {
   projectId: "mahilbuzz-8d984",
   storageBucket: "mahilbuzz-8d984.firebasestorage.app",
   messagingSenderId: "364076231129",
-  appId: "1:364076231129:web:538aad1882ce26704d11c8",
-  measurementId: "G-JR0172JSE9"
+  appId: "1:364076231129:web:538aad1882ce26704d11c8"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-window.db=db;window.fbRef=ref;window.fbSet=set;window.fbGet=get;window.fbUpdate=update;window.fbOnValue=onValue;window.fbRemove=remove;window.fbRunTransaction=runTransaction;window.fbOnDisconnect=onDisconnect;
-window.dispatchEvent(new Event('firebase-ready'));
+
+window.db = db;
+window.fbRef = ref;
+window.fbSet = set;
+window.fbGet = get;
+window.fbUpdate = update;
+window.fbOnValue = onValue;
+window.fbRemove = remove;
+window.fbRunTransaction = runTransaction;
 </script>
+
 <script>
-let currentUser=null,currentRoom='',timerInterval=null,roomListenerStartedFor='',presenceRegistered=false;
-let previousScoreByPlayerKey={};
-let lastScoreAction=null;
-let voiceAnnouncerEnabled=true;
-let currentRoomDataCache=null;
-let firebaseUsersCache=[];
-let lastSentQuestion='';
-let practiceState={deck:'general',index:0,score:0,active:false};
-const ADMIN_USERNAMES=['admin','superadmin','mahiladmin'];
-const ACTIVITY_LABELS={buzzer:'⚡ BUZZER',poll:'📊 LIVE POLL',truefalse:'✅ TRUE/FALSE',typeanswer:'✍️ TYPE ANSWER',speedquiz:'⏱️ SPEED QUIZ'};
-const PRACTICE_DECKS={
-  general:[
-    {q:'Capital of France?',opts:['Paris','London','Rome','Berlin'],a:0},
-    {q:'2 + 2 = ?',opts:['3','4','5','22'],a:1},
-    {q:'Largest planet?',opts:['Earth','Mars','Jupiter','Venus'],a:2}
-  ],
-  science:[
-    {q:'Chemical symbol for water?',opts:['O2','H2O','CO2','NaCl'],a:1},
-    {q:'Speed of light unit?',opts:['mph','m/s','km/s','knots'],a:1},
-    {q:'Human body bones (approx)?',opts:['106','206','306','406'],a:1}
-  ],
-  trivia:[
-    {q:'Who painted the Mona Lisa?',opts:['Van Gogh','Da Vinci','Picasso','Monet'],a:1},
-    {q:'Year WW2 ended?',opts:['1943','1945','1947','1950'],a:1},
-    {q:'First man on moon?',opts:['Aldrin','Armstrong','Collins','Gagarin'],a:1}
-  ]
-};
-const DEFAULT_QUESTION_BANK={
-  general:[
-    {question:'What is 15 × 4?',answer:'60',type:'short'},
-    {question:'Name the longest river in the world.',answer:'Nile',type:'short'},
-    {question:'Which gas do plants absorb?',answer:'carbon dioxide',type:'short'}
-  ],
-  fun:[
-    {question:'What color is a ruby?',answer:'red',type:'short'},
-    {question:'How many sides does a hexagon have?',answer:'6',type:'short'},
-    {question:'Buzz in: fastest finger wins!',answer:'',type:'buzzer'}
-  ],
-  mcq:[
-    {question:'Select the prime number',options:{A:'9',B:'11',C:'15',D:'21'},correct:'B',type:'mcq'},
-    {question:'Select the mammal',options:{A:'Shark',B:'Frog',C:'Dolphin',D:'Spider'},correct:'C',type:'mcq'}
-  ]
-};
-const buzzSounds={1:'https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3',2:'https://assets.mixkit.co/active_storage/sfx/1018/1018-preview.mp3',3:'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3',4:'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3',5:'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',6:'https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3',7:'https://assets.mixkit.co/active_storage/sfx/220/220-preview.mp3',8:'https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3'};
-const themes=['neon','sunset','forest','midnight','aurora','rose','ice'];
+let currentRoom = null;
+let isHost = false;
+let userProfile = { name: '', team: '', mode: 'solo' };
+let audioCtx = null;
+let roomUnsubscribe = null;
 
-function escapeHtml(value){
-  return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-}
+// Clean Web Audio Synthesizer for high-performance buzzer
+function playBuzzerSound(type = 'buzz') {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
 
-const nativeAlert=window.alert.bind(window);
-function notify(message,type='info'){
-  const wrap=document.getElementById('notificationCenter');
-  if(!wrap)return nativeAlert(message);
-  const div=document.createElement('div');
-  div.className='notif';
-  if(type==='error')div.style.borderColor='rgba(239,68,68,.7)';
-  if(type==='success')div.style.borderColor='rgba(16,185,129,.7)';
-  div.textContent=message;
-  wrap.appendChild(div);
-  setTimeout(()=>div.remove(),3200);
-}
-window.alert=(msg)=>notify(String(msg),'info');
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
 
-function speakText(text){
-  if(!voiceAnnouncerEnabled||!('speechSynthesis' in window))return;
-  const utter=new SpeechSynthesisUtterance(String(text||''));
-  utter.rate=1;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utter);
-}
-
-function applyTheme(theme){
-  const selected=themes.includes(theme)?theme:'neon';
-  document.body.dataset.theme=selected;
-}
-
-function getSeasonData(){
-  if(!currentUser)return {xp:0,level:1,rank:'Bronze'};
-  const key='mahilSeason_'+currentUser.email;
-  const data=JSON.parse(localStorage.getItem(key)||'{"xp":0,"level":1,"rank":"Bronze"}');
-  return data;
-}
-
-function saveSeasonData(data){
-  if(!currentUser)return;
-  const key='mahilSeason_'+currentUser.email;
-  localStorage.setItem(key,JSON.stringify(data));
-}
-
-function addSeasonXp(amount){
-  const data=getSeasonData();
-  data.xp=(data.xp||0)+Math.max(0,amount);
-  data.level=Math.max(1,Math.floor(data.xp/120)+1);
-  data.rank=data.level>=20?'Diamond':data.level>=12?'Platinum':data.level>=7?'Gold':data.level>=4?'Silver':'Bronze';
-  saveSeasonData(data);
-}
-
-function getCurrentBuzzSound(){
-  const soundKey=(currentUser?.sound)||'1';
-  return buzzSounds[soundKey]||buzzSounds[1];
-}
-
-function isAdminUser(user){
-  if(!user)return false;
-  if(user.role==='admin')return true;
-  return ADMIN_USERNAMES.includes(String(user.username||'').toLowerCase());
-}
-
-function updateAdminButtonVisibility(){
-  const btn=document.getElementById('adminPanelBtn');
-  if(!btn)return;
-  btn.classList.toggle('hidden',!isAdminUser(currentUser));
-}
-function showDashboardPanel(section,btn){document.querySelectorAll('.dashboard-panel').forEach(el=>el.classList.remove('active'));const target=document.getElementById('dashPanel-'+section);if(target)target.classList.add('active');document.querySelectorAll('[data-dash]').forEach(el=>el.classList.remove('active'));const active=btn||document.querySelector(`[data-dash="${section}"]`);if(active)active.classList.add('active')}
-function showHostGameSection(section,btn){document.querySelectorAll('.host-game-panel').forEach(el=>el.classList.remove('active'));const target=document.getElementById('hostGamePanel-'+section);if(target)target.classList.add('active');document.querySelectorAll('[data-game-section]').forEach(el=>el.classList.remove('active'));const active=btn||document.querySelector(`[data-game-section="${section}"]`);if(active)active.classList.add('active')}
-function setTimerPreset(seconds){const timerEl=document.getElementById('timer');const playerTimerEl=document.getElementById('playerTimer');if(timerEl)timerEl.innerText=String(seconds);if(playerTimerEl)playerTimerEl.innerText=String(seconds)}
-
-function showHostSection(section){
-  const sections=['game','score','players','bank','tournament','analytics'];
-  sections.forEach(name=>{
-    const map={game:'hostSectionGame',score:'hostSectionScore',players:'hostSectionPlayers',bank:'hostSectionBank',tournament:'hostSectionTournament',analytics:'hostSectionAnalytics'};const sectionEl=document.getElementById(map[name]);
-    const navMap={game:'hostNavGame',score:'hostNavScore',players:'hostNavPlayers',bank:'hostNavBank',tournament:'hostNavTournament',analytics:'hostNavAnalytics'};const navBtn=document.getElementById(navMap[name]);
-    if(sectionEl)sectionEl.classList.toggle('hidden',name!==section);
-    if(navBtn)navBtn.classList.toggle('active',name===section);
-  });
-  if(section==='game'&&currentRoom)loadFirebaseUsersForHost();
-}
-
-function toggleHostSidebar(){
-  const sidebar=document.getElementById('hostSidebar');
-  if(sidebar)sidebar.classList.toggle('collapsed');
-}
-
-function previewSound(){
-  const selected=soundSelect?.value||'1';
-  const url=buzzSounds[selected]||buzzSounds[1];
-  const sound=new Audio(url);
-  sound.volume=.85;
-  sound.play().catch(()=>alert('Sound preview blocked by browser. Click again.'));
-}
-
-function previewTheme(){
-  applyTheme(themeSelect?.value||'neon');
-}
-
-function resetThemePreview(){
-  applyTheme(currentUser?.theme||'neon');
-  if(themeSelect)themeSelect.value=currentUser?.theme||'neon';
-}
-
-
-function showQuickTips(){
-  alert('Arena tips:\n• Space = buzz in live rooms\n• Hub: Practice, Daily Challenge, Leaderboard\n• Host can switch Poll / True-False / Type Answer modes\n• Room chat + reactions for audience energy\n• Ctrl+K = quick command (host, join, settings)');
-}
-
-function rememberRecentLogin(){
-  if(!currentUser)return;
-  localStorage.setItem('mahilRecentLogin',JSON.stringify({
-    username:currentUser.username,
-    email:currentUser.email,
-    time:Date.now()
-  }));
-}
-
-function renderRecentLoginHint(){
-  const hintEl=document.getElementById('recentLoginHint');
-  if(!hintEl)return;
-  const recent=JSON.parse(localStorage.getItem('mahilRecentLogin')||'null');
-  if(!recent){
-    hintEl.textContent='No recent user';
-    return;
-  }
-  hintEl.textContent=`${recent.username} • ${new Date(recent.time||Date.now()).toLocaleString()}`;
-}
-
-function updateDailyStreak(){
-  if(!currentUser)return;
-  const key='mahilDailyStreak_'+currentUser.email;
-  const raw=JSON.parse(localStorage.getItem(key)||'null');
-  const today=new Date().toDateString();
-  const yesterday=new Date(Date.now()-86400000).toDateString();
-  let streak=1;
-  if(raw&&raw.lastDate===today){
-    streak=raw.streak||1;
-  }else if(raw&&raw.lastDate===yesterday){
-    streak=(raw.streak||1)+1;
-  }
-  localStorage.setItem(key,JSON.stringify({streak,lastDate:today}));
-  return streak;
-}
-
-function getAchievementBadges(){
-  if(!currentUser)return [];
-  const badges=[];
-  const rooms=JSON.parse(localStorage.getItem('mahilRecentRooms')||'[]').filter(r=>r.by===currentUser.email);
-  const streakInfo=JSON.parse(localStorage.getItem('mahilDailyStreak_'+currentUser.email)||'null');
-  if((rooms.length||0)>=3)badges.push('Room Explorer');
-  if((streakInfo?.streak||0)>=3)badges.push('3-Day Streak');
-  if((currentUser.theme||'neon')!=='neon')badges.push('Style Master');
-  if((currentUser.sound||'1')!=='1')badges.push('Sound Tuner');
-  if(isAdminUser(currentUser))badges.push('Admin Power');
-  return badges;
-}
-
-function renderBadges(){
-  const row=document.getElementById('badgeRow');
-  if(!row)return;
-  const badges=getAchievementBadges();
-  if(!badges.length){
-    row.innerHTML='<span class="muted">No badges yet. Keep playing to unlock.</span>';
-    return;
-  }
-  row.innerHTML=badges.map(b=>`<span class="chip">${escapeHtml(b)}</span>`).join('');
-}
-
-function renderDashboardInsights(){
-  const statsEl=document.getElementById('dashboardStats');
-  if(!statsEl||!currentUser)return;
-  const users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  const rooms=JSON.parse(localStorage.getItem('mahilRecentRooms')||'[]');
-  const mine=rooms.filter(r=>r.by===currentUser.email);
-  const streakInfo=JSON.parse(localStorage.getItem('mahilDailyStreak_'+currentUser.email)||'null');
-  const season=getSeasonData();
-  statsEl.innerHTML=`<div class="mini-stat"><div class="muted">Theme</div><b>${escapeHtml(currentUser.theme||'neon')}</b></div><div class="mini-stat"><div class="muted">Sound</div><b>#${escapeHtml(currentUser.sound||'1')}</b></div><div class="mini-stat"><div class="muted">Arena XP</div><b>L${season.level}</b></div><div class="mini-stat"><div class="muted">Rooms Joined</div><b>${mine.length}</b></div><div class="mini-stat"><div class="muted">Daily Streak</div><b>${streakInfo?.streak||1} day(s)</b></div><div class="mini-stat"><div class="muted">Season Rank</div><b>${season.rank}</b></div>`;
-}
-
-function renderRecentRooms(){
-  const container=document.getElementById('recentRooms');
-  if(!container||!currentUser)return;
-  const rooms=JSON.parse(localStorage.getItem('mahilRecentRooms')||'[]').filter(r=>r.by===currentUser.email).slice(0,8);
-  if(!rooms.length){
-    container.textContent='No recent rooms';
-    return;
-  }
-  container.innerHTML=rooms.map(room=>`<div class="player"><div><b>${escapeHtml(room.code)}</b><br><span class="muted">${new Date(room.time).toLocaleString()}</span></div><button onclick="quickJoinRecentRoom('${escapeHtml(room.code)}')">JOIN</button></div>`).join('');
-}
-
-function quickJoinRecentRoom(code){
-  openJoinPage();
-  joinCode.value=String(code||'').toUpperCase();
-}
-
-function continueLastRoom(){
-  const recent=JSON.parse(localStorage.getItem('mahilRecentRooms')||'[]')[0];
-  if(!recent)return alert('No last room found');
-  joinCode.value=String(recent.code||'').toUpperCase();
-  if(currentUser)openJoinPage();
-}
-
-function runQuickAction(action){
-  if(action==='host')return hostGame();
-  if(action==='settings')return openSettings();
-}
-
-function saveRecentRoom(code){
-  if(!currentUser||!code)return;
-  const previous=JSON.parse(localStorage.getItem('mahilRecentRooms')||'[]');
-  const cleaned=previous.filter(item=>!(item.by===currentUser.email&&item.code===code));
-  cleaned.unshift({code,time:Date.now(),by:currentUser.email});
-  localStorage.setItem('mahilRecentRooms',JSON.stringify(cleaned.slice(0,30)));
-}
-
-async function logMatchEvent(type,detail){
-  if(!currentRoom)return;
-  const key=Date.now()+'_'+Math.random().toString(36).slice(2,6);
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/matchEvents/'+key),{
-    type,detail:detail||'',time:Date.now(),by:currentUser?.username||'system'
-  });
-}
-
-function toggleVoiceAnnouncer(){
-  voiceAnnouncerEnabled=!voiceAnnouncerEnabled;
-  notify(`Voice announcer ${voiceAnnouncerEnabled?'enabled':'disabled'}`);
-}
-
-async function autoDraftTeams(){
-  const snap=await fbGet(fbRef(db,'rooms/'+currentRoom+'/players'));
-  if(!snap.exists())return;
-  const players=Object.entries(snap.val()||{}).filter(([,p])=>!p.isHost);
-  const teamA='Alpha';
-  const teamB='Bravo';
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/teams'),{
-    [sanitizeKey(teamA)]:{name:teamA,score:0},
-    [sanitizeKey(teamB)]:{name:teamB,score:0}
-  });
-  for(let i=0;i<players.length;i++){
-    const [key]=players[i];
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+key),{team:i%2===0?teamA:teamB});
-  }
-  await logMatchEvent('auto_draft','Teams auto drafted');
-}
-
-function parseCSVLine(line){const result=[];let current='';let inQuotes=false;for(let i=0;i<line.length;i++){const char=line[i];const next=line[i+1];if(char==='"'){if(inQuotes&&next==='"'){current+='"';i++;}else{inQuotes=!inQuotes;}}else if(char===','&&!inQuotes){result.push(current);current='';}else{current+=char;}}result.push(current);return result.map(v=>v.trim())}
-function importQuestionsCSV(){const file=document.getElementById('csvQuestionFile')?.files?.[0];if(!file)return alert('Select CSV');const reader=new FileReader();reader.onload=function(e){const raw=String(e.target.result||'').replace(/^\uFEFF/,'');const rows=raw.split(/\r?\n/).filter(r=>r.trim());if(rows.length<2)return alert('CSV is empty');const header=parseCSVLine(rows[0]).map(h=>h.toLowerCase().replace(/[^a-z]/g,''));const indexOf=name=>header.indexOf(name);const qIndex=indexOf('question');const aIndex=indexOf('optiona');const bIndex=indexOf('optionb');const cIndex=indexOf('optionc');const dIndex=indexOf('optiond');const correctIndex=indexOf('correct');if([qIndex,aIndex,bIndex,cIndex,dIndex,correctIndex].some(i=>i===-1))return alert('CSV header must be: question, optionA, optionB, optionC, optionD, correct');const questions=[];rows.slice(1).forEach((row,rowOffset)=>{const cols=parseCSVLine(row);if(cols.length<6)return;const question=(cols[qIndex]||'').trim();const optionA=(cols[aIndex]||'').trim();const optionB=(cols[bIndex]||'').trim();const optionC=(cols[cIndex]||'').trim();const optionD=(cols[dIndex]||'').trim();const correct=((cols[correctIndex]||'').trim().toUpperCase());if(!question||!optionA||!optionB||!optionC||!optionD||!['A','B','C','D'].includes(correct))return;questions.push({id:'csv_'+Date.now()+'_'+rowOffset,question,options:{A:optionA,B:optionB,C:optionC,D:optionD},correct,type:'mcq',source:'csv'});});if(!questions.length)return alert('No valid questions found in CSV');const existing=JSON.parse(localStorage.getItem('importedQuestions')||'[]');const merged=[...existing,...questions];localStorage.setItem('importedQuestions',JSON.stringify(merged));const studio=JSON.parse(localStorage.getItem('mahilQuestionLibrary')||'[]');localStorage.setItem('mahilQuestionLibrary',JSON.stringify([...studio,...questions]));const fileInput=document.getElementById('csvQuestionFile');if(fileInput)fileInput.value='';if(typeof renderQuestionLibrary==='function')renderQuestionLibrary();alert(`${questions.length} questions imported successfully`);};reader.readAsText(file)}
-function downloadCSVTemplate(){const csv=`question,optionA,optionB,optionC,optionD,correct\nCapital of India?,Mumbai,Delhi,Chennai,Kolkata,B\n2+2=?,3,4,5,6,B\nLargest Planet?,Earth,Mars,Jupiter,Venus,C`;const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='question_template.csv';a.click()}
-function exportQuestionPack(){
-  const pack={
-    question:questionInput.value.trim(),
-    mcq:{
-      question:mcqQuestion.value.trim(),
-      options:{A:mcqOptionA.value.trim(),B:mcqOptionB.value.trim(),C:mcqOptionC.value.trim(),D:mcqOptionD.value.trim()},
-      correct:mcqCorrect.value
+    if (type === 'buzz') {
+      // Classic game-show buzzer sound (sawtooth with pitch drop)
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.35);
+      gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.35);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.35);
+    } else if (type === 'unlock') {
+      // Short high chime for unlocking
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08); // A5
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.25);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.25);
     }
-  };
-  questionPackData.value=JSON.stringify(pack,null,2);
-  notify('Question pack exported');
-}
-
-function importQuestionPack(){
-  try{
-    const pack=JSON.parse(questionPackData.value||'{}');
-    questionInput.value=pack.question||'';
-    if(pack.mcq){
-      mcqQuestion.value=pack.mcq.question||'';
-      mcqOptionA.value=pack.mcq.options?.A||'';
-      mcqOptionB.value=pack.mcq.options?.B||'';
-      mcqOptionC.value=pack.mcq.options?.C||'';
-      mcqOptionD.value=pack.mcq.options?.D||'';
-      mcqCorrect.value=pack.mcq.correct||'A';
-    }
-    notify('Question pack imported','success');
-  }catch(e){
-    notify('Invalid pack JSON','error');
+  } catch (e) {
+    console.warn('Audio Context unlock required by user gesture', e);
   }
 }
 
-function openOverlayMode(){
-  const page=document.getElementById('overlayPage');
-  if(page)page.classList.remove('hidden');
-  renderOverlay();
-}
-function closeOverlayMode(){
-  const page=document.getElementById('overlayPage');
-  if(page)page.classList.add('hidden');
-}
-function renderOverlay(){
-  const box=document.getElementById('overlayContent');
-  if(!box||!currentRoomDataCache)return;
-  const room=currentRoomDataCache;
-  const players=Object.values(room.players||{}).sort((a,b)=>(b.score||0)-(a.score||0)).slice(0,10);
-  box.innerHTML=`<h1>${escapeHtml(room.question||'Waiting for question...')}</h1><div class="timer">${room.timer??10}</div>${players.map((p,i)=>`<div class="player"><div>#${i+1} ${escapeHtml(p.username)}</div><div>${p.score||0} pts</div></div>`).join('')}`;
-}
-
-async function joinAsSpectator(){
-  await waitForFirebase();
-  const code=joinCode.value.trim().toUpperCase();
-  if(!code)return alert('Enter room code');
-  const snap=await fbGet(fbRef(db,'rooms/'+code));
-  if(!snap.exists())return alert('Room not found');
-  currentRoom=code;
-  await fbUpdate(fbRef(db,'rooms/'+code+'/spectators'),{
-    [getPlayerKey()]:{username:currentUser.username,email:currentUser.email,time:Date.now()}
-  });
-  hideAll();
-  playerPage.classList.remove('hidden');
-  buzzBtn.disabled=true;
-  buzzBtn.classList.add('locked');
-  attachRoomListener();
-  notify('Joined as spectator');
-}
-
-document.getElementById('avatarInput').addEventListener('change',e=>{const file=e.target.files[0];if(file){const reader=new FileReader();reader.onload=ev=>document.getElementById('avatarPreview').src=ev.target.result;reader.readAsDataURL(file)}});
-window.addEventListener('load',()=>{
-  const saved=localStorage.getItem('mahilCurrentUser');
-  if(saved){
-    currentUser=JSON.parse(saved);
-    if(isAdminUser(currentUser)&&currentUser.role!=='admin'){
-      currentUser.role='admin';
-      localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
-    }
-    applyTheme(currentUser.theme||'neon');
-    showDashboard();
-  }else{
-    applyTheme('neon');
-  }
-  const params=new URLSearchParams(window.location.search);
-  const roomParam=params.get('room');
-  if(roomParam)document.getElementById('joinCode').value=roomParam.toUpperCase();
-  renderRecentLoginHint();
+// UI State Management
+document.getElementById('gameModeSelect').addEventListener('change', (e) => {
+  document.getElementById('teamField').classList.toggle('hidden', e.target.value !== 'team');
 });
-function hideAll(){['loginPage','signupPage','dashboard','joinPage','settingsPage','adminPage','hostPage','playerPage','practicePage','leaderboardPage','dailyPage','publicRoomsPage','libraryPage'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
-function getTodayKey(){return new Date().toISOString().slice(0,10)}
-function showSignup(){hideAll();document.getElementById('signupPage').classList.remove('hidden')}
-function showLogin(){hideAll();document.getElementById('loginPage').classList.remove('hidden')}
-async function signup(){
-  const username=signupUsername.value.trim(),email=signupEmail.value.trim(),password=signupPassword.value.trim(),avatar=avatarPreview.src;
-  if(!username||!email||!password)return alert('Fill all fields');
-  await waitForFirebase();
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  const fbUsers=await fetchAllFirebaseUsers();
-  if(users.find(u=>u.username===username)||fbUsers.find(u=>u.username===username))return alert('Username Exists');
-  if(users.find(u=>u.email===email)||fbUsers.find(u=>u.email===email))return alert('Email already registered');
-  const role=(users.length===0||ADMIN_USERNAMES.includes(username.toLowerCase()))?'admin':'user';
-  const newUser={username,email,password,avatar,sound:'1',theme:'neon',confetti:true,role,cosmeticBorder:'none',createdAt:Date.now()};
-  users.push(newUser);
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  await syncUserToFirebase(newUser);
-  alert('Account Created');
-  showLogin();
-}
-async function login(){
-  const username=loginUsername.value.trim(),password=loginPassword.value.trim();
-  await waitForFirebase();
-  await migrateLocalUsersToFirebase();
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  const fbUsers=await fetchAllFirebaseUsers();
-  const merged=mergeUserLists(users,fbUsers);
-  localStorage.setItem('mahilUsers',JSON.stringify(merged));
-  const user=merged.find(u=>u.username===username&&u.password===password);
-  if(!user)return alert('Invalid Login');
-  if(isAdminUser(user)&&user.role!=='admin')user.role='admin';
-  currentUser=user;
-  await syncUserToFirebase(user);
-  if(rememberMeToggle.checked)localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
-  else localStorage.removeItem('mahilCurrentUser');
-  localStorage.setItem('mahilUsers',JSON.stringify(merged));
-  rememberRecentLogin();
-  showDashboard();
-  if(joinCode.value.trim())openJoinPage();
-}
-function showDashboard(){hideAll();dashboard.classList.remove('hidden');applyTheme(currentUser.theme||'neon');profileAvatar.src=currentUser.avatar;const season=getSeasonData();profileAvatar.style.border=season.level>=10?'4px solid #fbbf24':(season.level>=5?'4px solid #93c5fd':'3px solid #00e5ff');profileName.innerText=currentUser.username;profileEmail.innerText=currentUser.email;updateDailyStreak();updateAdminButtonVisibility();renderDashboardInsights();renderBadges();renderRecentRooms();renderGlobalAnnouncement();showDashboardPanel('home')}
-function logout(){localStorage.removeItem('mahilCurrentUser');location.reload()}
-function goDashboard(){showDashboard()}
-function openSettings(){hideAll();settingsPage.classList.remove('hidden');changeName.value=currentUser.username;soundSelect.value=currentUser.sound||'1';themeSelect.value=currentUser.theme||'neon';confettiToggle.checked=currentUser.confetti!==false}
-function saveSettings(){const newName=changeName.value.trim(),sound=soundSelect.value,theme=themeSelect.value;if(newName)currentUser.username=newName;currentUser.sound=sound;currentUser.theme=theme;currentUser.confetti=!!confettiToggle.checked;applyTheme(theme);const avatarFile=changeAvatar.files[0];if(avatarFile){const reader=new FileReader();reader.onload=ev=>{currentUser.avatar=ev.target.result;finishSave()};reader.readAsDataURL(avatarFile)}else finishSave()}
-async function finishSave(){
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  users=users.map(u=>u.email===currentUser.email?currentUser:u);
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
-  await waitForFirebase();
-  await syncUserToFirebase(currentUser);
-  alert('Saved');
-  location.reload();
-}
-function openJoinPage(){hideAll();joinPage.classList.remove('hidden')}
-function ensureAdminAccess(){if(!isAdminUser(currentUser)){alert('Admin access only');goDashboard();return false}return true}
-function openAdminPanel(){if(!ensureAdminAccess())return;hideAll();adminPage.classList.remove('hidden');renderAdminPanel()}
 
-async function renderAdminPanel(){
-  await waitForFirebase();
-  await migrateLocalUsersToFirebase();
-  const localUsers=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  const fbUsers=await fetchAllFirebaseUsers();
-  const users=mergeUserLists(localUsers,fbUsers);
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  const lucky=JSON.parse(localStorage.getItem('mahilLuckyDrawWinner')||'null');
-  const totalUsers=users.length;
-  const adminCount=users.filter(u=>isAdminUser(u)).length;
-  const normalCount=totalUsers-adminCount;
-  const topTheme=(users.map(u=>u.theme||'neon').sort((a,b)=>users.filter(x=>(x.theme||'neon')===a).length-users.filter(x=>(x.theme||'neon')===b).length).pop())||'neon';
-  adminStats.innerHTML=`<div class="player"><div>Total Users</div><div>${totalUsers}</div></div><div class="player"><div>Admins</div><div>${adminCount}</div></div><div class="player"><div>Players</div><div>${normalCount}</div></div><div class="player"><div>Top Theme</div><div class="chip">${escapeHtml(topTheme)}</div></div><div class="player"><div>Last Lucky Draw</div><div>${lucky?escapeHtml(lucky.username):'-'}</div></div>`;
-  let html='';
-  users.forEach(user=>{
-    const roleLabel=(user.role||'user').charAt(0).toUpperCase()+(user.role||'user').slice(1);
-    const protectedCurrent=user.email===currentUser.email;
-    const encodedEmail=encodeURIComponent(user.email||'');
-    html+=`<div class="admin-user"><div><b>${escapeHtml(user.username)}</b><br><span class="muted">${escapeHtml(user.email)}</span><br><span class="chip">${roleLabel}</span></div><div class="admin-tools"><select class="role-select" onchange="changeUserRole(this.value,'${encodedEmail}')" ${protectedCurrent?'disabled':''}><option value="user" ${(user.role||'user')==='user'?'selected':''}>User</option><option value="moderator" ${(user.role||'user')==='moderator'?'selected':''}>Moderator</option><option value="host" ${(user.role||'user')==='host'?'selected':''}>Host</option><option value="admin" ${(user.role||'user')==='admin'?'selected':''}>Admin</option></select><button class="safe-btn" onclick="resetUserPassword('${encodedEmail}')">RESET PASSWORD</button><button class="warn-btn" onclick="deleteUser('${encodedEmail}')" ${protectedCurrent?'disabled':''}>DELETE</button></div></div>`;
-  });
-  adminUsers.innerHTML=html||'<div class="muted">No users found</div>';
+function showJoinBox() {
+  document.getElementById('joinBox').classList.remove('hidden');
 }
 
-function changeUserRole(role,encodedEmail){const email=decodeURIComponent(encodedEmail);const normalized=(role||'user').toLowerCase();const users=getUsers().map(user=>user.email===email?{...user,role:normalized}:user);saveUsers(users);if(currentUser&&currentUser.email===email)currentUser.role=normalized;renderAdminUsers();updateAdminButtonVisibility()}
-async function toggleAdminRole(encodedEmail){
-  if(!ensureAdminAccess())return;
-  const email=decodeURIComponent(encodedEmail);
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  users=users.map(user=>{
-    if(user.email!==email)return user;
-    const nextRole=isAdminUser(user)?'user':'admin';
-    return {...user,role:nextRole};
-  });
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  const updated=users.find(u=>u.email===email);
-  if(updated)await syncUserToFirebase(updated);
-  if(currentUser.email===email){
-    currentUser=updated||currentUser;
-    localStorage.setItem('mahilCurrentUser',JSON.stringify(currentUser));
+function sanitize(str) {
+  return String(str || '').replace(/[.#$[\]]/g, '_').trim();
+}
+
+function getUserId() {
+  let id = localStorage.getItem('mahil_uid');
+  if (!id) {
+    id = 'user_' + Math.random().toString(36).substring(2, 9);
+    localStorage.setItem('mahil_uid', id);
   }
-  renderAdminPanel();
-  updateAdminButtonVisibility();
+  return id;
 }
 
-async function resetUserPassword(encodedEmail){
-  if(!ensureAdminAccess())return;
-  const email=decodeURIComponent(encodedEmail);
-  const next=prompt('Enter new password for this user:');
-  if(!next)return;
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  users=users.map(user=>user.email===email?{...user,password:next}:user);
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  const updated=users.find(u=>u.email===email);
-  if(updated)await syncUserToFirebase(updated);
-  alert('Password reset complete');
+function generateRoomCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
 }
 
-async function deleteUser(encodedEmail){
-  if(!ensureAdminAccess())return;
-  const email=decodeURIComponent(encodedEmail);
-  if(!confirm('Delete this user permanently?'))return;
-  let users=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  users=users.filter(user=>user.email!==email);
-  localStorage.setItem('mahilUsers',JSON.stringify(users));
-  await waitForFirebase();
-  await fbRemove(fbRef(db,'users/'+sanitizeKey(email)));
-  renderAdminPanel();
-}
+// Hosting
+async function hostRoom() {
+  const name = document.getElementById('usernameInput').value.trim() || 'Host';
+  const mode = document.getElementById('gameModeSelect').value;
+  const roomCode = generateRoomCode();
 
-function broadcastGlobalAnnouncement(){
-  if(!ensureAdminAccess())return;
-  const msg=globalAnnouncementInput.value.trim();
-  if(!msg)return alert('Enter announcement');
-  const payload={message:msg,time:Date.now(),by:currentUser.username};
-  localStorage.setItem('mahilGlobalAnnouncement',JSON.stringify(payload));
-  globalAnnouncementInput.value='';
-  alert('Announcement published');
-  renderGlobalAnnouncement();
-}
+  userProfile = { name, team: '', mode };
+  isHost = true;
+  currentRoom = roomCode;
 
-function renderGlobalAnnouncement(){
-  const payload=JSON.parse(localStorage.getItem('mahilGlobalAnnouncement')||'null');
-  if(!payload||!payload.message)return;
-  const recent=Date.now()-(payload.time||0)<1000*60*60*24;
-  const seenKey='mahilSeenAnnouncementTime_'+(currentUser?.email||'guest');
-  const seenAt=Number(localStorage.getItem(seenKey)||0);
-  if(recent&&(payload.time||0)>seenAt){
-    alert(`📢 ${payload.message}\n- ${payload.by||'Admin'}`);
-    localStorage.setItem(seenKey,String(payload.time||Date.now()));
-  }
-}
-
-async function runLuckyDraw(){
-  if(!ensureAdminAccess())return;
-  await waitForFirebase();
-  const localUsers=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  const fbUsers=await fetchAllFirebaseUsers();
-  const users=mergeUserLists(localUsers,fbUsers);
-  const pool=users.filter(u=>!isAdminUser(u));
-  if(!pool.length)return alert('No non-admin users for lucky draw');
-  const winner=pool[Math.floor(Math.random()*pool.length)];
-  localStorage.setItem('mahilLuckyDrawWinner',JSON.stringify({username:winner.username,email:winner.email,time:Date.now()}));
-  alert(`🎉 Lucky Draw Winner: ${winner.username}`);
-  renderAdminPanel();
-}
-function waitForFirebase(){return new Promise(resolve=>{if(window.db&&window.fbRef)resolve();else window.addEventListener('firebase-ready',resolve,{once:true})})}
-function sanitizeKey(email){return String(email||'').replace(/[.#$[\]]/g,'_')}
-
-function mergeUserLists(localUsers=[],firebaseUsers=[]){
-  const map=new Map();
-  [...localUsers,...firebaseUsers].forEach(user=>{
-    if(!user?.email)return;
-    const prev=map.get(user.email)||{};
-    map.set(user.email,{...prev,...user});
-  });
-  return Array.from(map.values());
-}
-
-async function syncUserToFirebase(user){
-  if(!user?.email)return;
-  await waitForFirebase();
-  const key=sanitizeKey(user.email);
-  await fbSet(fbRef(db,'users/'+key),{
-    username:user.username||'',
-    email:user.email||'',
-    password:user.password||'',
-    avatar:user.avatar||'',
-    sound:user.sound||'1',
-    theme:user.theme||'neon',
-    confetti:user.confetti!==false,
-    role:user.role||'user',
-    cosmeticBorder:user.cosmeticBorder||'none',
-    updatedAt:Date.now(),
-    createdAt:user.createdAt||Date.now()
-  });
-}
-
-async function fetchAllFirebaseUsers(){
-  await waitForFirebase();
-  const snap=await fbGet(fbRef(db,'users'));
-  if(!snap.exists())return [];
-  return Object.values(snap.val()||{}).filter(u=>u&&u.email);
-}
-
-async function migrateLocalUsersToFirebase(){
-  const local=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-  for(const user of local){
-    try{await syncUserToFirebase(user)}catch(e){console.warn('User sync skipped',user?.email,e)}
-  }
-  return local.length;
-}
-
-function renderFirebaseUserPickList(users){
-  const box=document.getElementById('hostFirebaseUsers');
-  if(!box)return;
-  if(!users.length){
-    box.innerHTML='<div class="muted">No registered users in Firebase yet. Ask players to sign up, or use SYNC LOCAL → FIREBASE.</div>';
-    return;
-  }
-  const roomPlayers=currentRoomDataCache?.players||{};
-  const inRoomEmails=new Set(Object.values(roomPlayers).map(p=>p.email).filter(Boolean));
-  box.innerHTML=users.map(user=>{
-    const encoded=encodeURIComponent(user.email||'');
-    const inRoom=inRoomEmails.has(user.email);
-    const hostSelf=user.email===currentUser?.email;
-    return `<div class="user-pick-item"><div class="player-left"><img src="${escapeHtml(user.avatar||'https://i.pravatar.cc/150')}" alt=""><div><b>${escapeHtml(user.username||'')}</b><br><span class="muted">${escapeHtml(user.email||'')}</span>${inRoom?' <span class="chip">In Room</span>':''}</div></div><button class="${inRoom||hostSelf?'dark-btn':'safe-btn'}" onclick="inviteFirebaseUser('${encoded}')" ${inRoom||hostSelf?'disabled':''}>${inRoom?'JOINED':'INVITE'}</button></div>`;
-  }).join('');
-}
-
-function filterFirebaseUsers(){
-  const q=(document.getElementById('hostUserSearch')?.value||'').trim().toLowerCase();
-  const filtered=!q?firebaseUsersCache:firebaseUsersCache.filter(u=>
-    String(u.username||'').toLowerCase().includes(q)||String(u.email||'').toLowerCase().includes(q)
-  );
-  renderFirebaseUserPickList(filtered);
-}
-
-async function loadFirebaseUsersForHost(){
-  const box=document.getElementById('hostFirebaseUsers');
-  if(box)box.innerHTML='<div class="muted">Loading users from Firebase...</div>';
-  try{
-    await waitForFirebase();
-    await migrateLocalUsersToFirebase();
-    const fbUsers=await fetchAllFirebaseUsers();
-    const local=JSON.parse(localStorage.getItem('mahilUsers'))||[];
-    firebaseUsersCache=mergeUserLists(local,fbUsers).filter(u=>u.email!==currentUser?.email);
-    filterFirebaseUsers();
-    notify(`Loaded ${firebaseUsersCache.length} user(s) from Firebase`,'success');
-  }catch(e){
-    console.error(e);
-    if(box)box.innerHTML='<div class="muted">Failed to load users. Check Firebase rules/network.</div>';
-    notify('Could not load Firebase users','error');
-  }
-}
-
-async function inviteFirebaseUser(encodedEmail,options={}){
-  if(!currentRoom)return alert('Create or open a room first');
-  const email=decodeURIComponent(encodedEmail);
-  const user=firebaseUsersCache.find(u=>u.email===email)||(await fetchAllFirebaseUsers()).find(u=>u.email===email);
-  if(!user)return alert('User not found');
-  const key=sanitizeKey(email);
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+key),{
-    username:user.username,
-    email:user.email,
-    avatar:user.avatar||'',
-    sound:user.sound||'1',
-    score:0,
-    team:'',
-    online:false,
-    isHost:false,
-    invited:true,
-    powerUps:{double:1,shield:1,steal:1},
-    activePowerUp:''
-  });
-  if(!options.silent){
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-      announcement:`📨 ${user.username}, join room ${currentRoom} now!`
-    });
-    notify(`Invited ${user.username}`,'success');
-    loadFirebaseUsersForHost();
-  }
-  return user.username;
-}
-
-async function inviteAllFirebaseUsers(){
-  if(!firebaseUsersCache.length)await loadFirebaseUsersForHost();
-  const roomPlayers=currentRoomDataCache?.players||{};
-  const inRoom=new Set(Object.values(roomPlayers).map(p=>p.email));
-  const names=[];
-  for(const user of firebaseUsersCache){
-    if(inRoom.has(user.email))continue;
-    const name=await inviteFirebaseUser(encodeURIComponent(user.email),{silent:true});
-    if(name)names.push(name);
-  }
-  if(names.length){
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-      announcement:`📨 ${names.length} player(s) invited to room ${currentRoom}`
-    });
-    notify(`Invited ${names.length} user(s)`,'success');
-    loadFirebaseUsersForHost();
-  }else{
-    notify('Everyone already in room');
-  }
-}
-
-function copyRoomCode(){
-  if(!currentRoom)return alert('No active room');
-  navigator.clipboard?.writeText(currentRoom).then(()=>notify('Room code copied','success')).catch(()=>alert('Room code: '+currentRoom));
-}
-
-function copyJoinLink(){
-  if(!currentRoom)return alert('No active room');
-  const joinURL=new URL(window.location.href);
-  joinURL.searchParams.set('room',currentRoom);
-  navigator.clipboard?.writeText(joinURL.toString()).then(()=>notify('Join link copied','success')).catch(()=>alert(joinURL.toString()));
-}
-
-async function broadcastGameStart(){
-  if(!currentRoom)return;
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    announcement:`🎮 Game starting in room ${currentRoom}! Host: ${currentUser?.username||'Host'}`,
-    buzzerLocked:true,
-    buzzed:false,
-    winner:'',
-    reaction:''
-  });
-  speakText('Game is starting');
-}
-
-async function hostCountdownUnlock(){
-  if(!currentRoom)return;
-  const steps=['3','2','1','BUZZ!'];
-  for(let i=0;i<steps.length;i++){
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{announcement:steps[i],timer:i<3?3-i:10});
-    await new Promise(r=>setTimeout(r,900));
-  }
-  await unlockBuzzers();
-}
-
-async function sendQuickAnnouncement(preset){
-  const msg=typeof preset==='string'?preset:(document.getElementById('quickAnnounceInput')?.value||'').trim();
-  if(!msg||!currentRoom)return alert('Enter announcement text');
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{announcement:msg});
-  if(document.getElementById('quickAnnounceInput'))document.getElementById('quickAnnounceInput').value='';
-}
-
-function reuseLastQuestion(){
-  const q=lastSentQuestion||(currentRoomDataCache?.question||'');
-  if(!q)return alert('No previous question yet');
-  questionInput.value=q;
-  notify('Last question loaded into editor');
-}
-
-async function clearCurrentQuestion(){
-  if(!currentRoom)return;
-  questionInput.value='';
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    question:'',
-    questionImage:'',
-    winner:'',
-    buzzed:false,
-    reaction:'',
-    mcq:{active:false,question:'',options:{},correct:'',responses:{}}
-  });
-}
-
-async function revealMcqAnswer(){
-  if(!currentRoom)return;
-  const mcq=currentRoomDataCache?.mcq||{};
-  if(!mcq.active||!mcq.correct)return alert('No active MCQ');
-  const correct=mcq.correct;
-  const text=mcq.options?.[correct]||correct;
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    announcement:`✅ Correct answer: ${correct}) ${text}`,
-    mcq:{...mcq,revealed:true}
-  });
-}
-
-async function freezeAllPlayers(){
-  if(!currentRoom)return;
-  const players=currentRoomDataCache?.players||{};
-  const payload={};
-  Object.entries(players).forEach(([key,p])=>{
-    if(!p.isHost)payload[key]=true;
-  });
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/frozenPlayers'),payload);
-  notify('All players frozen');
-}
-
-async function unfreezeAllPlayers(){
-  if(!currentRoom)return;
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/frozenPlayers'),{});
-  notify('All players unfrozen','success');
-}
-
-async function endRoundNow(){
-  if(!currentRoom)return;
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    buzzerLocked:true,
-    buzzed:false,
-    winner:'',
-    reaction:'',
-    announcement:'Round ended by host'
-  });
-  clearInterval(timerInterval);
-}
-
-function renderHostLiveStatus(room){
-  const statusEl=document.getElementById('hostLiveStatus');
-  const countEl=document.getElementById('hostRoomPlayerCount');
-  if(!room)return;
-  const players=Object.values(room.players||{}).filter(p=>!p.isHost);
-  const online=players.filter(p=>p.online).length;
-  const invited=players.filter(p=>p.invited&&!p.online).length;
-  if(countEl)countEl.textContent=`${players.length} PLAYER${players.length===1?'':'S'}`;
-  if(statusEl){
-    statusEl.innerHTML=`
-      <span class="chip">${room.buzzerLocked?'🔒 Locked':'🟢 Open'}</span>
-      <span class="chip">${online} online</span>
-      <span class="chip">${invited} invited</span>
-      <span class="chip">${(room.scoreMode||'individual').toUpperCase()}</span>
-      <span class="chip">${escapeHtml(ACTIVITY_LABELS[room.activityType]||'BUZZER')}</span>
-      ${room.winner?`<span class="chip">Winner: ${escapeHtml(room.winner)}</span>`:''}
-    `;
-  }
-}
-function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=e=>resolve(e.target.result);reader.onerror=reject;reader.readAsDataURL(file)})}
-function generateRoomCode(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let code='';for(let i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];return code}
-function getPlayerKey(){return sanitizeKey(currentUser.email)}
-
-async function recordLeaderboardStats(delta={}){
-  if(!currentUser?.email)return;
-  await waitForFirebase();
-  const key=sanitizeKey(currentUser.email);
-  const refPath=fbRef(db,'leaderboard/'+key);
-  const snap=await fbGet(refPath);
-  const cur=snap.exists()?snap.val():{};
-  await fbSet(refPath,{
-    username:currentUser.username,
-    email:currentUser.email,
-    avatar:currentUser.avatar||'',
-    totalXp:(cur.totalXp||0)+Math.max(0,delta.xp||0),
-    wins:(cur.wins||0)+Math.max(0,delta.wins||0),
-    gamesPlayed:(cur.gamesPlayed||0)+Math.max(0,delta.games||0),
-    lastActive:Date.now()
-  });
-}
-
-async function updatePublicRoomListing(room){
-  if(!currentRoom||!room)return;
-  const players=Object.values(room.players||{}).filter(p=>!p.isHost);
-  await fbSet(fbRef(db,'publicRooms/'+currentRoom),{
-    code:currentRoom,
-    host:room.host||currentUser?.username,
-    activityType:room.activityType||'buzzer',
-    mode:room.mode||'normal',
-    playerCount:players.length,
-    onlineCount:players.filter(p=>p.online).length,
-    updatedAt:Date.now()
-  });
-}
-
-function openPracticeMode(){
-  hideAll();
-  practicePage.classList.remove('hidden');
-  const sel=document.getElementById('practiceDeckSelect');
-  if(sel){
-    sel.innerHTML=Object.keys(PRACTICE_DECKS).map(d=>`<option value="${d}">${d.charAt(0).toUpperCase()+d.slice(1)}</option>`).join('');
-    sel.onchange=()=>{practiceState.deck=sel.value;practiceState.index=0};
-    practiceState.deck=sel.value||'general';
-  }
-  resetPractice();
-}
-function resetPractice(){
-  practiceState.index=0;practiceState.score=0;practiceState.active=false;
-  document.getElementById('practiceScore').textContent='Score: 0';
-  document.getElementById('practiceQuestion').textContent='Press START / NEXT';
-  document.getElementById('practiceOptions').innerHTML='';
-}
-function startPracticeRound(){
-  const deck=PRACTICE_DECKS[practiceState.deck]||PRACTICE_DECKS.general;
-  if(practiceState.index>=deck.length)practiceState.index=0;
-  const item=deck[practiceState.index];
-  practiceState.active=true;
-  document.getElementById('practiceQuestion').textContent=item.q;
-  document.getElementById('practiceOptions').innerHTML=item.opts.map((opt,i)=>
-    `<button onclick="answerPractice(${i})">${escapeHtml(opt)}</button>`
-  ).join('');
-}
-function answerPractice(choice){
-  const deck=PRACTICE_DECKS[practiceState.deck]||PRACTICE_DECKS.general;
-  const item=deck[practiceState.index];
-  if(choice===item.a){
-    practiceState.score+=10;
-    addSeasonXp(8);
-    recordLeaderboardStats({xp:8});
-    notify('Correct! +10','success');
-  }else notify('Wrong — try next one','error');
-  document.getElementById('practiceScore').textContent='Score: '+practiceState.score;
-  practiceState.index++;
-  setTimeout(startPracticeRound,600);
-}
-
-function openLeaderboard(){
-  hideAll();
-  leaderboardPage.classList.remove('hidden');
-  renderLeaderboard();
-}
-async function renderLeaderboard(){
-  await waitForFirebase();
-  const snap=await fbGet(fbRef(db,'leaderboard'));
-  const list=snap.exists()?Object.values(snap.val()||{}):[];
-  list.sort((a,b)=>(b.totalXp||0)-(a.totalXp||0));
-  const podium=document.getElementById('leaderboardPodium');
-  const box=document.getElementById('leaderboardList');
-  if(!list.length){
-    podium.innerHTML='';
-    box.innerHTML='<div class="muted">No rankings yet. Play games or practice to earn XP.</div>';
-    return;
-  }
-  const top3=list.slice(0,3);
-  const order=[1,0,2];
-  podium.innerHTML=order.map(i=>top3[i]).filter(Boolean).map((u,rank)=>{
-    const place=rank===1?'1st':rank===0?'2nd':'3rd';
-    return `<div class="podium-item ${rank===1?'first':''}"><div class="podium-rank">${place}</div><b>${escapeHtml(u.username)}</b><div>${u.totalXp||0} XP</div><div class="muted">${u.wins||0} wins</div></div>`;
-  }).join('');
-  box.innerHTML=list.map((u,i)=>`<div class="player"><div><b>#${i+1} ${escapeHtml(u.username)}</b></div><div>${u.totalXp||0} XP • ${u.wins||0} wins</div></div>`).join('');
-}
-
-function openDailyChallenge(){
-  hideAll();
-  dailyPage.classList.remove('hidden');
-  loadDailyChallenge();
-}
-async function ensureDailyChallenge(){
-  await waitForFirebase();
-  const day=getTodayKey();
-  const ref=fbRef(db,'dailyChallenge/'+day);
-  const snap=await fbGet(ref);
-  if(snap.exists())return snap.val();
-  const pool=PRACTICE_DECKS.general.concat(PRACTICE_DECKS.science);
-  const pick=pool[Math.floor(Math.random()*pool.length)];
-  const payload={
-    question:pick.q,
-    options:pick.opts,
-    correctIndex:pick.a,
-    date:day
+  const roomData = {
+    host: name,
+    mode: mode,
+    locked: true,
+    firstBuzzer: null,
+    buzzQueue: {},
+    scores: {},
+    createdAt: Date.now()
   };
-  await fbSet(ref,payload);
-  return payload;
-}
-async function loadDailyChallenge(){
-  document.getElementById('dailyDateLabel').textContent='Challenge for '+getTodayKey();
-  const data=await ensureDailyChallenge();
-  document.getElementById('dailyQuestion').textContent=data.question;
-  const labels=['A','B','C','D'];
-  document.getElementById('dailyOptions').innerHTML=data.options.map((opt,i)=>
-    `<button onclick="selectDailyOption(${i})" id="dailyOpt${i}">${labels[i]}) ${escapeHtml(opt)}</button>`
-  ).join('');
-  window._dailySelected=null;
-  const doneKey='mahilDailyDone_'+currentUser?.email+'_'+getTodayKey();
-  const res=document.getElementById('dailyResult');
-  if(localStorage.getItem(doneKey)){
-    res.classList.remove('hidden');
-    res.textContent='✅ You already completed today\'s challenge!';
-  }else{
-    res.classList.add('hidden');
-  }
-}
-function selectDailyOption(i){window._dailySelected=i;notify('Selected option '+(i+1))}
-async function submitDailyChallenge(){
-  if(!currentUser)return alert('Login first');
-  if(window._dailySelected==null)return alert('Pick an answer');
-  const data=await ensureDailyChallenge();
-  const correct=window._dailySelected===data.correctIndex;
-  const res=document.getElementById('dailyResult');
-  res.classList.remove('hidden');
-  res.textContent=correct?'🎉 Correct! +25 XP':'❌ Wrong — come back tomorrow';
-  if(correct){
-    addSeasonXp(25);
-    await recordLeaderboardStats({xp:25});
-  }
-  localStorage.setItem('mahilDailyDone_'+currentUser.email+'_'+getTodayKey(),correct?'win':'loss');
+
+  await window.fbSet(window.fbRef(window.db, `buzz_rooms/${roomCode}`), roomData);
+  initHostUI(roomCode, mode);
+  listenToRoom(roomCode);
 }
 
-function openPublicRooms(){
-  hideAll();
-  publicRoomsPage.classList.remove('hidden');
-  renderPublicRooms();
+function initHostUI(roomCode, mode) {
+  document.getElementById('lobbyPage').classList.add('hidden');
+  document.getElementById('playerPage').classList.add('hidden');
+  document.getElementById('hostPage').classList.remove('hidden');
+
+  document.getElementById('hostRoomCodeLabel').textContent = `ROOM: ${roomCode}`;
+  document.getElementById('hostModeLabel').textContent = mode.toUpperCase();
+
+  const qrContainer = document.getElementById('qrcode');
+  qrContainer.innerHTML = '';
+  const joinURL = new URL(window.location.href);
+  joinURL.searchParams.set('room', roomCode);
+
+  new QRCode(qrContainer, {
+    text: joinURL.toString(),
+    width: 146,
+    height: 146,
+    colorDark: '#000000',
+    colorLight: '#ffffff'
+  });
 }
-async function renderPublicRooms(){
-  await waitForFirebase();
-  const snap=await fbGet(fbRef(db,'publicRooms'));
-  const box=document.getElementById('publicRoomsList');
-  if(!snap.exists()){
-    box.innerHTML='<div class="muted">No public rooms live right now. Be the first — Host Live!</div>';
+
+// Joining
+async function joinRoom() {
+  const name = document.getElementById('usernameInput').value.trim();
+  const roomCode = (document.getElementById('roomCodeInput').value || '').trim().toUpperCase();
+  const mode = document.getElementById('gameModeSelect').value;
+  const team = document.getElementById('teamInput').value.trim();
+
+  if (!name) return alert('Please enter your name');
+  if (!roomCode) return alert('Please enter a room code');
+  if (mode === 'team' && !team) return alert('Please enter your team name');
+
+  const snap = await window.fbGet(window.fbRef(window.db, `buzz_rooms/${roomCode}`));
+  if (!snap.exists()) return alert('Room not found! Check the 6-letter code.');
+
+  const roomData = snap.val();
+  userProfile = { name, team: roomData.mode === 'team' ? team : '', mode: roomData.mode };
+  isHost = false;
+  currentRoom = roomCode;
+
+  const memberKey = getUserId();
+  await window.fbUpdate(window.fbRef(window.db, `buzz_rooms/${roomCode}/members/${memberKey}`), {
+    name,
+    team: userProfile.team,
+    lastActive: Date.now()
+  });
+
+  initPlayerUI(roomCode);
+  listenToRoom(roomCode);
+}
+
+function initPlayerUI(roomCode) {
+  document.getElementById('lobbyPage').classList.add('hidden');
+  document.getElementById('hostPage').classList.add('hidden');
+  document.getElementById('playerPage').classList.remove('hidden');
+  document.getElementById('playerRoomCodeLabel').textContent = `ROOM: ${roomCode}`;
+}
+
+// Real-time synchronization
+function listenToRoom(roomCode) {
+  const roomRef = window.fbRef(window.db, `buzz_rooms/${roomCode}`);
+  window.fbOnValue(roomRef, (snapshot) => {
+    const room = snapshot.val();
+    if (!room) {
+      alert('The arena has ended.');
+      leaveRoom();
+      return;
+    }
+
+    renderRoomState(room);
+  });
+}
+
+let lastFirstBuzzer = null;
+let lastLockedState = true;
+
+function renderRoomState(room) {
+  const queue = Object.values(room.buzzQueue || {}).sort((a, b) => a.time - b.time);
+  const first = queue[0] || null;
+
+  // Sound triggers
+  if (first && (!lastFirstBuzzer || lastFirstBuzzer.id !== first.id)) {
+    playBuzzerSound('buzz');
+    if (!isHost && first.userId === getUserId()) {
+      confetti({ particleCount: 150, spread: 80 });
+    }
+  } else if (!room.locked && lastLockedState === true) {
+    playBuzzerSound('unlock');
+  }
+
+  lastFirstBuzzer = first;
+  lastLockedState = room.locked;
+
+  // Winner text formulation
+  let bannerText = 'Waiting for buzzes...';
+  if (room.locked && !first) {
+    bannerText = '🔒 Buzzers Locked by Host';
+  } else if (first) {
+    bannerText = room.mode === 'team'
+      ? `⚡ [TEAM ${first.team.toUpperCase()}] ${first.name} BUZZED FIRST!`
+      : `⚡ ${first.name.toUpperCase()} BUZZED FIRST!`;
+  }
+
+  if (isHost) {
+    document.getElementById('hostWinnerBanner').textContent = bannerText;
+    renderHostQueue(queue);
+    renderScoreboard('hostScoreboard', room.scores || {}, room.mode);
+  } else {
+    document.getElementById('playerWinnerBanner').textContent = bannerText;
+    const buzzerBtn = document.getElementById('buzzerBtn');
+    const pill = document.getElementById('playerStatusPill');
+
+    const alreadyBuzzed = queue.some(item => item.userId === getUserId());
+    const isLocked = room.locked || alreadyBuzzed;
+
+    buzzerBtn.disabled = isLocked;
+    buzzerBtn.classList.toggle('locked', isLocked);
+
+    if (room.locked) {
+      pill.textContent = 'LOCKED';
+      pill.className = 'status-pill locked';
+    } else if (alreadyBuzzed) {
+      pill.textContent = 'BUZZED';
+      pill.className = 'status-pill';
+    } else {
+      pill.textContent = 'OPEN';
+      pill.className = 'status-pill open';
+    }
+
+    renderScoreboard('playerScoreboard', room.scores || {}, room.mode);
+  }
+}
+
+function renderHostQueue(queue) {
+  const container = document.getElementById('hostBuzzQueue');
+  if (!queue.length) {
+    container.innerHTML = '<div style="color:var(--muted); text-align:center; padding:12px;">No buzzes this round</div>';
     return;
   }
-  const rooms=Object.values(snap.val()||{}).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-  box.innerHTML=rooms.map(r=>`<div class="player"><div><b>${escapeHtml(r.code)}</b><br><span class="muted">Host: ${escapeHtml(r.host||'')} • ${ACTIVITY_LABELS[r.activityType]||r.activityType} • ${r.playerCount||0} players</span></div><button onclick="quickJoinRecentRoom('${escapeHtml(r.code)}')">JOIN</button></div>`).join('');
+
+  container.innerHTML = queue.map((item, index) => `
+    <div class="queue-item">
+      <div>
+        <b>#${index + 1} ${item.mode === 'team' ? `[${escapeHtml(item.team)}] ` : ''}${escapeHtml(item.name)}</b>
+      </div>
+      <span style="font-size:0.85rem; color:var(--muted);">${index === 0 ? '🏆 1ST' : `+${((item.time - queue[0].time)/1000).toFixed(2)}s`}</span>
+    </div>
+  `).join('');
 }
 
-function openQuizLibrary(){
-  hideAll();
-  libraryPage.classList.remove('hidden');
-  const cat=document.getElementById('libraryCategory');
-  if(cat){
-    cat.innerHTML=Object.keys(DEFAULT_QUESTION_BANK).map(c=>`<option value="${c}">${c}</option>`).join('');
-    cat.onchange=renderLibraryQuestions;
-  }
-  renderLibraryQuestions();
-}
-async function seedQuestionBank(){
-  await waitForFirebase();
-  for(const [cat,items] of Object.entries(DEFAULT_QUESTION_BANK)){
-    for(let i=0;i<items.length;i++){
-      await fbSet(fbRef(db,'questionBank/'+cat+'/q'+i),{...items[i],category:cat});
-    }
-  }
-  notify('Question bank seeded to Firebase','success');
-  renderLibraryQuestions();
-}
-async function renderLibraryQuestions(){
-  const cat=document.getElementById('libraryCategory')?.value||'general';
-  const box=document.getElementById('libraryQuestions');
-  await waitForFirebase();
-  const snap=await fbGet(fbRef(db,'questionBank/'+cat));
-  let items=[];
-  if(snap.exists())items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v}));
-  else items=(DEFAULT_QUESTION_BANK[cat]||[]).map((v,i)=>({id:'local'+i,...v}));
-  if(!items.length){box.innerHTML='<div class="muted">Empty. Click SEED DEFAULT PACKS.</div>';return;}
-  box.innerHTML=items.map(item=>{
-    const encCat=encodeURIComponent(cat);
-    const encId=encodeURIComponent(item.id);
-    return `<div class="player"><div><b>${escapeHtml(item.question)}</b><br><span class="muted">${escapeHtml(item.type||'text')}</span></div><button onclick="useLibraryQuestion('${encCat}','${encId}')">USE IN ROOM</button></div>`;
-  }).join('');
-}
-async function useLibraryQuestion(encCat,encId){
-  const cat=decodeURIComponent(encCat);
-  const id=decodeURIComponent(encId);
-  if(!currentRoom)return alert('Host a room first, then pick a question');
-  await waitForFirebase();
-  const snap=await fbGet(fbRef(db,'questionBank/'+cat+'/'+id));
-  const item=snap.exists()?snap.val():null;
-  if(!item)return alert('Question not found');
-  if(item.type==='mcq'&&item.options){
-    mcqQuestion.value=item.question;
-    mcqOptionA.value=item.options.A||'';
-    mcqOptionB.value=item.options.B||'';
-    mcqOptionC.value=item.options.C||'';
-    mcqOptionD.value=item.options.D||'';
-    mcqCorrect.value=item.correct||'A';
-    await setRoomActivity('speedquiz');
-    await sendMcqQuestion();
-    notify('MCQ loaded from library','success');
+function renderScoreboard(targetId, scores, mode) {
+  const container = document.getElementById(targetId);
+  const entries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+  if (!entries.length) {
+    container.innerHTML = '<div style="color:var(--muted); grid-column: 1/-1; text-align:center;">No points awarded yet</div>';
     return;
   }
-  questionInput.value=item.question||'';
-  if(item.type==='buzzer')await setRoomActivity('buzzer');
-  else if(item.type==='short')await setRoomActivity('typeanswer');
-  await sendQuestion();
-  notify('Question loaded from library','success');
+
+  container.innerHTML = entries.map(([key, pts]) => `
+    <div class="score-card">
+      <b>${escapeHtml(key)}</b>
+      <div class="pts">${pts}</div>
+    </div>
+  `).join('');
 }
 
-async function setRoomActivity(type){
-  if(!currentRoom)return alert('Create a room first');
-  const label=ACTIVITY_LABELS[type]||type.toUpperCase();
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    activityType:type,
-    announcement:`Activity switched to ${label}`
-  });
-  const badge=document.getElementById('hostActivityBadge');
-  if(badge)badge.textContent=label.replace(/[^\w\s/]/g,'').trim().toUpperCase();
-  if(type==='speedquiz'){
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{buzzerLocked:true});
-    notify('Speed quiz: players submit MCQ answers on timer');
-  }
-  notify(`Mode: ${label}`,'success');
-}
+// Atomic Buzzer Operation
+async function triggerBuzz() {
+  if (!currentRoom) return;
+  const userId = getUserId();
+  const roomRef = window.fbRef(window.db, `buzz_rooms/${currentRoom}`);
 
-async function startLivePoll(){
-  if(!currentRoom)return;
-  const question=(document.getElementById('pollQuestionInput')?.value||'').trim()||'Quick poll';
-  const opts={
-    A:(document.getElementById('pollOptA')?.value||'').trim()||'Option A',
-    B:(document.getElementById('pollOptB')?.value||'').trim()||'Option B',
-    C:(document.getElementById('pollOptC')?.value||'').trim(),
-    D:(document.getElementById('pollOptD')?.value||'').trim()
-  };
-  await setRoomActivity('poll');
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    question,
-    poll:{active:true,question,options:opts,votes:{},closed:false}
-  });
-}
-async function closePollResults(){
-  if(!currentRoom)return;
-  const room=currentRoomDataCache;
-  const poll=room?.poll||{};
-  const votes=poll.votes||{};
-  const tally={A:0,B:0,C:0,D:0};
-  Object.values(votes).forEach(v=>{if(tally[v.choice]!=null)tally[v.choice]++});
-  const summary=Object.entries(tally).filter(([,n])=>n>0).map(([k,n])=>`${k}:${n}`).join(' • ');
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/poll'),{closed:true});
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{announcement:`Poll results — ${summary||'No votes'}`});
-}
-async function submitPollVote(choice){
-  if(!currentRoom)return;
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/poll/votes/'+getPlayerKey()),{
-    choice,user:currentUser.username,time:Date.now()
-  });
-  notify('Vote recorded','success');
-}
+  try {
+    await window.fbRunTransaction(roomRef, (room) => {
+      if (!room || room.locked) return room;
+      if (!room.buzzQueue) room.buzzQueue = {};
 
-async function startTrueFalseRound(){
-  if(!currentRoom)return;
-  const question=(document.getElementById('tfQuestionInput')?.value||'').trim()||'True or False?';
-  const correct=document.getElementById('tfCorrect')?.value||'true';
-  await setRoomActivity('truefalse');
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    question,
-    trueFalse:{active:true,question,correct,answers:{}}
-  });
-}
-async function submitTrueFalse(answer){
-  if(!currentRoom)return;
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/trueFalse/answers/'+getPlayerKey()),{
-    answer,user:currentUser.username,time:Date.now()
-  });
-  const tf=currentRoomDataCache?.trueFalse||{};
-  const correct=String(tf.correct)===String(answer);
-  if(correct){
-    addSeasonXp(10);
-    recordLeaderboardStats({xp:10});
-    notify('Correct!','success');
-  }else notify('Submitted','info');
-}
-
-async function startTypeAnswerRound(){
-  if(!currentRoom)return;
-  const question=(document.getElementById('typeAnswerPrompt')?.value||'').trim()||'Type your answer';
-  const expected=(document.getElementById('typeAnswerExpected')?.value||'').trim();
-  await setRoomActivity('typeanswer');
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    question,
-    typeAnswer:{active:true,question,expected,answers:{}}
-  });
-}
-async function submitTypeAnswer(){
-  if(!currentRoom)return;
-  const text=(document.getElementById('playerTypeAnswerInput')?.value||'').trim();
-  if(!text)return alert('Type an answer');
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/typeAnswer/answers/'+getPlayerKey()),{
-    text,user:currentUser.username,time:Date.now()
-  });
-  document.getElementById('playerTypeAnswerInput').value='';
-  notify('Answer sent to host','success');
-}
-
-async function sendRoomChat(){
-  if(!currentRoom)return;
-  const text=(document.getElementById('roomChatInput')?.value||'').trim();
-  if(!text)return;
-  const key=Date.now()+'_'+getPlayerKey().slice(0,6);
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/chat/'+key),{
-    user:currentUser.username,text,time:Date.now()
-  });
-  document.getElementById('roomChatInput').value='';
-}
-async function sendReaction(emoji){
-  if(!currentRoom)return;
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    latestReaction:{emoji,user:currentUser.username,time:Date.now()}
-  });
-}
-
-function renderPlayerActivity(room){
-  const type=room.activityType||'buzzer';
-  const label=ACTIVITY_LABELS[type]||'BUZZER MODE';
-  const badge=document.getElementById('playerActivityBadge');
-  if(badge)badge.innerHTML=`<span class="badge">${escapeHtml(label)}</span>`;
-  const panels={buzzer:'playerActivityBuzzer',poll:'playerActivityPoll',truefalse:'playerActivityTrueFalse',typeanswer:'playerActivityTypeAnswer',speedquiz:'playerActivityBuzzer'};
-  Object.values(panels).forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.classList.add('hidden');
-  });
-  const showId=panels[type]||panels.buzzer;
-  const showEl=document.getElementById(showId);
-  if(showEl)showEl.classList.remove('hidden');
-  if(type==='poll'&&room.poll?.active){
-    document.getElementById('pollQuestionDisplay').textContent=room.poll.question||room.question||'';
-    const opts=room.poll.options||{};
-    const classes=['poll-btn-a','poll-btn-b','poll-btn-c','poll-btn-d'];
-    let html='';
-    ['A','B','C','D'].forEach((k,i)=>{
-      if(!opts[k])return;
-      html+=`<button class="${classes[i]}" onclick="submitPollVote('${k}')">${k}) ${escapeHtml(opts[k])}</button>`;
-    });
-    document.getElementById('pollVoteButtons').innerHTML=html;
-  }
-  if(type==='truefalse'&&room.trueFalse?.active){
-    document.getElementById('tfQuestionDisplay').textContent=room.trueFalse.question||room.question||'';
-  }
-  if(type==='typeanswer'&&room.typeAnswer?.active){
-    document.getElementById('typeAnswerDisplay').textContent=room.typeAnswer.question||room.question||'';
-  }
-  const buzzBtn=document.getElementById('buzzBtn');
-  if(buzzBtn){
-    const hideBuzz=type!=='buzzer'&&type!=='speedquiz';
-    buzzBtn.style.display=hideBuzz?'none':'block';
-  }
-}
-
-function renderRoomChat(room){
-  const box=document.getElementById('roomChatBox');
-  if(!box)return;
-  const msgs=Object.values(room.chat||{}).sort((a,b)=>(a.time||0)-(b.time||0)).slice(-25);
-  box.innerHTML=msgs.length?msgs.map(m=>`<div class="chat-msg"><b>${escapeHtml(m.user)}:</b> ${escapeHtml(m.text)}</div>`).join(''):'<div class="muted">No messages yet</div>';
-  box.scrollTop=box.scrollHeight;
-  const lr=room.latestReaction;
-  const rel=document.getElementById('latestReaction');
-  if(rel&&lr)rel.textContent=`${lr.emoji} ${lr.user}`;
-}
-
-async function hostGame(){
-  await waitForFirebase();
-  try{
-    hideAll();
-    hostPage.classList.remove('hidden');
-    const roomCode=generateRoomCode();
-    currentRoom=roomCode;
-    await fbSet(fbRef(db,'rooms/'+roomCode),{
-      host:currentUser.username,
-      hostEmail:currentUser.email,
-      roomCode,
-      question:'',
-      questionImage:'',
-      winner:'',
-      buzzed:false,
-      buzzerLocked:false,
-      reaction:'',
-      timer:10,
-      createdAt:Date.now(),
-      mode:'normal',
-      scoreMode:'individual',
-      buzzLog:{},
-      teams:{},
-      announcement:'',
-      roomTheme:'',
-      mcq:{active:false,question:'',options:{},correct:'',responses:{}},
-      spectators:{},
-      antiCheatFlags:{},
-      matchEvents:{},
-      streaks:{},
-      frozenPlayers:{},
-      tournament:{active:false,name:'',currentRound:0,maxRounds:3,history:{}},
-      questionHistory:{},
-      activityType:'buzzer',
-      poll:{active:false,question:'',options:{},votes:{},closed:false},
-      trueFalse:{active:false,question:'',correct:'true',answers:{}},
-      typeAnswer:{active:false,question:'',expected:'',answers:{}},
-      chat:{},
-      latestReaction:null,
-      players:{
-        [getPlayerKey()]:{
-          username:currentUser.username,
-          email:currentUser.email,
-          avatar:currentUser.avatar,
-          sound:currentUser.sound||'1',
-          score:0,
-          team:'',
-          online:true,
-          isHost:true,
-          powerUps:{double:1,shield:1,steal:1},
-          activePowerUp:''
-        }
+      // Check if user or team has already buzzed
+      const existing = Object.values(room.buzzQueue);
+      if (room.mode === 'team' && existing.some(item => item.team === userProfile.team)) {
+        return room;
       }
-    });
-    roomCodeRender(roomCode);
-    showHostSection('game');
-    await registerPresence();
-    attachRoomListener();
-    await migrateLocalUsersToFirebase();
-    loadFirebaseUsersForHost();
-    await updatePublicRoomListing({host:currentUser.username,players:{},activityType:'buzzer',mode:'normal'});
-    await recordLeaderboardStats({games:1});
-    alert('Room created: '+roomCode);
-  }catch(error){
-    console.error(error);
-    alert('Failed to create room: '+error.message);
-  }
-}
-
-function roomCodeRender(roomCode){
-  roomCodeEl('ROOM CODE: '+roomCode);
-  const joinURL=new URL(window.location.href);
-  joinURL.searchParams.set('room',roomCode);
-  const qrContainer=document.getElementById('qrcode');
-  qrContainer.innerHTML='';
-  new QRCode(qrContainer,{text:joinURL.toString(),width:200,height:200,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
-  joinLinkNote.textContent=joinURL.toString();
-}
-
-function roomCodeEl(text){document.getElementById('roomCode').textContent=text}
-
-async function joinGame(){
-  await waitForFirebase();
-  try{
-    const code=joinCode.value.trim().toUpperCase();
-    if(!code)return alert('Enter Room Code');
-    const snap=await fbGet(fbRef(db,'rooms/'+code));
-    if(!snap.exists())return alert('Room Not Found');
-    currentRoom=code;
-    saveRecentRoom(code);
-    await fbUpdate(fbRef(db,'rooms/'+code+'/players'),{
-      [getPlayerKey()]:{
-        username:currentUser.username,
-        email:currentUser.email,
-        avatar:currentUser.avatar,
-        sound:currentUser.sound||'1',
-        score:0,
-        team:'',
-        online:true,
-        isHost:false,
-        powerUps:{double:1,shield:1,steal:1},
-        activePowerUp:''
+      if (existing.some(item => item.userId === userId)) {
+        return room;
       }
-    });
-    await registerPresence();
-    hideAll();
-    playerPage.classList.remove('hidden');
-    attachRoomListener();
-    await recordLeaderboardStats({games:1});
-    alert('Joined Room '+code);
-  }catch(error){
-    console.error(error);
-    alert('Join failed: '+error.message);
-  }
-}
 
-async function registerPresence(){
-  if(!currentRoom||!currentUser||presenceRegistered)return;
-  presenceRegistered=true;
-  const pRef=fbRef(db,'rooms/'+currentRoom+'/players/'+getPlayerKey());
-  await fbUpdate(pRef,{online:true,lastSeen:Date.now()});
-  try{
-    const disc=fbOnDisconnect(pRef);
-    await disc.update({online:false,lastSeen:Date.now()});
-  }catch(e){
-    console.warn('Presence setup skipped',e);
-  }
-}
-
-async function sendQuestion(){
-  await waitForFirebase();
-  try{
-    const q=questionInput.value.trim();
-    if(q)lastSentQuestion=q;
-    const file=questionImageInput.files[0];
-    if(!currentRoom)return alert('No active room');
-    let questionImage='';
-    if(file)questionImage=await fileToBase64(file);
-    const historyKey=Date.now().toString();
-    const roomUpdate={
-      question:q,
-      questionImage,
-      winner:'',
-      buzzed:false,
-      buzzerLocked:false,
-      reaction:'',
-      timer:10,
-      mcq:{active:false,question:'',options:{},correct:'',responses:{}}
-    };
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom),roomUpdate);
-    if(q){
-      await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/questionHistory'),{
-        [historyKey]:{question:q,time:Date.now(),askedBy:currentUser.username}
-      });
-    }
-  }catch(error){
-    console.error(error);
-    alert('Failed to send question: '+error.message);
-  }
-}
-
-async function sendMcqQuestion(){
-  await waitForFirebase();
-  const question=mcqQuestion.value.trim();
-  const options={A:mcqOptionA.value.trim(),B:mcqOptionB.value.trim(),C:mcqOptionC.value.trim(),D:mcqOptionD.value.trim()};
-  const correct=mcqCorrect.value;
-  if(!question||!options.A||!options.B||!options.C||!options.D)return alert('Fill MCQ question and all options');
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    question:question,
-    winner:'',
-    buzzed:false,
-    mcq:{active:true,question,options,correct,responses:{}}
-  });
-  await logMatchEvent('mcq_sent',`${question}`);
-  speakText(`Multiple choice question sent`);
-}
-
-async function submitMcqAnswer(){
-  await waitForFirebase();
-  const ans=playerMcqAnswer.value;
-  if(!ans)return alert('Choose an answer');
-  const path='rooms/'+currentRoom+'/mcq/responses/'+getPlayerKey();
-  await fbSet(fbRef(db,path),{answer:ans,time:Date.now(),user:currentUser.username});
-  notify('Answer submitted','success');
-}
-
-async function gradeMcqAndAward(){
-  const snap=await fbGet(fbRef(db,'rooms/'+currentRoom));
-  if(!snap.exists())return;
-  const room=snap.val();
-  const mcq=room.mcq||{};
-  if(!mcq.active)return;
-  const responses=mcq.responses||{};
-  const players=room.players||{};
-  for(const key of Object.keys(responses)){
-    if((responses[key].answer||'')===mcq.correct){
-      const p=players[key];
-      if(!p)continue;
-      const score=(p.score||0)+getPointDelta();
-      await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+key),{score});
-    }
-  }
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/mcq'),{active:false});
-  await logMatchEvent('mcq_graded','MCQ graded');
-}
-
-async function buzz(){
-  await waitForFirebase();
-  try{
-    if(!currentRoom)return;
-    const roomRef=fbRef(db,'rooms/'+currentRoom);
-    const result=await fbRunTransaction(roomRef,room=>{
-      if(room===null)return room;
-      const playerKey=getPlayerKey();
-      if(room.frozenPlayers&&room.frozenPlayers[playerKey])return room;
-      if(room.buzzed||room.buzzerLocked)return room;
-      room.buzzed=true;
-      room.winner=currentUser.username;
-      room.reaction=(Math.random()*1.5+0.2).toFixed(3);
-      room.matchEvents=room.matchEvents||{};
-      room.matchEvents[Date.now()+'_'+playerKey]={type:'buzz',user:currentUser.username,reaction:room.reaction,time:Date.now()};
-      if(Number(room.reaction)<0.18){
-        room.antiCheatFlags=room.antiCheatFlags||{};
-        room.antiCheatFlags[playerKey]={reason:'Suspiciously fast reaction',time:Date.now(),reaction:room.reaction};
-      }
-      room.buzzLog=room.buzzLog||{};
-      room.buzzLog[Date.now()+'_'+getPlayerKey()]={
-        user:currentUser.username,
-        reaction:room.reaction,
-        time:Date.now(),
-        round:(room.tournament?.currentRound||0)
+      const buzzId = 'buzz_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5);
+      room.buzzQueue[buzzId] = {
+        id: buzzId,
+        userId: userId,
+        name: userProfile.name,
+        team: userProfile.team || '',
+        mode: room.mode,
+        time: Date.now()
       };
+
       return room;
     });
-    if(result.committed){
-      const sound=new Audio(getCurrentBuzzSound());
-      sound.play();
-      if(currentUser.confetti!==false)confetti({particleCount:220,spread:140});
-      addSeasonXp(12);
-      recordLeaderboardStats({xp:12,wins:1});
-    }
-  }catch(error){
-    console.error(error);
+  } catch (err) {
+    console.error('Buzz transaction failed:', err);
   }
 }
 
-async function activatePowerUp(type){
-  if(!currentRoom)return;
-  const pKey=getPlayerKey();
-  const pRef=fbRef(db,'rooms/'+currentRoom+'/players/'+pKey);
-  const snap=await fbGet(pRef);
-  if(!snap.exists())return;
-  const player=snap.val();
-  const cur=(player.powerUps?.[type]||0);
-  if(cur<=0)return alert('No power-up left');
-  const nextPowerUps={...(player.powerUps||{}),[type]:cur-1};
-  await fbUpdate(pRef,{powerUps:nextPowerUps,activePowerUp:type});
-  notify(`${type.toUpperCase()} activated`,'success');
-}
-
-async function lockBuzzers(){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{buzzerLocked:true})}
-async function unlockBuzzers(){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{buzzerLocked:false,buzzed:false,winner:'',reaction:''})}
-async function resetBuzzers(){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{buzzed:false,winner:'',reaction:'',timer:10,buzzerLocked:false})}
-
-function getTimerSeconds(){
-  const timerValue=parseInt((timerSeconds?.value||'10').trim(),10);
-  return Number.isNaN(timerValue)?10:Math.min(90,Math.max(3,timerValue));
-}
-
-function getPointDelta(){
-  const pointsValue=parseInt((pointsInput?.value||'10').trim(),10);
-  return Number.isNaN(pointsValue)?10:Math.min(100,Math.max(1,pointsValue));
-}
-
-function applyQuickPreset(seconds,points){
-  if(timerSeconds)timerSeconds.value=String(seconds);
-  if(pointsInput)pointsInput.value=String(points);
-}
-
-async function startTimer(){
-  await waitForFirebase();
-  try{
-    if(!currentRoom)return;
-    clearInterval(timerInterval);
-    let time=getTimerSeconds();
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{timer:time});
-    timerInterval=setInterval(async()=>{
-      time--;
-      await fbUpdate(fbRef(db,'rooms/'+currentRoom),{timer:time});
-      if(time<=0){
-        clearInterval(timerInterval);
-        const rs=await fbGet(fbRef(db,'rooms/'+currentRoom+'/mcq/active'));
-        if(rs.exists()&&rs.val()===true)await gradeMcqAndAward();
-      }
-    },1000);
-  }catch(error){
-    console.error(error);
-  }
-}
-
-async function startLightningRound(){
-  if(!currentRoom)return;
-  if(timerSeconds)timerSeconds.value='5';
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    announcement:'⚡ Lightning Round: 5 seconds!',
-    buzzerLocked:false,
-    buzzed:false,
-    winner:'',
-    reaction:'',
-    timer:5
-  });
-  await startTimer();
-}
-
-async function shuffleThemeForAll(){
-  if(!currentRoom)return;
-  const randomTheme=themes[Math.floor(Math.random()*themes.length)];
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    roomTheme:randomTheme,
-    announcement:`Theme changed to ${randomTheme.toUpperCase()}`
+// Host controls
+async function unlockBuzzers() {
+  if (!currentRoom || !isHost) return;
+  await window.fbUpdate(window.fbRef(window.db, `buzz_rooms/${currentRoom}`), {
+    locked: false,
+    buzzQueue: {}
   });
 }
 
-async function revealTopPerformer(){
-  if(!currentRoom)return;
-  const snap=await fbGet(fbRef(db,'rooms/'+currentRoom+'/players'));
-  if(!snap.exists())return;
-  const players=Object.values(snap.val()||{}).sort((a,b)=>(b.score||0)-(a.score||0));
-  const top=players[0];
-  if(!top)return;
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    announcement:`Top Player: ${top.username} (${top.score||0} pts)`
+async function lockBuzzers() {
+  if (!currentRoom || !isHost) return;
+  await window.fbUpdate(window.fbRef(window.db, `buzz_rooms/${currentRoom}`), {
+    locked: true
   });
 }
 
-async function addPoints(){await changeWinnerScore(getPointDelta(),false)}
-async function minusPoints(){await changeWinnerScore(-getPointDelta(),false)}
-async function addTeamPoints(){await changeWinnerScore(getPointDelta(),true)}
-async function minusTeamPoints(){await changeWinnerScore(-getPointDelta(),true)}
+async function awardPoints(points) {
+  if (!currentRoom || !isHost) return;
+  const snap = await window.fbGet(window.fbRef(window.db, `buzz_rooms/${currentRoom}`));
+  if (!snap.exists()) return;
 
-async function changeWinnerScore(delta,teamMode){
-  await waitForFirebase();
-  try{
-    if(!currentRoom)return;
-    const snap=await fbGet(fbRef(db,'rooms/'+currentRoom));
-    if(!snap.exists())return;
-    const room=snap.val(),players=room.players||{},winnerName=room.winner;
-    let winnerKey=null;
-    for(const key in players){
-      if(players[key].username===winnerName){winnerKey=key;break}
-    }
-    if(!winnerKey)return;
-    if(teamMode){
-      const team=players[winnerKey].team;
-      if(!team)return alert('Winner has no team');
-      const teamKey=sanitizeKey(team);
-      const cur=((room.teams||{})[teamKey]?.score)||0;
-      await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/teams/'+teamKey),{name:team,score:cur+delta});
-      lastScoreAction={type:'team',teamKey,teamName:team,previous:cur,next:cur+delta,room:currentRoom,at:Date.now()};
-    }else{
-      const player=players[winnerKey];
-      let adjusted=delta;
-      if((player.activePowerUp||'')==='double'&&delta>0)adjusted=delta*2;
-      if((player.activePowerUp||'')==='shield'&&delta<0)adjusted=0;
-      if((player.activePowerUp||'')==='steal'&&delta>0){
-        const sorted=Object.entries(players).filter(([k])=>k!==winnerKey).sort((a,b)=>(b[1].score||0)-(a[1].score||0));
-        if(sorted[0]){
-          const stealFromKey=sorted[0][0];
-          const stealFromScore=players[stealFromKey].score||0;
-          await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+stealFromKey),{score:Math.max(0,stealFromScore-getPointDelta())});
-        }
-      }
-      const currentScore=player.score||0;
-      await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+winnerKey),{score:currentScore+adjusted,activePowerUp:''});
-      lastScoreAction={type:'player',playerKey:winnerKey,previous:currentScore,next:currentScore+adjusted,room:currentRoom,at:Date.now()};
-      addSeasonXp(Math.max(2,Math.abs(adjusted)));
-      recordLeaderboardStats({xp:Math.max(2,Math.abs(adjusted))});
-    }
-    await logMatchEvent('score_update',`${winnerName} ${delta>0?'+':''}${delta}`);
-  }catch(error){
-    console.error(error);
-  }
-}
+  const room = snap.val();
+  const queue = Object.values(room.buzzQueue || {}).sort((a, b) => a.time - b.time);
+  if (!queue.length) return alert('No winner to award points to!');
 
-async function awardWinnerWithStreak(){
-  await waitForFirebase();
-  try{
-    const snap=await fbGet(fbRef(db,'rooms/'+currentRoom));
-    if(!snap.exists())return;
-    const room=snap.val();
-    const players=room.players||{};
-    const winnerName=room.winner;
-    if(!winnerName)return alert('No winner selected yet');
-    let winnerKey=null;
-    for(const key in players){
-      if(players[key].username===winnerName){winnerKey=key;break}
-    }
-    if(!winnerKey)return;
-    const streaks=room.streaks||{};
-    const prevKey=streaks.lastWinnerKey||'';
-    const winnerStreak=(prevKey===winnerKey?(streaks[winnerKey]||0)+1:1);
-    const base=getPointDelta();
-    const streakBonus=winnerStreak>=3?Math.min(20,(winnerStreak-2)*5):0;
-    const total=base+streakBonus;
-    const oldScore=players[winnerKey].score||0;
-    const newScore=oldScore+total;
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+winnerKey),{score:newScore});
-    lastScoreAction={type:'player',playerKey:winnerKey,previous:oldScore,next:newScore,room:currentRoom,at:Date.now()};
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/streaks'),{
-      [winnerKey]:winnerStreak,
-      lastWinnerKey:winnerKey,
-      lastBonus:streakBonus
-    });
-    alert(`${winnerName} awarded ${total} points${streakBonus?` (${base}+${streakBonus} streak bonus)`:''}`);
-  }catch(error){
-    console.error(error);
-  }
-}
+  const winner = queue[0];
+  const scoreKey = sanitize(room.mode === 'team' ? winner.team : winner.name);
+  const currentScore = (room.scores && room.scores[scoreKey]) || 0;
 
-async function setGameMode(mode){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{mode})}
-async function setScoreMode(scoreMode){await fbUpdate(fbRef(db,'rooms/'+currentRoom),{scoreMode})}
-
-async function startTournament(){
-  const name=tournamentName.value.trim()||'Quiz Tournament';
-  const max=parseInt(maxRounds.value||'3',10);
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/tournament'),{active:true,name,currentRound:1,maxRounds:max,history:{}});
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{mode:'tournament'});
-}
-
-async function advanceTournamentRound(){
-  const snap=await fbGet(fbRef(db,'rooms/'+currentRoom));
-  if(!snap.exists())return;
-  const room=snap.val();
-  const t=room.tournament||{};
-  const round=t.currentRound||1;
-  const history=t.history||{};
-  history['round_'+round]={winner:room.winner||'',time:Date.now(),question:room.question||''};
-  const nextRound=round+1;
-  const finished=nextRound>(t.maxRounds||3);
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/tournament'),{
-    history,
-    currentRound:finished?round:nextRound,
-    active:!finished,
-    champion:finished?(room.winner||''):(t.champion||'')
-  });
-  if(finished){
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{question:'Tournament Finished',buzzerLocked:true});
-  }else{
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom),{winner:'',buzzed:false,reaction:'',buzzerLocked:false,question:'Round '+nextRound});
-  }
-}
-
-async function createTeam(){
-  const name=teamNameInput.value.trim();
-  if(!name)return;
-  const key=sanitizeKey(name);
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/teams/'+key),{name,score:0});
-  teamNameInput.value='';
-}
-
-async function joinSelectedTeam(){
-  const team=teamSelect.value;
-  if(!team)return alert('Choose a team');
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+getPlayerKey()),{team});
-}
-
-async function kickPlayer(email){
-  const key=sanitizeKey(email);
-  if(key===getPlayerKey())return alert('Host cannot kick self here');
-  await fbRemove(fbRef(db,'rooms/'+currentRoom+'/players/'+key));
-}
-
-async function clearRooms(){
-  await waitForFirebase();
-  try{
-    await fbRemove(fbRef(db,'rooms'));
-    await fbRemove(fbRef(db,'publicRooms'));
-    alert('All rooms cleared');
-  }catch(error){
-    console.error(error);
-    alert('Failed to clear rooms: '+error.message);
-  }
-}
-
-async function resetScores(){
-  const snap=await fbGet(fbRef(db,'rooms/'+currentRoom+'/players'));
-  if(!snap.exists())return;
-  const players=snap.val()||{};
-  const payload={};
-  Object.keys(players).forEach(key=>payload[key+'/score']=0);
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players'),payload);
-}
-
-async function resetTeamScores(){
-  const snap=await fbGet(fbRef(db,'rooms/'+currentRoom+'/teams'));
-  if(!snap.exists())return;
-  const teams=snap.val()||{};
-  const payload={};
-  Object.keys(teams).forEach(key=>payload[key+'/score']=0);
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/teams'),payload);
-}
-
-async function clearBuzzLog(){
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/buzzLog'),{});
-}
-
-async function clearStreaks(){
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/streaks'),{});
-}
-
-async function undoLastScoreAction(){
-  if(!lastScoreAction||lastScoreAction.room!==currentRoom)return alert('No score action to undo');
-  if(lastScoreAction.type==='player'){
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/players/'+lastScoreAction.playerKey),{score:lastScoreAction.previous});
-  }else if(lastScoreAction.type==='team'){
-    await fbUpdate(fbRef(db,'rooms/'+currentRoom+'/teams/'+lastScoreAction.teamKey),{name:lastScoreAction.teamName,score:lastScoreAction.previous});
-  }
-  lastScoreAction=null;
-}
-
-async function toggleAutoNextRound(){
-  const roomSnap=await fbGet(fbRef(db,'rooms/'+currentRoom+'/autoNextRound'));
-  const enabled=!!(roomSnap.exists()&&roomSnap.val());
-  await fbSet(fbRef(db,'rooms/'+currentRoom+'/autoNextRound'),!enabled);
-  alert(`Auto Next Round ${!enabled?'Enabled':'Disabled'}`);
-}
-
-async function sendAnnouncement(){
-  const msg=announcementInput.value.trim();
-  if(!msg)return alert('Enter announcement first');
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{announcement:msg});
-  announcementInput.value='';
-}
-
-async function clearAnnouncement(){
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{announcement:''});
-}
-
-async function pickRandomPlayer(){
-  const snap=await fbGet(fbRef(db,'rooms/'+currentRoom+'/players'));
-  if(!snap.exists())return;
-  const players=Object.values(snap.val()||{}).filter(p=>!p.isHost&&p.online);
-  if(!players.length)return alert('No online players to pick');
-  const selected=players[Math.floor(Math.random()*players.length)];
-  await fbUpdate(fbRef(db,'rooms/'+currentRoom),{
-    announcement:`Random Pick: ${selected.username}`
+  await window.fbUpdate(window.fbRef(window.db, `buzz_rooms/${currentRoom}/scores`), {
+    [scoreKey]: Math.max(0, currentScore + points)
   });
 }
 
-async function exportScores(){
-  const snap=await fbGet(fbRef(db,'rooms/'+currentRoom));
-  if(!snap.exists())return;
-  const room=snap.val();
-  const players=Object.values(room.players||{}).sort((a,b)=>(b.score||0)-(a.score||0));
-  const rows=['Rank,Username,Email,Score,Team'];
-  players.forEach((player,index)=>{
-    rows.push(`${index+1},"${String(player.username||'').replaceAll('"','""')}","${String(player.email||'').replaceAll('"','""')}",${player.score||0},"${String(player.team||'').replaceAll('"','""')}"`);
-  });
-  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download=`room_${currentRoom}_scores.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+async function resetAllScores() {
+  if (!currentRoom || !isHost) return;
+  if (!confirm('Reset all scores back to zero?')) return;
+  await window.fbSet(window.fbRef(window.db, `buzz_rooms/${currentRoom}/scores`), {});
 }
 
-function attachRoomListener(){
-  if(!currentRoom||roomListenerStartedFor===currentRoom)return;
-  roomListenerStartedFor=currentRoom;
-  fbOnValue(fbRef(db,'rooms/'+currentRoom),snapshot=>{
-    const room=snapshot.val();
-    if(!room)return;
-    currentRoomDataCache=room;
-
-    roomCodeEl('ROOM CODE: '+(room.roomCode||currentRoom));
-    document.getElementById('question').innerText=room.question||'Waiting for question...';
-    modeBadge.textContent=(room.mode||'normal').toUpperCase()+' MODE';
-    const actBadge=document.getElementById('hostActivityBadge');
-    if(actBadge)actBadge.textContent=(ACTIVITY_LABELS[room.activityType]||'BUZZER').replace(/[^\w\s]/g,'').trim().toUpperCase();
-    applyTheme(room.roomTheme||currentUser?.theme||'neon');
-
-    const img=document.getElementById('questionImage');
-    if(room.questionImage){
-      img.src=room.questionImage;
-      img.style.display='block';
-    }else{
-      img.style.display='none';
-    }
-
-    renderHostLiveStatus(room);
-    renderPlayers(room);
-    renderTeams(room);
-    renderBuzzLog(room);
-    renderQuestionHistory(room);
-    renderTournament(room);
-    updateBoards(room);
-    renderAnnouncement(room);
-    renderMcqForPlayer(room);
-    renderPowerState(room);
-    renderReplayPanel(room);
-    renderOverlay();
-    renderPlayerActivity(room);
-    renderRoomChat(room);
-    updatePublicRoomListing(room).catch(console.error);
-    if(room.autoNextRound&&room.winner&&room.mode==='tournament'&&room.tournament?.active){
-      setTimeout(()=>{advanceTournamentRound().catch(console.error)},1200);
-      fbSet(fbRef(db,'rooms/'+currentRoom+'/autoNextRound'),false).catch(()=>{});
-    }
-
-    const actType=room.activityType||'buzzer';
-    if(room.winner&&(actType==='buzzer'||actType==='speedquiz'||!actType)){
-      playerWinner.innerHTML='⚡ '+room.winner+' BUZZED FIRST';
-      winner.innerHTML='⚡ '+room.winner+' BUZZED FIRST';
-      if(buzzBtn){buzzBtn.disabled=true;buzzBtn.classList.add('locked')}
-      if(room.reaction)reaction.innerHTML='Reaction Time: '+room.reaction+'s';
-      speakText(`${room.winner} buzzed first`);
-    }else{
-      playerWinner.innerHTML='';
-      winner.innerHTML='';
-      reaction.innerHTML='';
-      const isFrozen=!!(room.frozenPlayers&&room.frozenPlayers[getPlayerKey()]);
-      const shouldLock=!!room.buzzerLocked||isFrozen;
-      if(buzzBtn){
-        buzzBtn.disabled=shouldLock;
-        buzzBtn.classList.toggle('locked',shouldLock);
-      }
-    }
-
-    const isFrozen=!!(room.frozenPlayers&&room.frozenPlayers[getPlayerKey()]);
-    lockState.innerHTML=isFrozen?'⛔ You are frozen by host':(room.buzzerLocked?'🔒 Host locked buzzer':'🟢 Buzzer open');
-    timer.innerHTML=room.timer??10;
-    playerTimer.innerHTML=room.timer??10;
-    fillTeamSelect(room);
-    if(room.question)speakText(room.question);
-  });
+function copyJoinLink() {
+  const url = new URL(window.location.href);
+  url.searchParams.set('room', currentRoom);
+  navigator.clipboard.writeText(url.toString()).then(() => alert('Direct room join link copied!'));
 }
 
-function updateBoards(room){
-  const players=Object.values(room.players||{}).sort((a,b)=>(b.score||0)-(a.score||0));
-  const nextScores={};
-  let podium='';
-  players.slice(0,3).forEach((player,index)=>{
-    const playerKey=sanitizeKey(player.email||player.username||`rank_${index}`);
-    const prevScore=previousScoreByPlayerKey[playerKey];
-    const score=player.score||0;
-    const changeClass=typeof prevScore==='number'?(score>prevScore?'score-up':(score<prevScore?'score-down':'')):'';
-    nextScores[playerKey]=score;
-    podium+=`<div class="podium-item scoreboard-entry ${changeClass}"><div class="podium-rank">#${index+1}</div><div><b>${escapeHtml(player.username||'')}</b></div><div>${score} pts</div></div>`;
-  });
-  if(podium)podium=`<div class="podium">${podium}</div>`;
-  let html='';
-  players.forEach((player,index)=>{
-    const playerKey=sanitizeKey(player.email||player.username||`player_${index}`);
-    const prevScore=previousScoreByPlayerKey[playerKey];
-    const score=player.score||0;
-    const changeClass=typeof prevScore==='number'?(score>prevScore?'score-up':(score<prevScore?'score-down':'')):'';
-    nextScores[playerKey]=score;
-    html+=`<div class="player scoreboard-entry ${changeClass}"><div class="player-left"><img src="${player.avatar}" alt="${escapeHtml(player.username)}"><div><b>${escapeHtml(player.username)}</b><br><small>${escapeHtml(player.email)}</small><br><span class="muted">${escapeHtml(player.team||'No Team')} • ${player.online?'Online':'Offline'}</span></div></div><div style="font-size:1.2rem">${score} pts</div></div>`;
-  });
-  previousScoreByPlayerKey=nextScores;
-  hostScoreboard.innerHTML=podium+html;
-  playerScoreboard.innerHTML=podium+html;
+function leaveRoom() {
+  location.href = window.location.pathname;
 }
 
-function renderTeams(room){
-  const teams=Object.values(room.teams||{}).sort((a,b)=>(b.score||0)-(a.score||0));
-  let html='';
-  if(!teams.length)html='<div class="muted">No teams yet</div>';
-  teams.forEach(t=>{
-    html+=`<div class="player"><div><b>${escapeHtml(t.name)}</b></div><div>${t.score||0} pts</div></div>`;
-  });
-  teamBoard.innerHTML=html;
+function escapeHtml(text) {
+  return String(text || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 }
 
-function renderPlayers(room){
-  const players=Object.values(room.players||{});
-  const frozen=room.frozenPlayers||{};
-  let html='';
-  players.forEach(p=>{
-    const key=sanitizeKey(p.email||'');
-    const frozenTag=frozen[key]?'<span class="frozen-pill">Frozen</span>':'';
-    const frozenBtnClass=frozen[key]?'safe-btn':'warn-btn';
-    const frozenBtnLabel=frozen[key]?'UNFREEZE':'FREEZE';
-    const inviteTag=p.invited&&!p.online?'<span class="chip">Invited</span>':'';
-    html+=`<div class="player"><div class="player-left"><img src="${p.avatar}" alt="${escapeHtml(p.username)}"><div><b>${escapeHtml(p.username)}</b>${frozenTag} ${inviteTag}<br><span class="muted">${escapeHtml(p.team||'No Team')} • ${p.online?'Online':(p.invited?'Invited':'Offline')}</span></div></div><div class="inline-row"><button class="${frozenBtnClass}" onclick="toggleFreezePlayer('${p.email}')">${frozenBtnLabel}</button><button class="kick-btn" onclick="kickPlayer('${p.email}')">KICK</button></div></div>`;
-  });
-  hostPlayers.innerHTML=html;
-}
-
-async function toggleFreezePlayer(email){
-  const key=sanitizeKey(email);
-  if(key===getPlayerKey())return alert('Host cannot freeze self');
-  const refPath=fbRef(db,'rooms/'+currentRoom+'/frozenPlayers/'+key);
-  const snap=await fbGet(refPath);
-  if(snap.exists()&&snap.val()===true){
-    await fbRemove(refPath);
-  }else{
-    await fbSet(refPath,true);
-  }
-}
-
-function renderBuzzLog(room){
-  const logs=Object.values(room.buzzLog||{}).sort((a,b)=>(b.time||0)-(a.time||0));
-  const flags=room.antiCheatFlags||{};
-  let html='';
-  if(!logs.length)html='<div class="muted">No buzzes yet</div>';
-  logs.forEach(log=>{
-    const suspicious=Object.values(flags).some(f=>f?.reaction===log.reaction&&f?.reason);
-    html+=`<div class="player"><div><b>${escapeHtml(log.user)}</b><br><span class="muted">Round ${log.round||0}${suspicious?' • ⚠ Flagged':''}</span></div><div>${log.reaction}s</div></div>`;
-  });
-  buzzLog.innerHTML=html;
-}
-
-function renderQuestionHistory(room){
-  const history=Object.values(room.questionHistory||{}).sort((a,b)=>(b.time||0)-(a.time||0)).slice(0,20);
-  let html='';
-  if(!history.length)html='<div class="muted">No questions asked yet</div>';
-  history.forEach(item=>{
-    html+=`<div class="player"><div><b>${escapeHtml(item.question||'')}</b><br><span class="muted">by ${escapeHtml(item.askedBy||'Host')}</span></div><div class="muted">${new Date(item.time||Date.now()).toLocaleTimeString()}</div></div>`;
-  });
-  questionHistory.innerHTML=html;
-}
-
-function renderAnnouncement(room){
-  const el=document.getElementById('playerAnnouncement');
-  if(!el)return;
-  const msg=(room.announcement||'').trim();
-  if(!msg){
-    el.classList.add('hidden');
-    el.textContent='';
-    return;
-  }
-  el.classList.remove('hidden');
-  el.textContent='📢 '+msg;
-}
-
-function renderMcqForPlayer(room){
-  const box=document.getElementById('playerMcqQuestion');
-  if(!box)return;
-  const mcq=room.mcq||{};
-  if(!mcq.active){
-    box.textContent='No MCQ active';
-    return;
-  }
-  const opts=mcq.options||{};
-  box.innerHTML=`<b>${escapeHtml(mcq.question||'')}</b><br>A) ${escapeHtml(opts.A||'')}<br>B) ${escapeHtml(opts.B||'')}<br>C) ${escapeHtml(opts.C||'')}<br>D) ${escapeHtml(opts.D||'')}`;
-}
-
-function renderPowerState(room){
-  const el=document.getElementById('powerUpState');
-  if(!el)return;
-  const player=(room.players||{})[getPlayerKey()];
-  if(!player){el.textContent='No power state';return;}
-  const p=player.powerUps||{};
-  el.textContent=`Double:${p.double||0}  Shield:${p.shield||0}  Steal:${p.steal||0}  Active:${player.activePowerUp||'None'}`;
-}
-
-function renderReplayPanel(room){
-  const panel=document.getElementById('replayPanel');
-  if(!panel)return;
-  const events=Object.values(room.matchEvents||{}).sort((a,b)=>(b.time||0)-(a.time||0)).slice(0,8);
-  panel.innerHTML=events.map(e=>`<div class="player"><div><b>${escapeHtml(e.type||'')}</b><br><span class="muted">${escapeHtml(e.by||e.user||'')}</span></div><div class="muted">${escapeHtml(e.detail||'')}</div></div>`).join('')||'<div class="muted">No events</div>';
-}
-
-function renderTournament(room){
-  const t=room.tournament||{};
-  let html=`<div class="muted">${t.active?'Tournament Running':'Tournament Idle'}</div>`;
-  html+=`<table class="table"><tr><th>Name</th><td>${t.name||'-'}</td></tr><tr><th>Round</th><td>${t.currentRound||0}/${t.maxRounds||0}</td></tr><tr><th>Champion</th><td>${t.champion||'-'}</td></tr></table>`;
-  const history=t.history||{};
-  const rows=Object.keys(history).sort().map(k=>`<tr><td>${k.replace('_',' ')}</td><td>${history[k].winner||'-'}</td><td>${history[k].question||'-'}</td></tr>`).join('');
-  html+=`<table class="table"><tr><th>Round</th><th>Winner</th><th>Question</th></tr>${rows||'<tr><td colspan="3">No rounds yet</td></tr>'}</table>`;
-  tournamentPanel.innerHTML=html;
-  playerTournamentPanel.innerHTML=html;
-}
-
-function fillTeamSelect(room){
-  const teams=Object.values(room.teams||{});
-  let options='<option value="">Choose team</option>';
-  teams.forEach(t=>{
-    const name=String(t.name||'');
-    const safeValue=name.replaceAll('"','&quot;');
-    options+=`<option value="${safeValue}">${escapeHtml(name)}</option>`;
-  });
-  teamSelect.innerHTML=options;
-}
-
-document.addEventListener('keydown',e=>{
-  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){
+// Keyboard shortcut (Space to buzz)
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' && !e.repeat && document.activeElement.tagName !== 'INPUT') {
     e.preventDefault();
-    const cmd=prompt('Quick command: host, join, settings, admin');
-    if(!cmd)return;
-    const val=cmd.trim().toLowerCase();
-    if(val==='host')hostGame();
-    else if(val==='join')openJoinPage();
-    else if(val==='settings')openSettings();
-    else if(val==='admin')openAdminPanel();
-    else if(val==='practice')openPracticeMode();
-    else if(val==='leaderboard')openLeaderboard();
-    else if(val==='daily')openDailyChallenge();
-    return;
+    const btn = document.getElementById('buzzerBtn');
+    if (btn && !btn.disabled && !document.getElementById('playerPage').classList.contains('hidden')) {
+      triggerBuzz();
+    }
   }
-  if(e.code==='Space'){
-    e.preventDefault();
-    const btn=document.getElementById('buzzBtn');
-    if(btn&&!btn.disabled)buzz();
+});
+
+// Auto-populate room from URL parameter
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const r = params.get('room');
+  if (r) {
+    document.getElementById('roomCodeInput').value = r.toUpperCase();
+    showJoinBox();
   }
 });
 </script>
