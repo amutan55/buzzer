@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mahil Buzzer Arena</title>
+<title>Mahil Buzz Arena</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
@@ -20,9 +20,9 @@
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
-  --accent-light: #eef2ff;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-light: #eff6ff;
   --success: #059669;
   --success-light: #ecfdf5;
   --danger: #dc2626;
@@ -31,9 +31,8 @@
   --gold-light: #fffbeb;
   --radius: 16px;
   --radius-sm: 10px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
-  --shadow-md: 0 10px 25px -5px rgba(15,23,42,0.06), 0 8px 10px -6px rgba(15,23,42,0.04);
-  --shadow-lg: 0 20px 30px -10px rgba(15,23,42,0.08);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 10px 25px -5px rgba(15,23,42,0.06);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,7 +50,7 @@ body {
 
 .app-wrapper {
   width: 100%;
-  max-width: 680px;
+  max-width: 620px;
 }
 
 .hidden { display: none !important; }
@@ -62,34 +61,32 @@ body {
   border-radius: var(--radius);
   padding: 32px;
   box-shadow: var(--shadow-md);
-  transition: all 0.3s ease;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .logo-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   background: var(--accent-light);
   color: var(--accent);
-  border-radius: 14px;
-  font-size: 1.4rem;
+  border-radius: 16px;
+  font-size: 1.6rem;
   font-weight: 800;
   margin-bottom: 12px;
 }
 
 h1.app-title {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.8rem;
   font-weight: 700;
   letter-spacing: -0.5px;
-  color: var(--text-primary);
 }
 
 p.subtitle {
@@ -98,14 +95,42 @@ p.subtitle {
   margin-top: 4px;
 }
 
+/* Auth Tabs */
+.auth-tabs {
+  display: flex;
+  background: var(--surface-subtle);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.tab-btn.active {
+  background: #ffffff;
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
 .form-group {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 label {
   display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: var(--text-secondary);
   margin-bottom: 6px;
   text-transform: uppercase;
@@ -123,13 +148,13 @@ input, select {
   font-family: inherit;
   font-weight: 500;
   outline: none;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition: all 0.2s;
 }
 
 input:focus, select:focus {
   background: #ffffff;
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
 }
 
 button {
@@ -147,18 +172,12 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.2s;
+  transition: all 0.15s;
   box-shadow: var(--shadow-sm);
 }
 
-button:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-}
-
-button:active {
-  transform: translateY(0);
-}
+button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+button:active { transform: translateY(0); }
 
 button.btn-outline {
   background: transparent;
@@ -166,34 +185,20 @@ button.btn-outline {
   color: var(--text-primary);
   box-shadow: none;
 }
+button.btn-outline:hover { background: var(--surface-subtle); }
 
-button.btn-outline:hover {
-  background: var(--surface-subtle);
-  border-color: var(--text-secondary);
-}
+button.btn-danger { background: var(--danger-light); color: var(--danger); box-shadow: none; }
+button.btn-danger:hover { background: #fee2e2; }
 
-button.btn-danger {
-  background: var(--danger-light);
-  color: var(--danger);
-  box-shadow: none;
-}
-button.btn-danger:hover {
-  background: #fee2e2;
-}
+button.btn-success { background: var(--success); color: #ffffff; }
+button.btn-success:hover { background: #047857; }
 
-button.btn-success {
-  background: var(--success);
-  color: #ffffff;
-}
-button.btn-success:hover {
-  background: #047857;
-}
-
+/* Topbar */
 .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
@@ -205,8 +210,8 @@ button.btn-success:hover {
 }
 
 .avatar-circle {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   background: var(--accent-light);
   color: var(--accent);
   border-radius: 50%;
@@ -214,23 +219,24 @@ button.btn-success:hover {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .user-info b { display: block; font-size: 0.9rem; }
 .user-info span { font-size: 0.75rem; color: var(--text-muted); }
 
+/* Hub layout */
 .hub-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px;
   margin-top: 10px;
 }
 
 .action-card {
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 22px;
   text-align: center;
   background: var(--surface);
   cursor: pointer;
@@ -243,28 +249,11 @@ button.btn-success:hover {
   transform: translateY(-2px);
 }
 
-.action-card .icon {
-  font-size: 2rem;
-  margin-bottom: 12px;
-}
+.action-card .icon { font-size: 1.8rem; margin-bottom: 10px; }
+.action-card h3 { font-size: 1.05rem; margin-bottom: 4px; }
+.action-card p { font-size: 0.8rem; color: var(--text-secondary); }
 
-.action-card h3 {
-  font-size: 1.1rem;
-  margin-bottom: 6px;
-}
-
-.action-card p {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-/* Arena & Buzzer Interface */
-.room-meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
+/* Buzzer area */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -272,11 +261,9 @@ button.btn-success:hover {
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
   background: var(--surface-subtle);
   border: 1px solid var(--border);
 }
-
 .tag.live { background: var(--success-light); color: var(--success); border-color: rgba(5,150,105,0.2); }
 .tag.locked { background: var(--danger-light); color: var(--danger); border-color: rgba(220,38,38,0.2); }
 
@@ -284,12 +271,12 @@ button.btn-success:hover {
   background: var(--surface-subtle);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 18px 24px;
+  padding: 16px;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  margin: 20px 0;
-  min-height: 64px;
+  margin: 18px 0;
+  min-height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -306,30 +293,29 @@ button.btn-success:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 30px 0;
+  padding: 24px 0;
 }
 
 .buzzer-btn {
-  width: 200px;
-  height: 200px;
+  width: 210px;
+  height: 210px;
   border-radius: 50%;
   background: linear-gradient(145deg, #ef4444, #dc2626);
   border: 8px solid #fee2e2;
-  box-shadow: 0 15px 30px rgba(220, 38, 38, 0.3), inset 0 2px 4px rgba(255,255,255,0.4);
+  box-shadow: 0 15px 30px rgba(220, 38, 38, 0.28), inset 0 2px 4px rgba(255,255,255,0.4);
   color: white;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.1s ease;
   user-select: none;
   touch-action: manipulation;
+  transition: all 0.08s ease;
 }
 
 .buzzer-btn:active:not(:disabled) {
-  transform: scale(0.94);
-  box-shadow: 0 8px 15px rgba(220, 38, 38, 0.4);
+  transform: scale(0.93);
+  box-shadow: 0 6px 15px rgba(220, 38, 38, 0.35);
 }
 
 .buzzer-btn:disabled {
@@ -337,18 +323,18 @@ button.btn-success:hover {
   border-color: var(--surface-subtle);
   box-shadow: none;
   cursor: not-allowed;
-  transform: none;
   color: var(--text-muted);
+  transform: none;
 }
 
 .queue-panel {
-  margin-top: 24px;
+  margin-top: 20px;
   border-top: 1px solid var(--border);
   padding-top: 16px;
 }
 
 .queue-title {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -363,7 +349,7 @@ button.btn-success:hover {
   padding: 10px 14px;
   border-radius: var(--radius-sm);
   background: var(--surface-subtle);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-size: 0.9rem;
 }
 
@@ -375,29 +361,29 @@ button.btn-success:hover {
 
 .scores-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 10px;
-  margin-top: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .score-box {
-  padding: 12px;
+  padding: 10px;
   background: var(--surface-subtle);
   border-radius: var(--radius-sm);
   text-align: center;
   border: 1px solid var(--border);
 }
-.score-box .name { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
-.score-box .pts { font-size: 1.25rem; font-weight: 800; color: var(--accent); margin-top: 4px; }
+.score-box .name { font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; }
+.score-box .pts { font-size: 1.2rem; font-weight: 800; color: var(--accent); margin-top: 2px; }
 
 .qr-wrapper {
   background: #fff;
   border: 1px solid var(--border);
-  padding: 12px;
+  padding: 10px;
   border-radius: 12px;
-  width: 144px;
-  height: 144px;
-  margin: 12px auto;
+  width: 136px;
+  height: 136px;
+  margin: 10px auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -405,8 +391,8 @@ button.btn-success:hover {
 
 @media(max-width: 600px) {
   .hub-actions { grid-template-columns: 1fr; }
-  .card { padding: 24px 18px; }
-  .buzzer-btn { width: 170px; height: 170px; font-size: 1.7rem; }
+  .card { padding: 22px 16px; }
+  .buzzer-btn { width: 180px; height: 180px; font-size: 1.8rem; }
 }
 </style>
 </head>
@@ -414,35 +400,58 @@ button.btn-success:hover {
 
 <div class="app-wrapper">
 
-  <!-- VIEW 1: AUTHENTICATION / LOGIN -->
+  <!-- VIEW 1: AUTH (LOGIN & SIGN UP) -->
   <div id="viewAuth" class="card">
     <div class="header">
       <div class="logo-badge">⚡</div>
-      <h1 class="app-title">Mahil Buzzer</h1>
-      <p class="subtitle">Enter your details to access the quizzing arena</p>
+      <h1 class="app-title">Buzzin Arena</h1>
+      <p class="subtitle">Real-time solo and team buzzer system</p>
     </div>
 
-    <div class="form-group">
-      <label>Your Display Name</label>
-      <input type="text" id="authUsername" placeholder="e.g. Alex, Maya" maxlength="24">
+    <div class="auth-tabs">
+      <button class="tab-btn active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="tab-btn" id="tabSignup" onclick="switchAuthTab('signup')">Create Account</button>
     </div>
 
-    <div class="form-group">
-      <label>Access Role / Passkey (Optional for host)</label>
-      <input type="password" id="authPasskey" placeholder="Enter password (optional)">
+    <!-- Sign In Form -->
+    <div id="formLogin">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password">
+      </div>
+      <button onclick="handleLogin()">Sign In</button>
     </div>
 
-    <button onclick="handleLogin()">Continue to Arena</button>
+    <!-- Sign Up Form -->
+    <div id="formSignup" class="hidden">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="signupUsername" placeholder="Choose a username" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="signupEmail" placeholder="name@example.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signupPassword" placeholder="Create a password">
+      </div>
+      <button class="btn-success" onclick="handleSignup()">Create Account</button>
+    </div>
   </div>
 
-  <!-- VIEW 2: HUB (JOIN & HOST CHOICES) -->
+  <!-- VIEW 2: HUB (HOST OR JOIN) -->
   <div id="viewHub" class="card hidden">
     <div class="top-bar">
       <div class="user-profile-badge">
         <div class="avatar-circle" id="hubAvatar">U</div>
         <div class="user-info">
           <b id="hubUsername">User</b>
-          <span>Ready to compete</span>
+          <span>Online & Ready</span>
         </div>
       </div>
       <button class="btn-outline" style="width: auto; padding: 6px 12px; font-size: 0.8rem;" onclick="handleLogout()">Sign Out</button>
@@ -451,49 +460,48 @@ button.btn-success:hover {
     <div class="hub-actions">
       <div class="action-card" onclick="openHostModal()">
         <div class="icon">🎙️</div>
-        <h3>Host an Arena</h3>
-        <p>Create a room, control the buzzer locks, and award points.</p>
+        <h3>Host Arena</h3>
+        <p>Create a room and manage live buzz rounds.</p>
       </div>
 
       <div class="action-card" onclick="openJoinModal()">
         <div class="icon">🎯</div>
-        <h3>Join an Arena</h3>
-        <p>Enter an existing 6-character room code to buzz in.</p>
+        <h3>Join Arena</h3>
+        <p>Enter a 6-letter room code to buzz in.</p>
       </div>
     </div>
 
-    <!-- HOST SETUP MODAL -->
-    <div id="hostSetupBox" class="hidden" style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px;">
-      <h3 style="font-size: 1rem; margin-bottom: 14px;">Arena Configuration</h3>
+    <!-- Host Modal Setup -->
+    <div id="hostSetupBox" class="hidden" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 16px;">
+      <h3 style="font-size: 0.95rem; margin-bottom: 12px;">Arena Mode</h3>
       <div class="form-group">
-        <label>Competition Mode</label>
         <select id="hostModeSelect">
-          <option value="solo">Individual / Solo Buzzer</option>
-          <option value="team">Team Buzzer (Locks out same team)</option>
+          <option value="solo">Solo Buzzer (Individual)</option>
+          <option value="team">Team Buzzer (Team Lockout)</option>
         </select>
       </div>
       <button class="btn-success" onclick="createArena()">Start Hosting</button>
     </div>
 
-    <!-- JOIN SETUP MODAL -->
-    <div id="joinSetupBox" class="hidden" style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px;">
-      <h3 style="font-size: 1rem; margin-bottom: 14px;">Enter Arena Code</h3>
+    <!-- Join Modal Setup -->
+    <div id="joinSetupBox" class="hidden" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 16px;">
+      <h3 style="font-size: 0.95rem; margin-bottom: 12px;">Enter Arena Details</h3>
       <div class="form-group">
         <label>Room Code</label>
-        <input type="text" id="joinRoomCode" placeholder="6-letter code" style="text-transform: uppercase;">
+        <input type="text" id="joinRoomCode" placeholder="e.g. ABCD23" style="text-transform: uppercase;">
       </div>
       <div class="form-group" id="joinTeamField">
-        <label>Team Name (If Team Mode)</label>
-        <input type="text" id="joinTeamName" placeholder="e.g. Phoenix, Team Alpha">
+        <label>Team Name (Optional if Solo)</label>
+        <input type="text" id="joinTeamName" placeholder="e.g. Team Titan">
       </div>
-      <button onclick="joinArena()">Connect to Room</button>
+      <button onclick="joinArena()">Connect to Arena</button>
     </div>
   </div>
 
-  <!-- VIEW 3: HOST ARENA DASHBOARD -->
+  <!-- VIEW 3: HOST CONTROL -->
   <div id="viewHost" class="card hidden">
     <div class="top-bar">
-      <div class="room-meta">
+      <div>
         <span class="tag" id="hostRoomCodeTag">CODE: ------</span>
         <span class="tag" id="hostModeTag">SOLO</span>
       </div>
@@ -501,18 +509,17 @@ button.btn-success:hover {
     </div>
 
     <div class="qr-wrapper"><div id="hostQrCode"></div></div>
-
     <div class="banner" id="hostBanner">Waiting for buzzes...</div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-      <button class="btn-success" onclick="hostUnlock()">⚡ Unlock (Reset Round)</button>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+      <button class="btn-success" onclick="hostUnlock()">⚡ Unlock (New Round)</button>
       <button class="btn-danger" onclick="hostLock()">🔒 Lock Buzzers</button>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
       <button class="btn-outline" onclick="hostAwardPoints(10)">+10 Pts</button>
       <button class="btn-outline" onclick="hostAwardPoints(-5)">-5 Pts</button>
-      <button class="btn-outline" onclick="hostResetScores()">Clear Scores</button>
+      <button class="btn-outline" onclick="hostResetScores()">Reset</button>
     </div>
 
     <div class="queue-panel">
@@ -526,10 +533,10 @@ button.btn-success:hover {
     </div>
   </div>
 
-  <!-- VIEW 4: PLAYER ARENA DASHBOARD -->
+  <!-- VIEW 4: PLAYER BUZZER -->
   <div id="viewPlayer" class="card hidden">
     <div class="top-bar">
-      <div class="room-meta">
+      <div>
         <span class="tag" id="playerRoomCodeTag">CODE: ------</span>
         <span class="tag live" id="playerStateTag">OPEN</span>
       </div>
@@ -540,18 +547,18 @@ button.btn-success:hover {
 
     <div class="buzzer-area">
       <button class="buzzer-btn" id="playerBuzzerBtn" onclick="playerPressBuzz()">BUZZ</button>
-      <p style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted);">Hit spacebar or tap the button</p>
+      <p style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted);">Hit spacebar or tap to buzz</p>
     </div>
 
     <div class="queue-panel">
-      <div class="queue-title">Arena Standings</div>
+      <div class="queue-title">Standings</div>
       <div class="scores-grid" id="playerScoreList"></div>
     </div>
   </div>
 
 </div>
 
-<!-- FIREBASE INTEGRATION -->
+<!-- FIREBASE REALTIME BACKEND -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import { getDatabase, ref, set, get, update, onValue, remove, runTransaction } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
@@ -585,7 +592,7 @@ let currentRoom = null;
 let isHost = false;
 let audioCtx = null;
 
-// Synthetic Web Audio System
+// Clean Web Audio Synthesizer (Instant & Zero Latency)
 function playAudio(type = 'buzz') {
   try {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -598,16 +605,16 @@ function playAudio(type = 'buzz') {
 
     if (type === 'buzz') {
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.3);
+      osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(75, audioCtx.currentTime + 0.3);
       gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
       gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
       osc.start();
       osc.stop(audioCtx.currentTime + 0.3);
     } else if (type === 'unlock') {
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-      osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08); // E5
+      osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08);
       gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
       gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
       osc.start();
@@ -618,7 +625,7 @@ function playAudio(type = 'buzz') {
   }
 }
 
-// User Navigation / Flow
+// Navigation & Auth Flow
 function showView(viewId) {
   ['viewAuth', 'viewHub', 'viewHost', 'viewPlayer'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
@@ -626,17 +633,51 @@ function showView(viewId) {
   document.getElementById(viewId).classList.remove('hidden');
 }
 
+function switchAuthTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+  document.getElementById('formLogin').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('formSignup').classList.toggle('hidden', tab !== 'signup');
+}
+
+function handleSignup() {
+  const username = document.getElementById('signupUsername').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value.trim();
+
+  if (!username || !email || !password) return alert('Please fill in all fields');
+
+  let accounts = JSON.parse(localStorage.getItem('buzzin_accounts') || '[]');
+  if (accounts.some(acc => acc.username.toLowerCase() === username.toLowerCase())) {
+    return alert('Username is already taken');
+  }
+
+  const newAcc = { username, email, password, id: 'usr_' + Math.random().toString(36).substring(2, 9) };
+  accounts.push(newAcc);
+  localStorage.setItem('buzzin_accounts', JSON.stringify(accounts));
+
+  currentUser = { name: newAcc.username, id: newAcc.id, team: '' };
+  localStorage.setItem('buzzin_session', JSON.stringify(currentUser));
+  setupHubView();
+}
+
 function handleLogin() {
-  const username = document.getElementById('authUsername').value.trim();
-  if (!username) return alert('Please enter a display name');
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
 
-  currentUser = {
-    name: username,
-    id: 'usr_' + Math.random().toString(36).substring(2, 9),
-    team: ''
-  };
+  if (!username || !password) return alert('Please enter your username and password');
 
-  localStorage.setItem('mahil_user', JSON.stringify(currentUser));
+  let accounts = JSON.parse(localStorage.getItem('buzzin_accounts') || '[]');
+  const match = accounts.find(acc => acc.username.toLowerCase() === username.toLowerCase() && acc.password === password);
+
+  if (!match) {
+    // Convenience fallback for quick demo login
+    currentUser = { name: username, id: 'usr_' + Math.random().toString(36).substring(2, 9), team: '' };
+  } else {
+    currentUser = { name: match.username, id: match.id, team: '' };
+  }
+
+  localStorage.setItem('buzzin_session', JSON.stringify(currentUser));
   setupHubView();
 }
 
@@ -650,8 +691,9 @@ function setupHubView() {
 
 function handleLogout() {
   currentUser = null;
-  localStorage.removeItem('mahil_user');
-  document.getElementById('authUsername').value = '';
+  localStorage.removeItem('buzzin_session');
+  document.getElementById('loginUsername').value = '';
+  document.getElementById('loginPassword').value = '';
   showView('viewAuth');
 }
 
@@ -672,7 +714,7 @@ function generateRoomCode() {
   return code;
 }
 
-// Hosting Arena
+// Host Action
 async function createArena() {
   const mode = document.getElementById('hostModeSelect').value;
   const roomCode = generateRoomCode();
@@ -688,7 +730,7 @@ async function createArena() {
     createdAt: Date.now()
   };
 
-  await window.fbSet(window.fbRef(window.db, `arenas/${roomCode}`), initialData);
+  await window.fbSet(window.fbRef(window.db, `buzz_arenas/${roomCode}`), initialData);
 
   document.getElementById('hostRoomCodeTag').textContent = `CODE: ${roomCode}`;
   document.getElementById('hostModeTag').textContent = mode.toUpperCase();
@@ -697,20 +739,20 @@ async function createArena() {
   qrEl.innerHTML = '';
   const url = new URL(window.location.href);
   url.searchParams.set('arena', roomCode);
-  new QRCode(qrEl, { text: url.toString(), width: 120, height: 120, colorDark: '#0f172a' });
+  new QRCode(qrEl, { text: url.toString(), width: 116, height: 116, colorDark: '#0f172a' });
 
   showView('viewHost');
   attachArenaListener(roomCode);
 }
 
-// Joining Arena
+// Join Action
 async function joinArena() {
   const code = (document.getElementById('joinRoomCode').value || '').trim().toUpperCase();
   const team = document.getElementById('joinTeamName').value.trim();
 
   if (!code) return alert('Enter room code');
 
-  const snap = await window.fbGet(window.fbRef(window.db, `arenas/${code}`));
+  const snap = await window.fbGet(window.fbRef(window.db, `buzz_arenas/${code}`));
   if (!snap.exists()) return alert('Arena not found. Verify the code.');
 
   const arena = snap.val();
@@ -732,10 +774,10 @@ let lastFirstId = null;
 let lastLocked = true;
 
 function attachArenaListener(roomCode) {
-  window.fbOnValue(window.fbRef(window.db, `arenas/${roomCode}`), (snapshot) => {
+  window.fbOnValue(window.fbRef(window.db, `buzz_arenas/${roomCode}`), (snapshot) => {
     const arena = snapshot.val();
     if (!arena) {
-      alert('The arena session was closed.');
+      alert('The arena session has closed.');
       exitArena();
       return;
     }
@@ -743,11 +785,11 @@ function attachArenaListener(roomCode) {
     const queue = Object.values(arena.buzzQueue || {}).sort((a, b) => a.time - b.time);
     const first = queue[0] || null;
 
-    // Audio & Confetti Signals
+    // Audio triggers
     if (first && (!lastFirstId || lastFirstId !== first.id)) {
       playAudio('buzz');
       if (!isHost && first.userId === currentUser.id) {
-        confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+        confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
       }
     } else if (!arena.locked && lastLocked === true) {
       playAudio('unlock');
@@ -756,7 +798,7 @@ function attachArenaListener(roomCode) {
     lastFirstId = first ? first.id : null;
     lastLocked = arena.locked;
 
-    // Formulate Winner String
+    // Formulate banner text
     let bannerText = 'Waiting for buzzes...';
     if (arena.locked && !first) {
       bannerText = '🔒 Buzzers are currently locked';
@@ -771,10 +813,9 @@ function attachArenaListener(roomCode) {
       bannerEl.textContent = bannerText;
       bannerEl.className = first ? 'banner active-winner' : 'banner';
 
-      // Render Queue
       const queueList = document.getElementById('hostQueueList');
       if (!queue.length) {
-        queueList.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem; padding:8px 0;">No buzzes this round</div>';
+        queueList.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem; padding:6px 0;">No buzzes this round</div>';
       } else {
         queueList.innerHTML = queue.map((q, idx) => `
           <div class="queue-row ${idx === 0 ? 'winner' : ''}">
@@ -830,10 +871,10 @@ function renderScores(targetId, scores) {
   `).join('');
 }
 
-// Atomic Buzz Action
+// Atomic Buzz Transaction
 async function playerPressBuzz() {
   if (!currentRoom) return;
-  const roomRef = window.fbRef(window.db, `arenas/${currentRoom}`);
+  const roomRef = window.fbRef(window.db, `buzz_arenas/${currentRoom}`);
 
   try {
     await window.fbRunTransaction(roomRef, (arena) => {
@@ -860,14 +901,14 @@ async function playerPressBuzz() {
       return arena;
     });
   } catch (err) {
-    console.error('Buzzer transaction error:', err);
+    console.error('Buzzer error:', err);
   }
 }
 
 // Host controls
 async function hostUnlock() {
   if (!currentRoom || !isHost) return;
-  await window.fbUpdate(window.fbRef(window.db, `arenas/${currentRoom}`), {
+  await window.fbUpdate(window.fbRef(window.db, `buzz_arenas/${currentRoom}`), {
     locked: false,
     buzzQueue: {}
   });
@@ -875,14 +916,14 @@ async function hostUnlock() {
 
 async function hostLock() {
   if (!currentRoom || !isHost) return;
-  await window.fbUpdate(window.fbRef(window.db, `arenas/${currentRoom}`), {
+  await window.fbUpdate(window.fbRef(window.db, `buzz_arenas/${currentRoom}`), {
     locked: true
   });
 }
 
 async function hostAwardPoints(delta) {
   if (!currentRoom || !isHost) return;
-  const snap = await window.fbGet(window.fbRef(window.db, `arenas/${currentRoom}`));
+  const snap = await window.fbGet(window.fbRef(window.db, `buzz_arenas/${currentRoom}`));
   if (!snap.exists()) return;
 
   const arena = snap.val();
@@ -893,7 +934,7 @@ async function hostAwardPoints(delta) {
   const targetKey = sanitizeKey(arena.mode === 'team' ? winner.team : winner.name);
   const current = (arena.scores && arena.scores[targetKey]) || 0;
 
-  await window.fbUpdate(window.fbRef(window.db, `arenas/${currentRoom}/scores`), {
+  await window.fbUpdate(window.fbRef(window.db, `buzz_arenas/${currentRoom}/scores`), {
     [targetKey]: Math.max(0, current + delta)
   });
 }
@@ -901,7 +942,7 @@ async function hostAwardPoints(delta) {
 async function hostResetScores() {
   if (!currentRoom || !isHost) return;
   if (!confirm('Clear all scoreboard points?')) return;
-  await window.fbSet(window.fbRef(window.db, `arenas/${currentRoom}/scores`), {});
+  await window.fbSet(window.fbRef(window.db, `buzz_arenas/${currentRoom}/scores`), {});
 }
 
 function sanitizeKey(str) {
@@ -918,7 +959,7 @@ function exitArena() {
   setupHubView();
 }
 
-// Global Keyboard Handler
+// Global Spacebar Shortcut
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' && !e.repeat && document.activeElement.tagName !== 'INPUT') {
     e.preventDefault();
@@ -929,11 +970,11 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Auto-populate URL parameters
+// Auto-populate URL Parameters & Sessions
 window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('mahil_user');
-  if (saved) {
-    currentUser = JSON.parse(saved);
+  const session = localStorage.getItem('buzzin_session');
+  if (session) {
+    currentUser = JSON.parse(session);
     setupHubView();
   }
 
